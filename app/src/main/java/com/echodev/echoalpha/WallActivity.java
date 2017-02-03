@@ -53,7 +53,7 @@ public class WallActivity extends AppCompatActivity {
 
 //        populateProfile();
 //        populateIdpToken();
-        
+
         IDText.setText("You have signed in as\n" + currentUser.getUid() + "\n" + currentUser.getEmail());
     }
 
