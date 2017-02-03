@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">EchoAlpha</string>
     <string name="greeting">Hello</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="camera">Take Photo</string>
-    <string name="record">Record Audio</string>
+    <string name="sign_out">Sign out</string>
+    <string name="camera">Take photo</string>
+    <string name="record">Record audio</string>
+    <string name="sign_out_failed">Sign out failed</string>
 </resources>

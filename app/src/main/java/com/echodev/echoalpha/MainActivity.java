@@ -1,5 +1,6 @@
 package com.echodev.echoalpha;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -72,5 +73,12 @@ public class MainActivity extends AppCompatActivity {
     private void startWall() {
         Intent intent = new Intent(this, WallActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    public static Intent createIntent(Context context) {
+        Intent intent = new Intent();
+        intent.setClass(context, MainActivity.class);
+        return intent;
     }
 }
