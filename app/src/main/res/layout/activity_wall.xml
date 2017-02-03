@@ -11,8 +11,36 @@
     android:gravity="center"
     tools:context="com.echodev.echoalpha.WallActivity">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/identity_text"/>
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/identity_text"
+            android:text="@string/greeting"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sign_out_btn"
+            android:text="@string/sign_out"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/camera_btn"
+            android:text="@string/camera"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/record_btn"
+            android:text="@string/record"/>
+
+    </LinearLayout>
+
 </RelativeLayout>
