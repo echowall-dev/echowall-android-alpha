@@ -30,6 +30,7 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 public class WallActivity extends AppCompatActivity {
     private static final String LOG_TAG = "Record_audio_message";
@@ -87,35 +88,6 @@ public class WallActivity extends AppCompatActivity {
         IDText.setText("You have signed in as\n" + currentUser.getUid() + "\n" + currentUser.getEmail());
 
         createAppDir();
-
-        recordBtn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (createDirSuccess) {
-                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        startRecording();
-//                        IDText.setText("You hold down\n" + currentUser.getUid());
-                    } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                        stopRecording();
-//                        IDText.setText("You release\n" + currentUser.getUid());
-                    }
-                }
-
-                return false;
-            }
-        });
-
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    playAudioLocal(currentUser.getUid() + ".3gp");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-//                IDText.setText("You play\n" + currentUser.getUid());
-            }
-        });
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -161,52 +133,61 @@ public class WallActivity extends AppCompatActivity {
         }
     }
 
-    private void startRecording() {
-        if (!createDirSuccess) {
-            return;
+    @OnTouch(R.id.record_btn)
+    public boolean controlRecording(View view, MotionEvent motionEvent) {
+        if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            // Start recording
+
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setOutputFile(audioFileName);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+            try {
+                mRecorder.prepare();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "prepare() failed");
+            }
+
+            mRecorder.start();
+
+            return true;
+        } else if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            // Stop recording
+
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
+
+            return true;
         }
 
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(audioFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        try {
-            mRecorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-
-        mRecorder.start();
+        return false;
     }
 
-    private void stopRecording() {
+    @OnClick(R.id.play_btn)
+    public void playAudioLocal(View view) {
         if (!createDirSuccess) {
             return;
         }
 
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
-    }
-
-    public void playAudioLocal(String fileName) throws IOException {
-        if (!createDirSuccess) {
-            return;
-        }
-
-        String filePath;
-
-        filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/EchoAlpha/" + fileName;
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        filePath += "/EchoAlpha/" + currentUser.getUid() + ".3gp";
 
         File appFile = new File(filePath);
         if (appFile.exists()) {
             mPlayer.reset();
             mPlayer = new MediaPlayer();
 //            mp.release();
-            mPlayer.setDataSource(filePath);
-            mPlayer.prepare();
+
+            try {
+                mPlayer.setDataSource(filePath);
+                mPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             mPlayer.start();
         }
     }
