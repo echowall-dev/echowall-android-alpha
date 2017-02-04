@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EchoAlphaMain";
-    private static final int RC_SIGN_IN = 1;
+    private static final int RC_SIGN_IN = 100;
 
     @BindView(R.id.activity_main)
     View mRootView;
@@ -130,8 +130,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startWall() {
-        Intent intent = new Intent(this, WallActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, WallActivity.class);
+//        startActivity(intent);
+        startActivity(WallActivity.createIntent(this, null));
         finish();
     }
 

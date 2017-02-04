@@ -29,17 +29,43 @@
             android:id="@+id/sign_out_btn"
             android:text="@string/sign_out"/>
 
-        <Button
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/camera_btn"
-            android:text="@string/camera"/>
+            android:orientation="horizontal">
 
-        <Button
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/camera_btn"
+                android:text="@string/camera"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/view_btn"
+                android:text="@string/view"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/record_btn"
-            android:text="@string/record"/>
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/record_btn"
+                android:text="@string/record"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/play_btn"
+                android:text="@string/play"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
