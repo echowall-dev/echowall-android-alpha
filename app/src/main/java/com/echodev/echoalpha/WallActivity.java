@@ -58,7 +58,7 @@ public class WallActivity extends AppCompatActivity {
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer = new MediaPlayer();
     private String audioFileName;
-    private boolean createDirSuccess = false;
+    private boolean createDirSuccess = true;
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -209,11 +209,6 @@ public class WallActivity extends AppCompatActivity {
             mPlayer.prepare();
             mPlayer.start();
         }
-    }
-
-//    @OnClick(R.id.play_btn)
-    public void showPlayMsg() {
-        IDText.setText("You play\n" + currentUser.getUid());
     }
 
     private void startMain() {
