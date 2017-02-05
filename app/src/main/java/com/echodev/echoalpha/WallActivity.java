@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,7 +86,11 @@ public class WallActivity extends AppCompatActivity {
 //        populateProfile();
 //        populateIdpToken();
 
-        IDText.setText("You have signed in as\n" + currentUser.getUid() + "\n" + currentUser.getEmail());
+        String currentUid = currentUser.getUid();
+        String currentEmail = currentUser.getEmail();
+        String uniqueID = UUID.randomUUID().toString();
+
+        IDText.setText("You have signed in as\n" + currentUid + "\n" + currentEmail + "\n" + uniqueID);
 
         createAppDir();
     }
@@ -122,14 +127,14 @@ public class WallActivity extends AppCompatActivity {
     }
 
     private void createAppDir() {
-        File appDir = new File(Environment.getExternalStorageDirectory() + "/EchoAlpha");
+        File appDir = new File(Environment.getExternalStorageDirectory() + "/" + R.string.app_name);
         if (!appDir.exists()) {
             createDirSuccess = appDir.mkdir();
         }
 
         if (createDirSuccess) {
             audioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFileName += "/EchoAlpha/" + currentUser.getUid() + ".3gp";
+            audioFileName += "/" + R.string.app_name + "/" + currentUser.getUid() + R.string.audio_format;
         }
     }
 
@@ -143,13 +148,11 @@ public class WallActivity extends AppCompatActivity {
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mRecorder.setOutputFile(audioFileName);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
             try {
                 mRecorder.prepare();
             } catch (IOException e) {
                 Log.e(LOG_TAG, "prepare() failed");
             }
-
             mRecorder.start();
 
             return true;
@@ -173,21 +176,19 @@ public class WallActivity extends AppCompatActivity {
         }
 
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        filePath += "/EchoAlpha/" + currentUser.getUid() + ".3gp";
+        filePath += "/" + R.string.app_name + "/" + currentUser.getUid() + R.string.audio_format;
 
         File appFile = new File(filePath);
         if (appFile.exists()) {
             mPlayer.reset();
             mPlayer = new MediaPlayer();
 //            mp.release();
-
             try {
                 mPlayer.setDataSource(filePath);
                 mPlayer.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             mPlayer.start();
         }
     }

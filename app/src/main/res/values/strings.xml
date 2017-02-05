@@ -12,4 +12,6 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="unknown_error">An unknown error occurred</string>
     <string name="sign_out_failed">Sign out failed</string>
+    <string name="app_folder">EchoAlpha/</string>
+    <string name="audio_format">.3gp</string>
 </resources>
