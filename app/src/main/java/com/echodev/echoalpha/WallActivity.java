@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.echodev.echoalpha.util.audioHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -69,7 +70,7 @@ public class WallActivity extends AppCompatActivity {
     private boolean createDirSuccess = true;
 
     private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
+    private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
 
     @Override
@@ -77,8 +78,8 @@ public class WallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
+        mUser = mAuth.getCurrentUser();
+        if (mUser == null) {
             startActivity(MainActivity.createIntent(this));
             finish();
             return;
@@ -89,16 +90,12 @@ public class WallActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
 
-        populateProfile();
+        String postID = UUID.randomUUID().toString();
+
+        audioHelper mAudio = new audioHelper(mUser.getUid(), postID);
+
+        populateProfile(postID);
         populateIdpToken();
-
-        /*
-        String currentUid = currentUser.getUid();
-        String currentEmail = currentUser.getEmail();
-        String uniqueID = UUID.randomUUID().toString();
-
-        IDText.setText("You have signed in as\n" + currentUid + "\n" + currentEmail + "\n" + uniqueID);
-        */
 
         createAppDir();
     }
@@ -120,12 +117,11 @@ public class WallActivity extends AppCompatActivity {
     }
 
     @MainThread
-    private void populateProfile() {
-        String currentUid = currentUser.getUid();
-        String currentEmail = currentUser.getEmail();
-        String uniqueID = UUID.randomUUID().toString();
+    private void populateProfile(String postID) {
+        String currentUid = mUser.getUid();
+        String currentEmail = mUser.getEmail();
 
-        IDText.setText("You have signed in as\n" + currentUid + "\n" + currentEmail + "\n" + uniqueID);
+        IDText.setText("You have signed in as\n" + currentUid + "\n" + currentEmail + "\n" + postID);
 
         /*
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -206,7 +202,7 @@ public class WallActivity extends AppCompatActivity {
 
         if (createDirSuccess) {
             audioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFileName += "/" + R.string.app_name + "/" + currentUser.getUid() + R.string.audio_format;
+            audioFileName += "/" + R.string.app_name + "/" + mUser.getUid() + R.string.audio_format;
         }
     }
 
@@ -248,7 +244,7 @@ public class WallActivity extends AppCompatActivity {
         }
 
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        filePath += "/" + R.string.app_name + "/" + currentUser.getUid() + R.string.audio_format;
+        filePath += "/" + R.string.app_name + "/" + mUser.getUid() + R.string.audio_format;
 
         File appFile = new File(filePath);
         if (appFile.exists()) {

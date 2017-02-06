@@ -20,13 +20,13 @@ public class audioHelper {
     private String mFilePath;
     private boolean createDirSuccess = true;
 
-    private FirebaseUser mUser;
+    private String mUserID;
     private String mPostID;
 
-    public audioHelper(FirebaseUser currentUser, String postID) {
-        this.mUser = currentUser;
+    public audioHelper(String userID, String postID) {
+        this.mUserID = userID;
         this.mPostID = postID;
-        this.mFileName = currentUser.getUid() + "_" + postID + R.string.audio_format;
+        this.mFileName = userID + "_" + postID + R.string.audio_format;
     }
 
     public static boolean createAppDir() {
@@ -42,8 +42,8 @@ public class audioHelper {
         return createDirSuccess;
     }
 
-    private audioHelper setUser(FirebaseUser currentUser) {
-        this.mUser = currentUser;
+    private audioHelper setUserID(String userID) {
+        this.mUserID = userID;
         return this;
     }
 
@@ -52,8 +52,8 @@ public class audioHelper {
         return this;
     }
 
-    private FirebaseUser getUser() {
-        return this.mUser;
+    private String getUserID() {
+        return this.mUserID;
     }
 
     private String getPostID() {
