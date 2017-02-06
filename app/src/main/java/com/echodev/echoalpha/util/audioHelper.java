@@ -26,6 +26,7 @@ public class audioHelper {
     public audioHelper(FirebaseUser currentUser, String postID) {
         this.mUser = currentUser;
         this.mPostID = postID;
+        this.mFileName = currentUser.getUid() + "_" + postID + R.string.audio_format;
     }
 
     public static boolean createAppDir() {
@@ -49,5 +50,13 @@ public class audioHelper {
     private audioHelper setPostID(String postID) {
         this.mPostID = postID;
         return this;
+    }
+
+    private FirebaseUser getUser() {
+        return this.mUser;
+    }
+
+    private String getPostID() {
+        return this.mPostID;
     }
 }
