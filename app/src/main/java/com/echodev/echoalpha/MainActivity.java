@@ -39,9 +39,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            startWall();
+        } else {
+            signIn();
+        }
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        /*
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -59,12 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+        */
     }
 
     public void signIn() {
         startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
+                AuthUI.getInstance().createSignInIntentBuilder()
+                        .setTheme(R.style.EchoTheme)
+                        .setLogo(R.drawable.echo_logo_200px)
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
@@ -115,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         showSnackbar(R.string.unknown_sign_in_response);
     }
 
+    /*
     @Override
     public void onStart() {
         super.onStart();
@@ -128,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+    */
 
     private void startWall() {
 //        Intent intent = new Intent(this, WallActivity.class);

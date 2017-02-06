@@ -11,21 +11,27 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -83,14 +89,16 @@ public class WallActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
 
-//        populateProfile();
-//        populateIdpToken();
+        populateProfile();
+        populateIdpToken();
 
+        /*
         String currentUid = currentUser.getUid();
         String currentEmail = currentUser.getEmail();
         String uniqueID = UUID.randomUUID().toString();
 
         IDText.setText("You have signed in as\n" + currentUid + "\n" + currentEmail + "\n" + uniqueID);
+        */
 
         createAppDir();
     }
@@ -113,11 +121,75 @@ public class WallActivity extends AppCompatActivity {
 
     @MainThread
     private void populateProfile() {
+        String currentUid = currentUser.getUid();
+        String currentEmail = currentUser.getEmail();
+        String uniqueID = UUID.randomUUID().toString();
 
+        IDText.setText("You have signed in as\n" + currentUid + "\n" + currentEmail + "\n" + uniqueID);
+
+        /*
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user.getPhotoUrl() != null) {
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .fitCenter()
+                    .into(mUserProfilePicture);
+        }
+
+        mUserEmail.setText(
+                TextUtils.isEmpty(user.getEmail()) ? "No email" : user.getEmail());
+        mUserDisplayName.setText(
+                TextUtils.isEmpty(user.getDisplayName()) ? "No display name" : user.getDisplayName());
+
+        StringBuilder providerList = new StringBuilder(100);
+
+        providerList.append("Providers used: ");
+
+        if (user.getProviders() == null || user.getProviders().isEmpty()) {
+            providerList.append("none");
+        } else {
+            Iterator<String> providerIter = user.getProviders().iterator();
+            while (providerIter.hasNext()) {
+                String provider = providerIter.next();
+                if (GoogleAuthProvider.PROVIDER_ID.equals(provider)) {
+                    providerList.append("Google");
+                } else if (FacebookAuthProvider.PROVIDER_ID.equals(provider)) {
+                    providerList.append("Facebook");
+                } else if (EmailAuthProvider.PROVIDER_ID.equals(provider)) {
+                    providerList.append("Password");
+                } else {
+                    providerList.append(provider);
+                }
+
+                if (providerIter.hasNext()) {
+                    providerList.append(", ");
+                }
+            }
+        }
+
+        mEnabledProviders.setText(providerList);
+        */
     }
 
     private void populateIdpToken() {
-
+        /*
+        String token = null;
+        String secret = null;
+        if (mIdpResponse != null) {
+            token = mIdpResponse.getIdpToken();
+            secret = mIdpResponse.getIdpSecret();
+        }
+        if (token == null) {
+            findViewById(R.id.idp_token_layout).setVisibility(View.GONE);
+        } else {
+            ((TextView) findViewById(R.id.idp_token)).setText(token);
+        }
+        if (secret == null) {
+            findViewById(R.id.idp_secret_layout).setVisibility(View.GONE);
+        } else {
+            ((TextView) findViewById(R.id.idp_secret)).setText(secret);
+        }
+        */
     }
 
     @MainThread
