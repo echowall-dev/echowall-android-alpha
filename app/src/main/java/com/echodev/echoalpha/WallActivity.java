@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -72,6 +73,8 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +203,20 @@ public class WallActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void startMain() {
+        startActivity(MainActivity.createIntent(WallActivity.this));
+        finish();
+    }
+
+    public static Intent createIntent(Context context, IdpResponse idpResponse) {
+        Intent intent = IdpResponse.getIntent(idpResponse);
+        intent.setClass(context, WallActivity.class);
+        return intent;
+    }
+
+    /*
+     * Prepare app directory
+     */
     private boolean createAppDir() {
         boolean createSuccess;
 
@@ -212,12 +229,26 @@ public class WallActivity extends AppCompatActivity {
 
         if (createSuccess) {
             audioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFileName += "/" + R.string.app_name + "/" + mUser.getUid() + R.string.audio_format;
+            audioFileName += "/" + R.string.app_name + "/" + mUser.getUid() + "_audio" + R.string.audio_format;
         }
 
         return createSuccess;
     }
 
+    /*
+     * Image methods
+     */
+    @OnClick(R.id.camera_btn)
+    public void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    /*
+     * Audio methods
+     */
     @OnTouch(R.id.record_btn)
     public boolean controlRecording(View view, MotionEvent motionEvent) {
         if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
@@ -256,7 +287,7 @@ public class WallActivity extends AppCompatActivity {
         }
 
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        filePath += "/" + R.string.app_name + "/" + mUser.getUid() + R.string.audio_format;
+        filePath += "/" + R.string.app_name + "/" + mUser.getUid() + "_audio" + R.string.audio_format;
 
         File appFile = new File(filePath);
         if (appFile.exists()) {
@@ -271,16 +302,5 @@ public class WallActivity extends AppCompatActivity {
             }
             mPlayer.start();
         }
-    }
-
-    private void startMain() {
-        startActivity(MainActivity.createIntent(WallActivity.this));
-        finish();
-    }
-
-    public static Intent createIntent(Context context, IdpResponse idpResponse) {
-        Intent intent = IdpResponse.getIntent(idpResponse);
-        intent.setClass(context, WallActivity.class);
-        return intent;
     }
 }
