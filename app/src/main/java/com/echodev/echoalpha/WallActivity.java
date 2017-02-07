@@ -67,7 +67,7 @@ public class WallActivity extends AppCompatActivity {
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer = new MediaPlayer();
     private String audioFileName;
-    private boolean createDirSuccess = true;
+    private boolean createDirSuccess;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -97,7 +97,7 @@ public class WallActivity extends AppCompatActivity {
         populateProfile(postID);
         populateIdpToken();
 
-        createAppDir();
+        createDirSuccess = createAppDir();
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -121,7 +121,13 @@ public class WallActivity extends AppCompatActivity {
         String currentUid = mUser.getUid();
         String currentEmail = mUser.getEmail();
 
-        IDText.setText("You have signed in as\n" + currentUid + "\n" + currentEmail + "\n" + postID);
+        String contentText = Environment.getExternalStorageDirectory().getAbsolutePath();
+        contentText += "\nYou have signed in as";
+        contentText += "\n" + currentUid;
+        contentText += "\n" + currentEmail;
+        contentText += "\n" + postID;
+
+        IDText.setText(contentText);
 
         /*
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -194,16 +200,22 @@ public class WallActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void createAppDir() {
+    private boolean createAppDir() {
+        boolean createSuccess;
+
         File appDir = new File(Environment.getExternalStorageDirectory() + "/" + R.string.app_name);
         if (!appDir.exists()) {
-            createDirSuccess = appDir.mkdir();
+            createSuccess = appDir.mkdir();
+        } else {
+            createSuccess = true;
         }
 
-        if (createDirSuccess) {
+        if (createSuccess) {
             audioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
             audioFileName += "/" + R.string.app_name + "/" + mUser.getUid() + R.string.audio_format;
         }
+
+        return createSuccess;
     }
 
     @OnTouch(R.id.record_btn)

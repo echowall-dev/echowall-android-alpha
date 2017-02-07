@@ -3,11 +3,19 @@ package com.echodev.echoalpha.util;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 
 import com.echodev.echoalpha.R;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
+import java.io.IOException;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.OnTouch;
 
 /**
  * Created by Ho on 6/2/2017.
@@ -22,6 +30,12 @@ public class audioHelper {
 
     private String mUserID;
     private String mPostID;
+
+//    @BindView(R.id.record_btn)
+    Button recordBtn;
+
+//    @BindView(R.id.play_btn)
+    Button playBtn;
 
     public audioHelper(String userID, String postID) {
         this.mUserID = userID;
@@ -42,21 +56,50 @@ public class audioHelper {
         return createDirSuccess;
     }
 
-    private audioHelper setUserID(String userID) {
+    public audioHelper setUserID(String userID) {
         this.mUserID = userID;
         return this;
     }
 
-    private audioHelper setPostID(String postID) {
+    public audioHelper setPostID(String postID) {
         this.mPostID = postID;
         return this;
     }
 
-    private String getUserID() {
+    public String getUserID() {
         return this.mUserID;
     }
 
-    private String getPostID() {
+    public String getPostID() {
         return this.mPostID;
+    }
+
+//    @OnTouch(R.id.record_btn)
+    public boolean controlRecording(View view, MotionEvent motionEvent) {
+        return true;
+    }
+
+//    @OnClick(R.id.play_btn)
+    public void playAudioLocal(View view) {
+        if (!createDirSuccess) {
+            return;
+        }
+
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        filePath += "/" + R.string.app_name + "/" + mUserID + R.string.audio_format;
+
+        File appFile = new File(filePath);
+        if (appFile.exists()) {
+            mPlayer.reset();
+            mPlayer = new MediaPlayer();
+//            mp.release();
+            try {
+                mPlayer.setDataSource(filePath);
+                mPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mPlayer.start();
+        }
     }
 }
