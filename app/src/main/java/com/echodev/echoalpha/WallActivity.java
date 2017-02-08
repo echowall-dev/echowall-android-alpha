@@ -129,12 +129,15 @@ public class WallActivity extends AppCompatActivity {
     private void populateProfile(String postID) {
         String currentUid = mUser.getUid();
         String currentEmail = mUser.getEmail();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         String contentText = Environment.getExternalStorageDirectory().getAbsolutePath();
         contentText += "\nYou have signed in as";
         contentText += "\n" + currentUid;
         contentText += "\n" + currentEmail;
         contentText += "\n" + postID;
+        contentText += "\n" + timeStamp + "_audio" + ".3gp";
+        contentText += "\n" + timeStamp + "_image" + ".jpg";
 
         IDText.setText(contentText);
 
