@@ -2,26 +2,30 @@ package com.echodev.echoalpha;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.echodev.echoalpha.util.ImageHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,46 +35,51 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.activity_main)
     View mRootView;
 
+    @BindView(R.id.cover_image)
+    ImageView coverImage;
+
+    @BindView(R.id.sign_in_btn)
+    Button signInBtn;
+
+    @BindView(R.id.quit_btn)
+    Button quitBtn;
+
+    @BindView(R.id.debug_text_main)
+    TextView debugTextMain;
+
+    Resources localRes;
+
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private IdpResponse mIdpResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        localRes = this.getResources();
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
+            // User is signed in
             startWall();
         } else {
-            signIn();
+            // User is signed out
         }
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        /*
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        // To ensure the set-picture function is called after the activity's drawing phase is finished
+        coverImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    startWall();
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    signIn();
-                }
+            public void onGlobalLayout() {
+                coverImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                ImageHelper.setPicFromResources(coverImage, localRes, R.drawable.cover_lowres, debugTextMain);
             }
-        };
-        */
+        });
     }
 
-    public void signIn() {
+    @OnClick(R.id.sign_in_btn)
+    public void signIn(View view) {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setTheme(R.style.EchoTheme)
@@ -125,22 +134,6 @@ public class MainActivity extends AppCompatActivity {
         showSnackbar(R.string.unknown_sign_in_response);
     }
 
-    /*
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-    */
-
     private void startWall() {
 //        Intent intent = new Intent(this, WallActivity.class);
 //        startActivity(intent);
@@ -157,5 +150,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(context, MainActivity.class);
         return intent;
+    }
+
+    @OnClick(R.id.quit_btn)
+    public void quitApp(View view) {
+        this.finishAffinity();
     }
 }

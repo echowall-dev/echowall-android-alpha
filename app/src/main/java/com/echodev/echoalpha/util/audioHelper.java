@@ -8,20 +8,17 @@ import android.view.View;
 import android.widget.Button;
 
 import com.echodev.echoalpha.R;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
-
-import butterknife.BindView;
-import butterknife.OnClick;
-import butterknife.OnTouch;
 
 /**
  * Created by Ho on 6/2/2017.
  */
 
-public class audioHelper {
+public class AudioHelper {
+    private static final String LOG_TAG = "AudioHelper";
+
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer = new MediaPlayer();
     private String mFileName;
@@ -37,7 +34,7 @@ public class audioHelper {
 //    @BindView(R.id.play_btn)
     Button playBtn;
 
-    public audioHelper(String userID, String postID) {
+    public AudioHelper(String userID, String postID) {
         this.mUserID = userID;
         this.mPostID = postID;
         this.mFileName = userID + "_" + postID + R.string.audio_format;
@@ -56,12 +53,12 @@ public class audioHelper {
         return createDirSuccess;
     }
 
-    public audioHelper setUserID(String userID) {
+    public AudioHelper setUserID(String userID) {
         this.mUserID = userID;
         return this;
     }
 
-    public audioHelper setPostID(String postID) {
+    public AudioHelper setPostID(String postID) {
         this.mPostID = postID;
         return this;
     }

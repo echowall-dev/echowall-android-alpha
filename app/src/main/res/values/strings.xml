@@ -1,7 +1,9 @@
 <resources>
-    <string name="app_name">EchoAlpha</string>
+    <string name="app_name">Echowall Alpha</string>
     <string name="greeting">Hello</string>
+    <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
+    <string name="quit">Quit</string>
     <string name="camera">Take photo</string>
     <string name="view">View photo</string>
     <string name="record">Record audio</string>

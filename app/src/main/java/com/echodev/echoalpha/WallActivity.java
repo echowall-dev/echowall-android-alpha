@@ -2,8 +2,6 @@ package com.echodev.echoalpha;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -16,7 +14,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,23 +21,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.echodev.echoalpha.util.audioHelper;
+import com.echodev.echoalpha.util.AudioHelper;
+import com.echodev.echoalpha.util.ImageHelper;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -72,8 +65,11 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.play_btn)
     Button playBtn;
 
-    @BindView(R.id.image_sample)
+    @BindView(R.id.sample_image)
     ImageView mImageView;
+
+    @BindView(R.id.debug_text_wall)
+    TextView debugTextWall;
 
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer = new MediaPlayer();
@@ -84,7 +80,6 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
     private String mCurrentPhotoPath;
 
@@ -106,8 +101,6 @@ public class WallActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         String postID = UUID.randomUUID().toString();
-
-        audioHelper mAudio = new audioHelper(mUser.getUid(), postID);
 
         populateProfile(postID);
         populateIdpToken();
@@ -254,7 +247,7 @@ public class WallActivity extends AppCompatActivity {
      * Image handling methods
      */
     @OnClick(R.id.camera_btn)
-    public void dispatchTakePictureIntent() {
+    public void dispatchTakePictureIntent(View view) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -305,33 +298,8 @@ public class WallActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.view_btn)
-    public void setPic() {
-        // Get the dimensions of the View
-//        int targetW = mImageView.getWidth();
-//        int targetH = mImageView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-        float photoScale = photoW/photoH;
-
-        // Get the dimensions of the View
-        int targetW = mImageView.getWidth();
-        int targetH = Math.round(targetW/photoScale);
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mImageView.setImageBitmap(bitmap);
+    public void setPic(View view) {
+        ImageHelper.setPicFromFile(mImageView, mCurrentPhotoPath, debugTextWall);
     }
 
     /*
