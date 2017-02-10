@@ -14,7 +14,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -254,7 +253,11 @@ public class WallActivity extends AppCompatActivity {
             // Create the File where the photo should go
             File photoFile = null;
             try {
-                photoFile = createImageFile();
+                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                photoFile = ImageHelper.createImageFile(storageDir);
+
+                // Save a file: path for use with ACTION_VIEW intents
+                mCurrentPhotoPath = photoFile.getAbsolutePath();
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 // Terminate the app
@@ -273,27 +276,8 @@ public class WallActivity extends AppCompatActivity {
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = timeStamp + "_pic";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
     private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
+        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(mCurrentPhotoPath);
         this.sendBroadcast(mediaScanIntent);
     }
 
@@ -309,30 +293,13 @@ public class WallActivity extends AppCompatActivity {
     public boolean controlRecording(View view, MotionEvent motionEvent) {
         if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
             // Start recording
-
-            mRecorder = new MediaRecorder();
-            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mRecorder.setOutputFile(audioFileName);
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-            try {
-                mRecorder.prepare();
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "prepare() failed");
-            }
-            mRecorder.start();
-
+            AudioHelper.startRecording(audioFileName);
             return true;
         } else if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_UP) {
             // Stop recording
-
-            mRecorder.stop();
-            mRecorder.release();
-            mRecorder = null;
-
+            AudioHelper.stopRecording(audioFileName);
             return true;
         }
-
         return false;
     }
 
@@ -344,19 +311,6 @@ public class WallActivity extends AppCompatActivity {
 
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
         filePath += "/" + R.string.app_name + "/" + mUser.getUid() + "_audio" + R.string.audio_format;
-
-        File appFile = new File(filePath);
-        if (appFile.exists()) {
-            mPlayer.reset();
-            mPlayer = new MediaPlayer();
-//            mp.release();
-            try {
-                mPlayer.setDataSource(filePath);
-                mPlayer.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mPlayer.start();
-        }
+        AudioHelper.playAudioLocal(filePath);
     }
 }

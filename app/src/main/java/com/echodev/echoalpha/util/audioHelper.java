@@ -2,10 +2,6 @@ package com.echodev.echoalpha.util;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
 
 import com.echodev.echoalpha.R;
 
@@ -19,20 +15,12 @@ import java.io.IOException;
 public class AudioHelper {
     private static final String LOG_TAG = "AudioHelper";
 
-    private MediaRecorder mRecorder;
+    private static MediaRecorder mRecorder;
     private MediaPlayer mPlayer = new MediaPlayer();
     private String mFileName;
-    private String mFilePath;
-    private boolean createDirSuccess = true;
 
     private String mUserID;
     private String mPostID;
-
-//    @BindView(R.id.record_btn)
-    Button recordBtn;
-
-//    @BindView(R.id.play_btn)
-    Button playBtn;
 
     public AudioHelper(String userID, String postID) {
         this.mUserID = userID;
@@ -40,17 +28,39 @@ public class AudioHelper {
         this.mFileName = userID + "_" + postID + R.string.audio_format;
     }
 
-    public static boolean createAppDir() {
-        boolean createDirSuccess;
-        File appDir = new File(Environment.getExternalStorageDirectory() + "/" + R.string.app_name);
-
-        if (!appDir.exists()) {
-            createDirSuccess = appDir.mkdir();
-        } else {
-            createDirSuccess = true;
+    public static void startRecording(String audioName) {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(audioName);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        mRecorder.start();
+    }
 
-        return createDirSuccess;
+    public static void stopRecording(String audioName) {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+    }
+
+    public static void playAudioLocal(String audioPath) {
+        MediaPlayer mPlayer = new MediaPlayer();
+        File appFile = new File(audioPath);
+        if (appFile.exists()) {
+            try {
+                mPlayer.setDataSource(audioPath);
+                mPlayer.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mPlayer.start();
+//            mPlayer.release();
+        }
     }
 
     public AudioHelper setUserID(String userID) {
@@ -69,34 +79,5 @@ public class AudioHelper {
 
     public String getPostID() {
         return this.mPostID;
-    }
-
-//    @OnTouch(R.id.record_btn)
-    public boolean controlRecording(View view, MotionEvent motionEvent) {
-        return true;
-    }
-
-//    @OnClick(R.id.play_btn)
-    public void playAudioLocal(View view) {
-        if (!createDirSuccess) {
-            return;
-        }
-
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        filePath += "/" + R.string.app_name + "/" + mUserID + R.string.audio_format;
-
-        File appFile = new File(filePath);
-        if (appFile.exists()) {
-            mPlayer.reset();
-            mPlayer = new MediaPlayer();
-//            mp.release();
-            try {
-                mPlayer.setDataSource(filePath);
-                mPlayer.prepare();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mPlayer.start();
-        }
     }
 }

@@ -1,10 +1,17 @@
 package com.echodev.echoalpha.util;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Ho on 6/2/2017.
@@ -83,6 +90,28 @@ public class ImageHelper {
         debug_msg += "\n" + "scale factor W: " + photoW/targetW + "  H: " + photoH/targetH;
 
         debugText.setText(debug_msg);
+    }
+
+    public static File createImageFile(File storageDir) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = timeStamp + "_pic";
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        return image;
+    }
+
+    public static Intent galleryAddPicIntent(String imgPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(imgPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+
+        return mediaScanIntent;
     }
 
     public ImageHelper setUserID(String userID) {
