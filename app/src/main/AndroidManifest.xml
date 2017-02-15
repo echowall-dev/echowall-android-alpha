@@ -24,7 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WallActivity"></activity>
+
+        <activity
+            android:name=".WallActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
