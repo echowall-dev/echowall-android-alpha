@@ -294,13 +294,11 @@ public class WallActivity extends AppCompatActivity {
         if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
             // Start recording
             AudioHelper.startRecording(audioFileName);
-            return true;
         } else if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_UP) {
             // Stop recording
             AudioHelper.stopRecording(audioFileName);
-            return true;
         }
-        return false;
+        return true;
     }
 
     @OnClick(R.id.play_btn)
