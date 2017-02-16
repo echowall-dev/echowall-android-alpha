@@ -290,11 +290,11 @@ public class WallActivity extends AppCompatActivity {
      * Audio handling methods
      */
     @OnTouch(R.id.record_btn)
-    public boolean controlRecording(View view, MotionEvent motionEvent) {
-        if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+    public boolean controlRecording(View view, MotionEvent event) {
+        if (createDirSuccess && event.getAction() == MotionEvent.ACTION_DOWN) {
             // Start recording
             AudioHelper.startRecording(audioFileName);
-        } else if (createDirSuccess && motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        } else if (createDirSuccess && event.getAction() == MotionEvent.ACTION_UP) {
             // Stop recording
             AudioHelper.stopRecording(audioFileName);
         }
