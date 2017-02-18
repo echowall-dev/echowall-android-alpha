@@ -20,4 +20,16 @@ public class PostHelper {
     public String getPostIDString() {
         return this.postID.toString();
     }
+
+    public boolean createPost() {
+        return false;
+    }
+
+    public boolean editPost() {
+        return false;
+    }
+
+    public boolean deletePost() {
+        return false;
+    }
 }

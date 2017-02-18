@@ -19,8 +19,7 @@ public class AudioHelper {
     private MediaPlayer mPlayer = new MediaPlayer();
     private String mFileName;
 
-    private String mUserID;
-    private String mPostID;
+    private String mPostID, mUserID, mUserEmail;
 
     public AudioHelper(String userID, String postID) {
         this.mUserID = userID;
