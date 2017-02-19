@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".WallActivity" />
+        <activity android:name=".TagActivity" />
 
         <!-- <activity -->
         <!-- android:name=".WallActivity" -->
@@ -42,8 +43,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <activity android:name=".TagActivity"></activity>
     </application>
 
 </manifest>
