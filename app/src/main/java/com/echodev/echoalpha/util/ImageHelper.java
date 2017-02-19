@@ -1,5 +1,6 @@
 package com.echodev.echoalpha.util;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -129,5 +130,25 @@ public class ImageHelper {
 
     public String getPostID() {
         return this.mPostID;
+    }
+
+    /**
+     * Covert dp to px
+     * @param dp
+     * @param context
+     * @return pixel
+     */
+    public static float convertDpToPixel(float dp, Context context) {
+        return dp * context.getResources().getDisplayMetrics().density;
+    }
+
+    /**
+     * Covert px to dp
+     * @param px
+     * @param context
+     * @return dp
+     */
+    public static float convertPixelToDp(float px, Context context) {
+        return px / context.getResources().getDisplayMetrics().density;
     }
 }

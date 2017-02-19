@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.echodev.echoalpha">
 
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -24,13 +26,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".WallActivity" />
 
-        <activity android:name=".WallActivity"></activity>
-
-        <!--<activity-->
-            <!--android:name=".WallActivity"-->
-            <!--android:theme="@android:style/Theme.NoTitleBar">-->
-        <!--</activity>-->
+        <!-- <activity -->
+        <!-- android:name=".WallActivity" -->
+        <!-- android:theme="@android:style/Theme.NoTitleBar"> -->
+        <!-- </activity> -->
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -39,8 +40,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".TagActivity"></activity>
     </application>
 
 </manifest>
