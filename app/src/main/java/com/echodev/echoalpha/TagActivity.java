@@ -22,13 +22,13 @@ import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 public class TagActivity extends AppCompatActivity {
 
-    @BindView(R.id.relative_0)
+//    @BindView(R.id.relative_0)
     RelativeLayout mRelativeLayout0;
 
-    @BindView(R.id.relative_1)
+//    @BindView(R.id.relative_1)
     RelativeLayout mRelativeLayout1;
 
-    @BindView(R.id.hello_world)
+//    @BindView(R.id.hello_world)
     TextView helloWorldText;
 
 //    @BindView(R.id.app_logo_small_1)
@@ -58,7 +58,7 @@ public class TagActivity extends AppCompatActivity {
 //        appLogoSmall.setLayoutParams(layoutParams);
     }
 
-    @OnTouch(R.id.hello_world)
+//    @OnTouch(R.id.hello_world)
     public boolean helloWorldControl(View view, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -219,12 +219,12 @@ public class TagActivity extends AppCompatActivity {
         appLogoSmall2 = new ImageView(this);
         appLogoSmall2.setId(02);
         appLogoSmall2.setImageResource(R.drawable.echo_logo_200px);
-        int targetWidth = (int) ImageHelper.convertDpToPixel(R.dimen.logo_width_1, this);
-        int targetHeight = (int) ImageHelper.convertDpToPixel(R.dimen.logo_height_1, this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetWidth, targetHeight);
+//        int targetWidth = (int) ImageHelper.convertDpToPixel(R.dimen.logo_width_1, this);
+//        int targetHeight = (int) ImageHelper.convertDpToPixel(R.dimen.logo_height_1, this);
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetWidth, targetHeight);
 //        layoutParams.leftMargin = (int) ((mRelativeLayout1.getWidth() - appLogoSmall2.getWidth()) * 0.5);
 //        layoutParams.topMargin = (int) ((mRelativeLayout1.getHeight() - appLogoSmall2.getHeight()) * 0.5);
-        appLogoSmall2.setLayoutParams(layoutParams);
+//        appLogoSmall2.setLayoutParams(layoutParams);
         mRelativeLayout1.addView(appLogoSmall2);
     }
 }
