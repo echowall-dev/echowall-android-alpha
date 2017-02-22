@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.quit_btn)
     Button quitBtn;
 
-    Resources localRes;
-
+    private Resources localRes;
+    private boolean allPermissionGranted;
     private FirebaseAuth mAuth;
     private IdpResponse mIdpResponse;
 
@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
             handleSignInResponse(resultCode, data);
             return;
         }
+
         showSnackbar(R.string.unknown_response);
     }
 

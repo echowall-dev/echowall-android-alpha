@@ -283,7 +283,7 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.view_btn)
     public void setPic(View view) {
-        ImageHelper.setPicFromFile(mImageView, mCurrentPhotoPath, debugTextWall);
+        ImageHelper.setPicFromFile(mImageView, mCurrentPhotoPath);
     }
 
     /*
