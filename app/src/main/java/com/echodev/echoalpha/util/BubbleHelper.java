@@ -17,6 +17,13 @@ public class BubbleHelper {
         this.userEmail = userEmail;
     }
 
+    public BubbleHelper(String postID, String userEmail, int x, int y) {
+        this.postID = postID;
+        this.userEmail = userEmail;
+        this.viewX = x;
+        this.viewY = y;
+    }
+
     public BubbleHelper setPostID(String postID) {
         this.postID = postID;
         return this;

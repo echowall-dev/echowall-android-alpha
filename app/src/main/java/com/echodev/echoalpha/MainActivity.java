@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EchoAlphaMain";
     private static final int RC_SIGN_IN = 100;
-    public static final int REQUEST_CODE_All_PERMISSIONS = 111;
+    public static final int REQUEST_CODE_All_PERMISSIONS = 101;
 
     @BindView(R.id.activity_main)
     View mRootView;

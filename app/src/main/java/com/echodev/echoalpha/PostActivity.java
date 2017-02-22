@@ -28,7 +28,7 @@ import butterknife.OnTouch;
 public class PostActivity extends AppCompatActivity {
     public static final char SPEECH_BUBBLE_LEFT = 'L';
     public static final char SPEECH_BUBBLE_RIGHT = 'R';
-    static final int REQUEST_TAKE_PHOTO = 100;
+    static final int REQUEST_TAKE_PHOTO = 103;
 
     @BindView(R.id.camera_btn)
     Button cameraBtn;
@@ -57,6 +57,7 @@ public class PostActivity extends AppCompatActivity {
     private Resources localRes;
     private static String appName, audioFormat;
     private boolean appDirExist;
+    private String userID, userEmail, postID;
     private String photoFilePath, audioFilePath;
 
     @Override
@@ -65,6 +66,11 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
         ButterKnife.bind(this);
 
+        Bundle bundle = getIntent().getExtras();
+        userID = bundle.getString("userID");
+        userEmail = bundle.getString("userEmail");
+        postID = bundle.getString("postID");
+
         localRes = this.getResources();
         appName = localRes.getString(R.string.app_name);
         audioFormat = localRes.getString(R.string.audio_format);
@@ -72,7 +78,7 @@ public class PostActivity extends AppCompatActivity {
         appDirExist = MainActivity.createAppDir();
         if (appDirExist) {
             audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFilePath += "/" + appName + "/audio/" + "temp" + "_audio" + audioFormat;
+            audioFilePath += "/" + appName + "/audio/" + userID + "_audio" + audioFormat;
         }
     }
 
@@ -114,8 +120,10 @@ public class PostActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_TAKE_PHOTO:
-                galleryAddPic();
-                ImageHelper.setPicFromFile(previewImage, photoFilePath);
+                if (resultCode == RESULT_OK) {
+                    galleryAddPic();
+                    ImageHelper.setPicFromFile(previewImage, photoFilePath);
+                }
                 break;
             default:
                 break;
@@ -134,7 +142,6 @@ public class PostActivity extends AppCompatActivity {
         return true;
     }
 
-    @OnClick(R.id.finish_btn)
     public void playAudioLocal(View view) {
         if (!appDirExist) {
             return;
@@ -212,4 +219,19 @@ public class PostActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    @OnClick(R.id.finish_btn)
+    public void finishPost() {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+
+        bundle.putString("photoPath", photoFilePath);
+        bundle.putString("audioPath", audioFilePath);
+        bundle.putInt("bubbleX", finalX);
+        bundle.putInt("bubbleY", finalY);
+        intent.putExtras(bundle);
+
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }

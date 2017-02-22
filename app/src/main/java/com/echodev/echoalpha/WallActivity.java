@@ -29,6 +29,7 @@ import butterknife.OnClick;
 
 public class WallActivity extends AppCompatActivity {
     private static final String LOG_TAG = "Record_audio_message";
+    private static final int REQUEST_CODE_POST = 102;
 
     @BindView(android.R.id.content)
     View mRootView;
@@ -46,6 +47,8 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
 
+    private String postID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +65,7 @@ public class WallActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
 
-        String postID = UUID.randomUUID().toString();
+        postID = UUID.randomUUID().toString();
 
         populateProfile(postID);
         populateIdpToken();
@@ -175,8 +178,38 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
-        Intent intent = new Intent(this, PostActivity.class);
-        startActivity(intent);
+        Bundle bundle = new Bundle();
+        bundle.putString("userID", mUser.getUid());
+        bundle.putString("userEmail", mUser.getEmail());
+        bundle.putString("postID", postID);
+
+        Intent intent = new Intent();
+        intent.setClass(this, PostActivity.class);
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, REQUEST_CODE_POST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_POST:
+                if (resultCode == RESULT_OK) {
+                    String photoPath = data.getExtras().getString("photoPath");
+                    String audioPath = data.getExtras().getString("audioPath");
+                    int bubbleX = data.getExtras().getInt("bubbleX");
+                    int bubbleY = data.getExtras().getInt("bubbleY");
+
+                    String contentText = "";
+                    contentText += "photoPath: " + photoPath;
+                    contentText += "\naudioPath: " + audioPath;
+                    contentText += "\nbubbleX: " + bubbleX + " bubbleY: " + bubbleY;
+                    IDText.setText(contentText);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     private void startMain() {
