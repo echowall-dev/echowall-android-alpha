@@ -19,6 +19,8 @@ import com.echodev.echoalpha.util.ImageHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,8 +79,9 @@ public class PostActivity extends AppCompatActivity {
 
         appDirExist = MainActivity.createAppDir();
         if (appDirExist) {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFilePath += "/" + appName + "/audio/" + userID + "_audio" + audioFormat;
+            audioFilePath += "/" + appName + "/audio/" + userID + "_" + timeStamp + audioFormat;
         }
     }
 

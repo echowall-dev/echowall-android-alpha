@@ -101,7 +101,7 @@ public class ImageHelper {
     public static File createImageFile(File storageDir) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = timeStamp + "_pic";
+        String imageFileName = timeStamp + "_";
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         return image;
