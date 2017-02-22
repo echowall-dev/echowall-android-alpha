@@ -1,18 +1,21 @@
 package com.echodev.echoalpha;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.support.annotation.MainThread;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.echodev.echoalpha.util.ImageHelper;
 import com.firebase.ui.auth.AuthUI;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "EchoAlphaMain";
     private static final int RC_SIGN_IN = 100;
+    public static final int REQUEST_CODE_All_PERMISSIONS = 111;
 
     @BindView(R.id.activity_main)
     View mRootView;
@@ -44,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.quit_btn)
     Button quitBtn;
 
-    @BindView(R.id.debug_text_main)
-    TextView debugTextMain;
-
     Resources localRes;
 
     private FirebaseAuth mAuth;
@@ -55,7 +56,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         localRes = this.getResources();
+
+        // To ensure the set-picture function is called after the activity's drawing phase is finished
+        coverImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                coverImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                ImageHelper.setPicFromResources(coverImage, localRes, R.drawable.cover_lowres);
+            }
+        });
+
+        requestPermission();
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
@@ -64,18 +79,49 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // User is signed out
         }
+    }
 
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+    private void requestPermission() {
+        String[] permissionReqList = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
 
-        // To ensure the set-picture function is called after the activity's drawing phase is finished
-        coverImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                coverImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                ImageHelper.setPicFromResources(coverImage, localRes, R.drawable.cover_lowres, debugTextMain);
+        int[] permissionCheckArray = new int[3];
+        Arrays.fill(permissionCheckArray, -1);
+        permissionCheckArray[0] = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        permissionCheckArray[1] = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        permissionCheckArray[2] = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        boolean allPermissionGranted = true;
+        for (int permissionCheck : permissionCheckArray) {
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                allPermissionGranted = false;
+                break;
             }
-        });
+        }
+
+        if (!allPermissionGranted) {
+            ActivityCompat.requestPermissions(this, permissionReqList, REQUEST_CODE_All_PERMISSIONS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_All_PERMISSIONS:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the contacts-related task you need to do.
+                } else {
+                    // permission denied, boo! Disable the functionality that depends on this permission.
+                }
+                break;
+            default:
+                break;
+            // other 'case' lines to check for other permissions this app might request
+        }
     }
 
     @OnClick(R.id.sign_in_btn)
@@ -99,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
             handleSignInResponse(resultCode, data);
             return;
         }
-
         showSnackbar(R.string.unknown_response);
     }
 
