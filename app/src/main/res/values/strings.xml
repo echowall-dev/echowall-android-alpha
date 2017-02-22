@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Echowall Alpha</string>
+    <string name="app_name">Echowall_alpha</string>
     <string name="greeting">Hello</string>
     <string name="cover_title">Capture your memorable moments</string>
     <string name="sign_in">Sign in</string>
@@ -17,4 +17,8 @@
     <string name="sign_out_failed">Sign out failed</string>
     <string name="app_folder">EchoAlpha/</string>
     <string name="audio_format">.3gp</string>
+    <string name="add_bubble_left">Add bubble left</string>
+    <string name="add_bubble_right">Add bubble right</string>
+    <string name="finish">Finish</string>
+    <string name="create_post">Create post</string>
 </resources>

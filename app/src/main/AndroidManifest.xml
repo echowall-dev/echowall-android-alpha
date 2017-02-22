@@ -14,7 +14,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/echo_logo_200px"
+        android:icon="@drawable/echowall_logo_500px"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -26,8 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WallActivity" />
-        <activity android:name=".TagActivity" />
+        <activity android:name=".WallActivity"></activity>
+        <activity android:name=".PostActivity"></activity>
 
         <!-- <activity -->
         <!-- android:name=".WallActivity" -->
@@ -43,6 +43,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>

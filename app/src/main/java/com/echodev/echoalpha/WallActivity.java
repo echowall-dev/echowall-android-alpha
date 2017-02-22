@@ -52,35 +52,12 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.sign_out_btn)
     Button signOutBtn;
 
-    @BindView(R.id.camera_btn)
-    Button cameraBtn;
-
-    @BindView(R.id.view_btn)
-    Button viewBtn;
-
-    @BindView(R.id.record_btn)
-    Button recordBtn;
-
-    @BindView(R.id.play_btn)
-    Button playBtn;
-
-    @BindView(R.id.sample_image)
-    ImageView mImageView;
-
-    @BindView(R.id.debug_text_wall)
-    TextView debugTextWall;
-
-    private MediaRecorder mRecorder;
-    private MediaPlayer mPlayer = new MediaPlayer();
-    private String audioFileName;
-    private boolean createDirSuccess;
+    @BindView(R.id.create_post_btn)
+    Button createPostBtn;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
-
-    static final int REQUEST_TAKE_PHOTO = 1;
-    private String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +66,7 @@ public class WallActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser == null) {
-            startActivity(MainActivity.createIntent(this));
-            finish();
+            startMain();
             return;
         }
 
@@ -103,8 +79,6 @@ public class WallActivity extends AppCompatActivity {
 
         populateProfile(postID);
         populateIdpToken();
-
-        createDirSuccess = createAppDir();
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -129,13 +103,15 @@ public class WallActivity extends AppCompatActivity {
         String currentEmail = mUser.getEmail();
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-        String contentText = Environment.getExternalStorageDirectory().getAbsolutePath();
-        contentText += "\nYou have signed in as";
-        contentText += "\n" + currentUid;
+        String contentText = "";
+//        contentText += Environment.getExternalStorageDirectory().getAbsolutePath();
+//        contentText += "\nYou have signed in as";
+        contentText += "You have signed in as";
         contentText += "\n" + currentEmail;
-        contentText += "\n" + postID;
-        contentText += "\n" + timeStamp + "_audio" + ".3gp";
-        contentText += "\n" + timeStamp + "_image" + ".jpg";
+        contentText += "\n" + currentUid;
+//        contentText += "\n" + postID;
+//        contentText += "\n" + timeStamp + "_audio" + ".3gp";
+//        contentText += "\n" + timeStamp + "_image" + ".jpg";
 
         IDText.setText(contentText);
 
@@ -210,6 +186,12 @@ public class WallActivity extends AppCompatActivity {
                 .show();
     }
 
+    @OnClick(R.id.create_post_btn)
+    public void startCreatePost() {
+        Intent intent = new Intent(this, PostActivity.class);
+        startActivity(intent);
+    }
+
     private void startMain() {
         startActivity(MainActivity.createIntent(WallActivity.this));
         finish();
@@ -219,96 +201,5 @@ public class WallActivity extends AppCompatActivity {
         Intent intent = IdpResponse.getIntent(idpResponse);
         intent.setClass(context, WallActivity.class);
         return intent;
-    }
-
-    /*
-     * Prepare app directory
-     */
-    private boolean createAppDir() {
-        boolean createSuccess;
-
-        File appDir = new File(Environment.getExternalStorageDirectory() + "/" + R.string.app_name);
-        if (!appDir.exists()) {
-            createSuccess = appDir.mkdir();
-        } else {
-            createSuccess = true;
-        }
-
-        if (createSuccess) {
-            audioFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFileName += "/" + R.string.app_name + "/" + mUser.getUid() + "_audio" + R.string.audio_format;
-        }
-
-        return createSuccess;
-    }
-
-    /*
-     * Image handling methods
-     */
-    @OnClick(R.id.camera_btn)
-    public void dispatchTakePictureIntent(View view) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                photoFile = ImageHelper.createImageFile(storageDir);
-
-                // Save a file: path for use with ACTION_VIEW intents
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                // Terminate the app
-                this.finishAffinity();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.echodev.echoalpha.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-
-            galleryAddPic();
-        }
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(mCurrentPhotoPath);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-    @OnClick(R.id.view_btn)
-    public void setPic(View view) {
-        ImageHelper.setPicFromFile(mImageView, mCurrentPhotoPath);
-    }
-
-    /*
-     * Audio handling methods
-     */
-    @OnTouch(R.id.record_btn)
-    public boolean controlRecording(View view, MotionEvent event) {
-        if (createDirSuccess && event.getAction() == MotionEvent.ACTION_DOWN) {
-            // Start recording
-            AudioHelper.startRecording(audioFileName);
-        } else if (createDirSuccess && event.getAction() == MotionEvent.ACTION_UP) {
-            // Stop recording
-            AudioHelper.stopRecording(audioFileName);
-        }
-        return true;
-    }
-
-    @OnClick(R.id.play_btn)
-    public void playAudioLocal(View view) {
-        if (!createDirSuccess) {
-            return;
-        }
-
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        filePath += "/" + R.string.app_name + "/" + mUser.getUid() + "_audio" + R.string.audio_format;
-        AudioHelper.playAudioLocal(filePath);
     }
 }

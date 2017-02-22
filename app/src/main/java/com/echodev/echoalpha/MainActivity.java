@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Environment;
 import android.support.annotation.MainThread;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
@@ -24,6 +25,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.File;
 import java.util.Arrays;
 
 import butterknife.BindView;
@@ -49,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     Button quitBtn;
 
     private Resources localRes;
+    private static String appName;
     private boolean allPermissionGranted;
-    private FirebaseAuth mAuth;
     private IdpResponse mIdpResponse;
 
     @Override
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         localRes = this.getResources();
+        appName = localRes.getString(R.string.app_name);
 
         // To ensure the set-picture function is called after the activity's drawing phase is finished
         coverImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -72,13 +75,31 @@ public class MainActivity extends AppCompatActivity {
 
         requestPermission();
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             // User is signed in
             startWall();
         } else {
             // User is signed out
         }
+    }
+
+    // Prepare app directory
+    public static boolean createAppDir() {
+        boolean createSuccess = true;
+
+        File appDirPicture = new File(Environment.getExternalStorageDirectory() + "/" + appName + "/picture");
+        File appDirAudio = new File(Environment.getExternalStorageDirectory() + "/" + appName + "/audio");
+
+        if (!appDirPicture.exists()) {
+            createSuccess = appDirPicture.mkdir();
+        }
+
+        if (!appDirAudio.exists()) {
+            createSuccess = appDirAudio.mkdir();
+        }
+
+        return createSuccess;
     }
 
     private void requestPermission() {
@@ -104,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (!allPermissionGranted) {
             ActivityCompat.requestPermissions(this, permissionReqList, REQUEST_CODE_All_PERMISSIONS);
+        } else {
+            createAppDir();
         }
     }
 
@@ -114,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the contacts-related task you need to do.
+                    createAppDir();
                 } else {
                     // permission denied, boo! Disable the functionality that depends on this permission.
                 }
@@ -129,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setTheme(R.style.EchoTheme)
-                        .setLogo(R.drawable.echo_logo_200px)
+                        .setLogo(R.drawable.echowall_logo_bubble_500px)
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))

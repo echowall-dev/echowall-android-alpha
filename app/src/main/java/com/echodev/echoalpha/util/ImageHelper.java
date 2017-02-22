@@ -34,11 +34,32 @@ public class ImageHelper {
         BitmapFactory.decodeResource(appRes, imgID, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
+
         float photoScale = (float) photoW/photoH;
 
         // Get the dimensions of the View
         int targetW = imgView.getWidth();
         int targetH = Math.round(targetW/photoScale);
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeResource(appRes, imgID, bmOptions);
+        imgView.setImageBitmap(bitmap);
+    }
+
+    public static void setPicFromResources(ImageView imgView, final int targetW, final int targetH, Resources appRes, int imgID) {
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(appRes, imgID, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
 
         // Determine how much to scale down the image
         int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
