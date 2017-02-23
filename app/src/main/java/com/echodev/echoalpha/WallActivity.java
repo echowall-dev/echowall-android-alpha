@@ -259,6 +259,14 @@ public class WallActivity extends AppCompatActivity {
 
         ImageView bubbleImageView = new ImageView(this);
         bubbleImageView.setLayoutParams(layoutParams);
+
+//        ImageButton bubbleImageButton = new ImageButton(this);
+//        bubbleImageButton.setLayoutParams(layoutParams);
+//        bubbleImageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//        bubbleImageButton.setAdjustViewBounds(true);
+//        bubbleImageButton.setPadding(0, 0, 0, 0);
+//        bubbleImageButton.setBackgroundColor(localRes.getColor(android.R.color.transparent));
+
         postImageArea.addView(bubbleImageView);
 
         switch (bubbleOrientation) {
@@ -284,6 +292,12 @@ public class WallActivity extends AppCompatActivity {
         String fileInfoText = "photo location:\n" + photoPath + "\n\naudio location:\n" + audioPath;
         TextView fileInfoTextView = new TextView(this);
         fileInfoTextView.setText(fileInfoText);
+        fileInfoTextView.setPadding(
+                localRes.getDimensionPixelSize(R.dimen.activity_horizontal_margin),
+                0,
+                localRes.getDimensionPixelSize(R.dimen.activity_horizontal_margin),
+                0
+        );
         postAppendArea.addView(fileInfoTextView);
     }
 
