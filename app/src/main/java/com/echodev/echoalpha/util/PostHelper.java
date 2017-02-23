@@ -7,6 +7,13 @@ import java.util.UUID;
  */
 
 public class PostHelper {
+
+    // Finite-state machine
+    public static final int STATE_PHOTO_PREPARE = 0;
+    public static final int STATE_AUDIO_PREPARE = 1;
+    public static final int STATE_BUBBLE_PREPARE = 2;
+    public static final int STATE_POST_READY = 3;
+
     private static final String LOG_TAG = "PostHelper";
 
     private final UUID postID = UUID.randomUUID();

@@ -13,6 +13,7 @@ import java.io.IOException;
  */
 
 public class AudioHelper {
+
     private static final String LOG_TAG = "AudioHelper";
 
     private static MediaRecorder mRecorder;

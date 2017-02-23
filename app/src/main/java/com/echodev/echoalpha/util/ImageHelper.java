@@ -18,6 +18,7 @@ import java.util.Date;
  */
 
 public class ImageHelper {
+
     private static final String LOG_TAG = "ImageHelper";
 
     private String mPostID, mUserID, mUserEmail;

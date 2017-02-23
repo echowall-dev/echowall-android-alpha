@@ -7,6 +7,7 @@ import java.util.Date;
  */
 
 public class CommentHelper {
+
     private String postID, userID, userEmail;
     private Date creationDate;
     private int languageCode;

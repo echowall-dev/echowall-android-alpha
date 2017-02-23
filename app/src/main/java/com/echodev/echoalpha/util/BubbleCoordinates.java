@@ -5,6 +5,7 @@ package com.echodev.echoalpha.util;
  */
 
 public class BubbleCoordinates {
+
     private int x, y;
 
     public BubbleCoordinates(final int x, final int y) {

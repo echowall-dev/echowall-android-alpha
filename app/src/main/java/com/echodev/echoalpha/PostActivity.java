@@ -15,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.echodev.echoalpha.util.AudioHelper;
+import com.echodev.echoalpha.util.SpeechBubble;
 import com.echodev.echoalpha.util.ImageHelper;
+import com.echodev.echoalpha.util.PostHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +30,10 @@ import butterknife.OnClick;
 import butterknife.OnTouch;
 
 public class PostActivity extends AppCompatActivity {
-    public static final char SPEECH_BUBBLE_LEFT = 'L';
-    public static final char SPEECH_BUBBLE_RIGHT = 'R';
-    static final int REQUEST_TAKE_PHOTO = 103;
+
+    public static final int REQUEST_TAKE_PHOTO = 120;
+
+    private int currentPostState;
 
     @BindView(R.id.camera_btn)
     Button cameraBtn;
@@ -53,8 +56,9 @@ public class PostActivity extends AppCompatActivity {
     @BindView(R.id.preview_image)
     ImageView previewImage;
 
-    private ImageView speechBubble;
-    private int dX, dY, targetX, targetY, finalX, finalY;
+    private ImageView bubbleImageView;
+    private int dX, dY, targetX, targetY, finalX, finalY, finalOrientation;
+//    private SpeechBubble speechBubble;
 
     private Resources localRes;
     private static String appName, audioFormat;
@@ -68,10 +72,14 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
         ButterKnife.bind(this);
 
+        currentPostState = PostHelper.STATE_PHOTO_PREPARE;
+
         Bundle bundle = getIntent().getExtras();
         userID = bundle.getString("userID");
         userEmail = bundle.getString("userEmail");
         postID = bundle.getString("postID");
+
+//        SpeechBubble speechBubble = new SpeechBubble(postID, userEmail);
 
         localRes = this.getResources();
         appName = localRes.getString(R.string.app_name);
@@ -87,6 +95,10 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.camera_btn)
     public void dispatchTakePictureIntent(View view) {
+        if (currentPostState != PostHelper.STATE_PHOTO_PREPARE) {
+            return;
+        }
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -126,6 +138,8 @@ public class PostActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     galleryAddPic();
                     ImageHelper.setPicFromFile(previewImage, photoFilePath);
+
+                    currentPostState = PostHelper.STATE_AUDIO_PREPARE;
                 }
                 break;
             default:
@@ -135,6 +149,10 @@ public class PostActivity extends AppCompatActivity {
 
     @OnTouch(R.id.record_btn)
     public boolean recordAudioLocal(View view, MotionEvent event) {
+        if (currentPostState != PostHelper.STATE_AUDIO_PREPARE) {
+            return false;
+        }
+
         if (appDirExist && event.getAction() == MotionEvent.ACTION_DOWN) {
             // Start recording
             AudioHelper.startRecording(audioFilePath);
@@ -142,6 +160,8 @@ public class PostActivity extends AppCompatActivity {
             // Stop recording
             AudioHelper.stopRecording(audioFilePath);
         }
+
+        currentPostState = PostHelper.STATE_BUBBLE_PREPARE;
         return true;
     }
 
@@ -155,15 +175,19 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_bubble_btn_l)
     public void addSpeechBubbleL() {
-        addSpeechBubble(SPEECH_BUBBLE_LEFT);
+        addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_LEFT);
     }
 
     @OnClick(R.id.add_bubble_btn_r)
     public void addSpeechBubbleR() {
-        addSpeechBubble(SPEECH_BUBBLE_RIGHT);
+        addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_RIGHT);
     }
 
-    private void addSpeechBubble(final char bubbleOrientation) {
+    private void addSpeechBubble(final int bubbleOrientation) {
+        if (currentPostState != PostHelper.STATE_BUBBLE_PREPARE) {
+            return;
+        }
+
         // Get the dimensions of the View
         int targetW = localRes.getDimensionPixelSize(R.dimen.bubble_width);
         int targetH = localRes.getDimensionPixelSize(R.dimen.bubble_height);
@@ -172,17 +196,21 @@ public class PostActivity extends AppCompatActivity {
         layoutParams.leftMargin = (int) ((previewArea.getWidth() - targetW) * 0.5);
         layoutParams.topMargin = (int) ((previewArea.getHeight() - targetH) * 0.5);
 
-        speechBubble = new ImageView(this);
-        speechBubble.setLayoutParams(layoutParams);
-        previewArea.addView(speechBubble);
+        bubbleImageView = new ImageView(this);
+        bubbleImageView.setLayoutParams(layoutParams);
+        previewArea.addView(bubbleImageView);
 
-        if (bubbleOrientation == SPEECH_BUBBLE_LEFT) {
-            ImageHelper.setPicFromResources(speechBubble, targetW, targetH, localRes, R.drawable.speech_bubble_l);
-        } else if (bubbleOrientation == SPEECH_BUBBLE_RIGHT) {
-            ImageHelper.setPicFromResources(speechBubble, targetW, targetH, localRes, R.drawable.speech_bubble_r);
+        if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_LEFT) {
+            finalOrientation = SpeechBubble.SPEECH_BUBBLE_LEFT;
+            ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
+        } else if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_RIGHT) {
+            finalOrientation = SpeechBubble.SPEECH_BUBBLE_RIGHT;
+            ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
         }
 
-        speechBubble.setOnTouchListener(adjustBubbleListener);
+        bubbleImageView.setOnTouchListener(adjustBubbleListener);
+
+        currentPostState = PostHelper.STATE_POST_READY;
     }
 
     private View.OnTouchListener adjustBubbleListener = new View.OnTouchListener() {
@@ -225,14 +253,21 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.finish_btn)
     public void finishPost() {
+        if (currentPostState != PostHelper.STATE_POST_READY) {
+            return;
+        }
+
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
 
         bundle.putString("photoPath", photoFilePath);
         bundle.putString("audioPath", audioFilePath);
+        bundle.putInt("bubbleOrientation", finalOrientation);
         bundle.putInt("bubbleX", finalX);
         bundle.putInt("bubbleY", finalY);
         intent.putExtras(bundle);
+
+        currentPostState = PostHelper.STATE_PHOTO_PREPARE;
 
         setResult(RESULT_OK, intent);
         finish();

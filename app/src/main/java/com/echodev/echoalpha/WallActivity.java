@@ -8,8 +8,10 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -28,8 +30,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class WallActivity extends AppCompatActivity {
+
     private static final String LOG_TAG = "Record_audio_message";
-    private static final int REQUEST_CODE_POST = 102;
+    private static final int REQUEST_CODE_POST = 110;
 
     @BindView(android.R.id.content)
     View mRootView;
@@ -42,6 +45,9 @@ public class WallActivity extends AppCompatActivity {
 
     @BindView(R.id.create_post_btn)
     Button createPostBtn;
+
+    @BindView(R.id.post_area)
+    LinearLayout postArea;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -197,14 +203,22 @@ public class WallActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     String photoPath = data.getExtras().getString("photoPath");
                     String audioPath = data.getExtras().getString("audioPath");
+                    int bubbleOrientation = data.getExtras().getInt("bubbleOrientation");
                     int bubbleX = data.getExtras().getInt("bubbleX");
                     int bubbleY = data.getExtras().getInt("bubbleY");
 
                     String contentText = "";
                     contentText += "photoPath: " + photoPath;
                     contentText += "\naudioPath: " + audioPath;
+                    contentText += "\nbubbleOrientation: " + bubbleOrientation;
                     contentText += "\nbubbleX: " + bubbleX + " bubbleY: " + bubbleY;
                     IDText.setText(contentText);
+
+                    View view = LayoutInflater.from(postArea.getContext())
+                            .inflate(R.layout.post_layout, postArea, false);
+
+                    TextView postCaption = (TextView) view.findViewById(R.id.post_caption);
+                    postCaption.setText("Post created");
                 }
                 break;
             default:
