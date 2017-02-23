@@ -59,7 +59,7 @@ public class AudioHelper {
                 e.printStackTrace();
             }
             mPlayer.start();
-            mPlayer.release();
+//            mPlayer.release();
         }
     }
 

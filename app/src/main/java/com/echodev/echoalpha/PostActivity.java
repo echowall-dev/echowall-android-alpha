@@ -152,19 +152,20 @@ public class PostActivity extends AppCompatActivity {
 
     @OnTouch(R.id.record_btn)
     public boolean recordAudioLocal(View view, MotionEvent event) {
-        if (currentPostState != PostHelper.STATE_AUDIO_PREPARE) {
+        if (!appDirExist || currentPostState != PostHelper.STATE_AUDIO_PREPARE) {
             return false;
         }
 
-        if (appDirExist && event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             // Start recording
             AudioHelper.startRecording(audioFilePath);
-        } else if (appDirExist && event.getAction() == MotionEvent.ACTION_UP) {
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             // Stop recording
             AudioHelper.stopRecording(audioFilePath);
+
+            currentPostState = PostHelper.STATE_BUBBLE_PREPARE;
         }
 
-        currentPostState = PostHelper.STATE_BUBBLE_PREPARE;
         return true;
     }
 

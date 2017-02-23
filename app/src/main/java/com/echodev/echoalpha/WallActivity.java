@@ -276,11 +276,15 @@ public class WallActivity extends AppCompatActivity {
         bubbleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String debugMsg = "photo location:\n" + photoPath + "\n\naudio location:\n" + audioPath;
-                IDText.setText(debugMsg);
                 AudioHelper.playAudioLocal(audioPath);
             }
         });
+
+        // Add files path info at the bottom of the post
+        String fileInfoText = "photo location:\n" + photoPath + "\n\naudio location:\n" + audioPath;
+        TextView fileInfoTextView = new TextView(this);
+        fileInfoTextView.setText(fileInfoText);
+        postAppendArea.addView(fileInfoTextView);
     }
 
     private void startMain() {
