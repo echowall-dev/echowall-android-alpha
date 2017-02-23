@@ -17,7 +17,7 @@ public class AudioHelper {
     private static final String LOG_TAG = "AudioHelper";
 
     private static MediaRecorder mRecorder;
-    private MediaPlayer mPlayer = new MediaPlayer();
+    private MediaPlayer mPlayer;
     private String mFileName;
 
     private String mPostID, mUserID, mUserEmail;
@@ -59,7 +59,7 @@ public class AudioHelper {
                 e.printStackTrace();
             }
             mPlayer.start();
-//            mPlayer.release();
+            mPlayer.release();
         }
     }
 

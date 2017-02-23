@@ -8,7 +8,7 @@
     <string name="camera">Take photo</string>
     <string name="view">View photo</string>
     <string name="record">Record audio</string>
-    <string name="play">Play audio</string>
+    <string name="play">Preview audio</string>
     <string name="unknown_response">Unexpected onActivityResult response code</string>
     <string name="unknown_sign_in_response">Unknown response from AuthUI sign-in</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>

@@ -39,7 +39,10 @@ public class PostActivity extends AppCompatActivity {
     Button cameraBtn;
 
     @BindView(R.id.record_btn)
-    Button Record_btn;
+    Button recordBtn;
+
+    @BindView(R.id.play_btn)
+    Button playBtn;
 
     @BindView(R.id.add_bubble_btn_l)
     Button addBubbleBtnL;
@@ -165,12 +168,11 @@ public class PostActivity extends AppCompatActivity {
         return true;
     }
 
+    @OnClick(R.id.play_btn)
     public void playAudioLocal(View view) {
-        if (!appDirExist) {
-            return;
+        if (appDirExist && currentPostState == PostHelper.STATE_BUBBLE_PREPARE) {
+            AudioHelper.playAudioLocal(audioFilePath);
         }
-
-        AudioHelper.playAudioLocal(audioFilePath);
     }
 
     @OnClick(R.id.add_bubble_btn_l)
@@ -202,9 +204,11 @@ public class PostActivity extends AppCompatActivity {
 
         if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_LEFT) {
             finalOrientation = SpeechBubble.SPEECH_BUBBLE_LEFT;
+//            ImageHelper.setPicFromResources(bubbleImageView, localRes, R.drawable.speech_bubble_l);
             ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
         } else if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_RIGHT) {
             finalOrientation = SpeechBubble.SPEECH_BUBBLE_RIGHT;
+//            ImageHelper.setPicFromResources(bubbleImageView, localRes, R.drawable.speech_bubble_r);
             ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
         }
 

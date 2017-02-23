@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Post Container-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin">
 
+    <!--Post Body: CardView-->
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         card_view:cardCornerRadius="@dimen/card_corner_radius">
 
+        <!--Post Body Layout-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!--Post Body: users section-->
+            <TextView
+                android:id="@+id/post_user_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!--Post Body: photo section-->
             <RelativeLayout
+                android:id="@+id/post_image_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
@@ -28,10 +43,23 @@
                     android:adjustViewBounds="true"/>
             </RelativeLayout>
 
+            <!--Post Body: function section-->
             <TextView
+                android:id="@+id/post_like_number"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/post_caption" />
+                android:layout_height="wrap_content" />
+
+            <!--Post Body: caption section-->
+            <TextView
+                android:id="@+id/post_caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--Post Body: record section-->
+            <TextView
+                android:id="@+id/post_creation_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
