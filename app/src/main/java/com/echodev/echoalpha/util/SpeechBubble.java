@@ -1,11 +1,8 @@
 package com.echodev.echoalpha.util;
 
 import android.content.res.Resources;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.bumptech.glide.load.engine.Resource;
 
 import java.util.Date;
 

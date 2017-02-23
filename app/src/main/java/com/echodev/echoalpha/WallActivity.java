@@ -2,6 +2,7 @@ package com.echodev.echoalpha;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -10,10 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.echodev.echoalpha.util.AudioHelper;
+import com.echodev.echoalpha.util.ImageHelper;
+import com.echodev.echoalpha.util.SpeechBubble;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,13 +53,14 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.create_post_btn)
     Button createPostBtn;
 
-    @BindView(R.id.post_area)
-    LinearLayout postArea;
+    @BindView(R.id.post_append_area)
+    LinearLayout postAppendArea;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
 
+    private Resources localRes;
     private String postID;
 
     @Override
@@ -71,6 +79,7 @@ public class WallActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
 
+        localRes = this.getResources();
         postID = UUID.randomUUID().toString();
 
         populateProfile(postID);
@@ -201,29 +210,77 @@ public class WallActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
-                    String photoPath = data.getExtras().getString("photoPath");
-                    String audioPath = data.getExtras().getString("audioPath");
-                    int bubbleOrientation = data.getExtras().getInt("bubbleOrientation");
-                    int bubbleX = data.getExtras().getInt("bubbleX");
-                    int bubbleY = data.getExtras().getInt("bubbleY");
-
-                    String contentText = "";
-                    contentText += "photoPath: " + photoPath;
-                    contentText += "\naudioPath: " + audioPath;
-                    contentText += "\nbubbleOrientation: " + bubbleOrientation;
-                    contentText += "\nbubbleX: " + bubbleX + " bubbleY: " + bubbleY;
-                    IDText.setText(contentText);
-
-                    View view = LayoutInflater.from(postArea.getContext())
-                            .inflate(R.layout.post_layout, postArea, false);
-
-                    TextView postCaption = (TextView) view.findViewById(R.id.post_caption);
-                    postCaption.setText("Post created");
+                    addPost(postAppendArea, data.getExtras());
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    private void addPost(ViewGroup postAppendArea, Bundle postBundle) {
+        // Fetch the data of the new post
+        final String photoPath = postBundle.getString("photoPath");
+        final String audioPath = postBundle.getString("audioPath");
+        final int bubbleOrientation = postBundle.getInt("bubbleOrientation");
+        final int bubbleX = postBundle.getInt("bubbleX");
+        final int bubbleY = postBundle.getInt("bubbleY");
+
+        // Prepare an empty post
+        View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, true);
+
+        // Prepare the views of the post
+        TextView postUserProfile = (TextView) view.findViewById(R.id.post_user_profile);
+        RelativeLayout postImageArea = (RelativeLayout) view.findViewById(R.id.post_image_area);
+        ImageView postImage = (ImageView) view.findViewById(R.id.post_image);
+        TextView postLikeNumber = (TextView) view.findViewById(R.id.post_like_number);
+        TextView postCaption = (TextView) view.findViewById(R.id.post_caption);
+        TextView postCreationTime = (TextView) view.findViewById(R.id.post_creation_time);
+
+        // Set template info
+        postUserProfile.setText(mUser.getEmail());
+        postLikeNumber.setText("0 Like");
+        postCaption.setText("Peter:\nWhat a beautiful day!");
+        postCreationTime.setText("23/02/2017");
+
+        // Add the photo
+//        ImageHelper.setPicFromFile(postImage, photoPath);
+        ImageHelper.setPicFromFile(postImage, postAppendArea.getWidth(), photoPath);
+
+        // Add the speech bubble at target position
+
+        // Get the dimensions of the View
+        int targetW = localRes.getDimensionPixelSize(R.dimen.bubble_width);
+        int targetH = localRes.getDimensionPixelSize(R.dimen.bubble_height);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetW, targetH);
+        layoutParams.leftMargin = bubbleX;
+        layoutParams.topMargin = bubbleY;
+
+        ImageView bubbleImageView = new ImageView(this);
+        bubbleImageView.setLayoutParams(layoutParams);
+        postImageArea.addView(bubbleImageView);
+
+        switch (bubbleOrientation) {
+            case SpeechBubble.SPEECH_BUBBLE_LEFT:
+                ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
+                break;
+            case SpeechBubble.SPEECH_BUBBLE_RIGHT:
+                ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
+                break;
+            default:
+                break;
+        }
+
+        // Bind play audio function to the speech bubble
+        bubbleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String debugMsg = "photo location:\n" + photoPath + "\n\naudio location:\n" + audioPath;
+                IDText.setText(debugMsg);
+                AudioHelper.playAudioLocal(audioPath);
+            }
+        });
     }
 
     private void startMain() {
