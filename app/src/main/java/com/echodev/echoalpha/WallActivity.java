@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.ImageHelper;
+import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -211,6 +212,7 @@ public class WallActivity extends AppCompatActivity {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
                     addPost(postAppendArea, data.getExtras());
+//                    PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
                 }
                 break;
             default:
@@ -218,13 +220,27 @@ public class WallActivity extends AppCompatActivity {
         }
     }
 
-    private void addPost(ViewGroup postAppendArea, Bundle postBundle) {
+    private void addPost(ViewGroup postAppendArea, Bundle postbundle) {
         // Fetch the data of the new post
-        final String photoPath = postBundle.getString("photoPath");
-        final String audioPath = postBundle.getString("audioPath");
-        final int bubbleOrientation = postBundle.getInt("bubbleOrientation");
-        final int bubbleX = postBundle.getInt("bubbleX");
-        final int bubbleY = postBundle.getInt("bubbleY");
+//        final String photoPath = postBundle.getString("photoPath");
+//        final String audioPath = postBundle.getString("audioPath");
+//        final int bubbleType = postBundle.getInt("bubbleType");
+//        final int bubbleX = postBundle.getInt("bubbleX");
+//        final int bubbleY = postBundle.getInt("bubbleY");
+
+        PostClass newPost = (PostClass) postbundle.getParcelable("newPost");
+        SpeechBubble newSpeechBubble = newPost.getSpeechBubble(0);
+        final String photoPath = newPost.getPhotoPath();
+        final String audioPath = newSpeechBubble.getAudioPath();
+        final int bubbleType = newSpeechBubble.getType();
+        final int bubbleX = newSpeechBubble.getX();
+        final int bubbleY = newSpeechBubble.getY();
+
+//        final String photoPath = postBundle.getString("photoPath");
+//        final String audioPath = postBundle.getString("audioPath");
+//        final int bubbleType = postBundle.getInt("bubbleType");
+//        final int bubbleX = postBundle.getInt("bubbleX");
+//        final int bubbleY = postBundle.getInt("bubbleY");
 
         // Prepare an empty post
         View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, true);
@@ -269,7 +285,7 @@ public class WallActivity extends AppCompatActivity {
 
         postImageArea.addView(bubbleImageView);
 
-        switch (bubbleOrientation) {
+        switch (bubbleType) {
             case SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT:
                 ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
                 break;

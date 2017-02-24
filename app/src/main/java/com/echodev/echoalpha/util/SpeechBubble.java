@@ -1,6 +1,8 @@
 package com.echodev.echoalpha.util;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Date;
 
@@ -8,7 +10,7 @@ import java.util.Date;
  * Created by Ho on 19/2/2017.
  */
 
-public class SpeechBubble {
+public class SpeechBubble implements Parcelable {
 
     public static final int SPEECH_BUBBLE_TYPE_LEFT = 200;
     public static final int SPEECH_BUBBLE_TYPE_RIGHT = 201;
@@ -122,5 +124,50 @@ public class SpeechBubble {
 
     public Date getDate() {
         return this.creationDate;
+    }
+
+    // Parcelable implementation
+    protected SpeechBubble(Parcel in) {
+        postID = in.readString();
+        userID = in.readString();
+        userEmail = in.readString();
+        bubbleID = in.readString();
+        x = in.readInt();
+        y = in.readInt();
+        type = in.readInt();
+        audioPath = in.readString();
+        audioUri = in.readParcelable(Uri.class.getClassLoader());
+        languageCode = in.readInt();
+    }
+
+    public static final Creator<SpeechBubble> CREATOR = new Creator<SpeechBubble>() {
+        @Override
+        public SpeechBubble createFromParcel(Parcel in) {
+            return new SpeechBubble(in);
+        }
+
+        @Override
+        public SpeechBubble[] newArray(int size) {
+            return new SpeechBubble[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(postID);
+        dest.writeString(userID);
+        dest.writeString(userEmail);
+        dest.writeString(bubbleID);
+        dest.writeInt(x);
+        dest.writeInt(y);
+        dest.writeInt(type);
+        dest.writeString(audioPath);
+        dest.writeParcelable(audioUri, flags);
+        dest.writeInt(languageCode);
     }
 }

@@ -1,5 +1,8 @@
 package com.echodev.echoalpha.util;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -8,7 +11,7 @@ import java.util.UUID;
  * Created by Ho on 7/2/2017.
  */
 
-public class PostClass {
+public class PostClass implements Parcelable {
 
     // Post states for finite-state machine
     public static final int STATE_PHOTO_PREPARE = 0;
@@ -19,8 +22,8 @@ public class PostClass {
     // Class variables
     public static final String LOG_TAG = "PostClass";
 
-    private final UUID postID = UUID.randomUUID();
-    private final String postIDString = postID.toString();
+    private UUID postID = UUID.randomUUID();
+    private String postIDString = postID.toString();
 
     // Instance variables
     private int currentPostState;
@@ -28,6 +31,7 @@ public class PostClass {
     private ArrayList<SpeechBubble> speechBubbleList;
     private Date creationDate;
 
+    // Constructors
     public PostClass() {
         this.currentPostState = STATE_PHOTO_PREPARE;
         this.speechBubbleList = new ArrayList<SpeechBubble>();
@@ -56,6 +60,10 @@ public class PostClass {
 
     public ArrayList<SpeechBubble> getSpeechBubbleList() {
         return speechBubbleList;
+    }
+
+    public int getCurrentPostState() {
+        return currentPostState;
     }
 
     public Date getCreationDate() {
@@ -88,6 +96,10 @@ public class PostClass {
         return this;
     }
 
+    public void setCurrentPostState(int currentPostState) {
+        this.currentPostState = currentPostState;
+    }
+
     // Class methods
     public static PostClass createPost() {
         return new PostClass();
@@ -108,5 +120,50 @@ public class PostClass {
 
     public void removeSpeechBubble(SpeechBubble speechBubble) {
         this.speechBubbleList.remove(speechBubble);
+    }
+
+    public SpeechBubble getSpeechBubble(int i) {
+        return this.speechBubbleList.get(i);
+    }
+
+    public boolean matchCurrentPostState(int currentPostState) {
+        return this.currentPostState == currentPostState;
+    }
+
+    // Parcelable implementation
+    protected PostClass(Parcel in) {
+        postIDString = in.readString();
+        currentPostState = in.readInt();
+        userID = in.readString();
+        userEmail = in.readString();
+        photoPath = in.readString();
+        speechBubbleList = in.createTypedArrayList(SpeechBubble.CREATOR);
+    }
+
+    public static final Creator<PostClass> CREATOR = new Creator<PostClass>() {
+        @Override
+        public PostClass createFromParcel(Parcel in) {
+            return new PostClass(in);
+        }
+
+        @Override
+        public PostClass[] newArray(int size) {
+            return new PostClass[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(postIDString);
+        dest.writeInt(currentPostState);
+        dest.writeString(userID);
+        dest.writeString(userEmail);
+        dest.writeString(photoPath);
+        dest.writeTypedList(speechBubbleList);
     }
 }
