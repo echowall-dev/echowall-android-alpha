@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.echodev.echoalpha.util.ImageHelper;
-import com.echodev.echoalpha.util.PostHelper;
+import com.echodev.echoalpha.util.PostClass;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +61,8 @@ public class PostActivity extends AppCompatActivity {
 
     private ImageView bubbleImageView;
     private int dX, dY, targetX, targetY, finalX, finalY, finalOrientation;
-//    private SpeechBubble speechBubble;
+    private PostClass newPost;
+    private SpeechBubble speechBubble;
 
     private Resources localRes;
     private static String appName, audioFormat;
@@ -75,7 +76,7 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
         ButterKnife.bind(this);
 
-        currentPostState = PostHelper.STATE_PHOTO_PREPARE;
+        currentPostState = PostClass.STATE_PHOTO_PREPARE;
 
         Bundle bundle = getIntent().getExtras();
         userID = bundle.getString("userID");
@@ -98,7 +99,7 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.camera_btn)
     public void dispatchTakePictureIntent(View view) {
-        if (currentPostState != PostHelper.STATE_PHOTO_PREPARE) {
+        if (currentPostState != PostClass.STATE_PHOTO_PREPARE) {
             return;
         }
 
@@ -142,7 +143,7 @@ public class PostActivity extends AppCompatActivity {
                     galleryAddPic();
                     ImageHelper.setPicFromFile(previewImage, photoFilePath);
 
-                    currentPostState = PostHelper.STATE_AUDIO_PREPARE;
+                    currentPostState = PostClass.STATE_AUDIO_PREPARE;
                 }
                 break;
             default:
@@ -152,7 +153,7 @@ public class PostActivity extends AppCompatActivity {
 
     @OnTouch(R.id.record_btn)
     public boolean recordAudioLocal(View view, MotionEvent event) {
-        if (!appDirExist || currentPostState != PostHelper.STATE_AUDIO_PREPARE) {
+        if (!appDirExist || currentPostState != PostClass.STATE_AUDIO_PREPARE) {
             return false;
         }
 
@@ -163,7 +164,7 @@ public class PostActivity extends AppCompatActivity {
             // Stop recording
             AudioHelper.stopRecording(audioFilePath);
 
-            currentPostState = PostHelper.STATE_BUBBLE_PREPARE;
+            currentPostState = PostClass.STATE_BUBBLE_PREPARE;
         }
 
         return true;
@@ -171,23 +172,23 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.play_btn)
     public void playAudioLocal(View view) {
-        if (appDirExist && currentPostState == PostHelper.STATE_BUBBLE_PREPARE) {
+        if (appDirExist && currentPostState == PostClass.STATE_BUBBLE_PREPARE) {
             AudioHelper.playAudioLocal(audioFilePath);
         }
     }
 
     @OnClick(R.id.add_bubble_btn_l)
     public void addSpeechBubbleL() {
-        addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_LEFT);
+        addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT);
     }
 
     @OnClick(R.id.add_bubble_btn_r)
     public void addSpeechBubbleR() {
-        addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_RIGHT);
+        addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT);
     }
 
     private void addSpeechBubble(final int bubbleOrientation) {
-        if (currentPostState != PostHelper.STATE_BUBBLE_PREPARE) {
+        if (currentPostState != PostClass.STATE_BUBBLE_PREPARE) {
             return;
         }
 
@@ -203,19 +204,19 @@ public class PostActivity extends AppCompatActivity {
         bubbleImageView.setLayoutParams(layoutParams);
         previewArea.addView(bubbleImageView);
 
-        if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_LEFT) {
-            finalOrientation = SpeechBubble.SPEECH_BUBBLE_LEFT;
+        if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) {
+            finalOrientation = SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT;
 //            ImageHelper.setPicFromResources(bubbleImageView, localRes, R.drawable.speech_bubble_l);
             ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
-        } else if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_RIGHT) {
-            finalOrientation = SpeechBubble.SPEECH_BUBBLE_RIGHT;
+        } else if (bubbleOrientation == SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT) {
+            finalOrientation = SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT;
 //            ImageHelper.setPicFromResources(bubbleImageView, localRes, R.drawable.speech_bubble_r);
             ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
         }
 
         bubbleImageView.setOnTouchListener(adjustBubbleListener);
 
-        currentPostState = PostHelper.STATE_POST_READY;
+        currentPostState = PostClass.STATE_POST_READY;
     }
 
     private View.OnTouchListener adjustBubbleListener = new View.OnTouchListener() {
@@ -258,7 +259,7 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.finish_btn)
     public void finishPost() {
-        if (currentPostState != PostHelper.STATE_POST_READY) {
+        if (currentPostState != PostClass.STATE_POST_READY) {
             return;
         }
 
@@ -272,7 +273,7 @@ public class PostActivity extends AppCompatActivity {
         bundle.putInt("bubbleY", finalY);
         intent.putExtras(bundle);
 
-        currentPostState = PostHelper.STATE_PHOTO_PREPARE;
+        currentPostState = PostClass.STATE_PHOTO_PREPARE;
 
         setResult(RESULT_OK, intent);
         finish();

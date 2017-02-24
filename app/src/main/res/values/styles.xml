@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorSecondary</item>
-        <item name="colorPrimaryDark">@color/colorSecondary</item>
+        <item name="colorPrimary">@color/colorTest</item>
+        <item name="colorPrimaryDark">@color/colorTest</item>
         <item name="colorAccent">@color/colorcolorSecondaryDark</item>
     </style>
 
@@ -12,6 +12,13 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorSecondary</item>
         <item name="colorPrimaryDark">@color/colorSecondary</item>
+        <item name="colorAccent">@color/colorcolorSecondaryDark</item>
+    </style>
+
+    <style name="TestTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorTest</item>
+        <item name="colorPrimaryDark">@color/colorTest</item>
         <item name="colorAccent">@color/colorcolorSecondaryDark</item>
     </style>
 

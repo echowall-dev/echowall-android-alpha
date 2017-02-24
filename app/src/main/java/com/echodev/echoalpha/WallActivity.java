@@ -270,10 +270,10 @@ public class WallActivity extends AppCompatActivity {
         postImageArea.addView(bubbleImageView);
 
         switch (bubbleOrientation) {
-            case SpeechBubble.SPEECH_BUBBLE_LEFT:
+            case SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT:
                 ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
                 break;
-            case SpeechBubble.SPEECH_BUBBLE_RIGHT:
+            case SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT:
                 ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
                 break;
             default:

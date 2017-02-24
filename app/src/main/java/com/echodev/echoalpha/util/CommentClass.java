@@ -6,38 +6,38 @@ import java.util.Date;
  * Created by Ho on 19/2/2017.
  */
 
-public class CommentHelper {
+public class CommentClass {
 
     private String postID, userID, userEmail;
     private Date creationDate;
     private int languageCode;
 
-    public CommentHelper(String postID, String userEmail) {
+    public CommentClass(String postID, String userEmail) {
         this.postID = postID;
         this.userEmail = userEmail;
     }
 
-    public CommentHelper setPostID(String postID) {
+    public CommentClass setPostID(String postID) {
         this.postID = postID;
         return this;
     }
 
-    public CommentHelper setUserID(String userID) {
+    public CommentClass setUserID(String userID) {
         this.userID = userID;
         return this;
     }
 
-    public CommentHelper setUserEmail(String userEmail) {
+    public CommentClass setUserEmail(String userEmail) {
         this.userEmail = userEmail;
         return this;
     }
 
-    public CommentHelper setDate(Date creationDate) {
+    public CommentClass setDate(Date creationDate) {
         this.creationDate = creationDate;
         return this;
     }
 
-    public CommentHelper setLanguage(int languageCode) {
+    public CommentClass setLanguage(int languageCode) {
         this.languageCode = languageCode;
         return this;
     }

@@ -1,8 +1,6 @@
 package com.echodev.echoalpha.util;
 
-import android.content.res.Resources;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.net.Uri;
 
 import java.util.Date;
 
@@ -12,15 +10,17 @@ import java.util.Date;
 
 public class SpeechBubble {
 
-    public static final int SPEECH_BUBBLE_LEFT = 200;
-    public static final int SPEECH_BUBBLE_RIGHT = 201;
+    public static final int SPEECH_BUBBLE_TYPE_LEFT = 200;
+    public static final int SPEECH_BUBBLE_TYPE_RIGHT = 201;
 
-    private String postID, userID, userEmail;
-    private int x, y, orientation;
-    private ImageView bubbleImageView;
+    private String postID, userID, userEmail, bubbleID;
+    private int x, y, type;
+    private String audioPath;
+    private Uri audioUri;
     private Date creationDate;
     private int languageCode;
 
+    // Constructors
     public SpeechBubble(String postID, String userEmail) {
         this.postID = postID;
         this.userEmail = userEmail;
@@ -33,6 +33,15 @@ public class SpeechBubble {
         this.y = y;
     }
 
+    public SpeechBubble(String postID, String userEmail, int x, int y, int type) {
+        this.postID = postID;
+        this.userEmail = userEmail;
+        this.x = x;
+        this.y = y;
+        this.type = type;
+    }
+
+    // Setters
     public SpeechBubble setPostID(String postID) {
         this.postID = postID;
         return this;
@@ -58,21 +67,27 @@ public class SpeechBubble {
         return this;
     }
 
-    public SpeechBubble setOrientation(int orientation) {
-        this.orientation = orientation;
+    public SpeechBubble setType(int type) {
+        this.type = type;
         return this;
     }
 
-    public SpeechBubble setDate(Date creationDate) {
+    public SpeechBubble setAudioPath(String audioPath) {
+        this.audioPath = audioPath;
+        return this;
+    }
+
+    public SpeechBubble setAudioUri(Uri audioUri) {
+        this.audioUri = audioUri;
+        return this;
+    }
+
+    public SpeechBubble setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
         return this;
     }
 
-    public SpeechBubble setLanguage(int languageCode) {
-        this.languageCode = languageCode;
-        return this;
-    }
-
+    // Getters
     public String getPostID() {
         return this.postID;
     }
@@ -93,19 +108,19 @@ public class SpeechBubble {
         return this.y;
     }
 
-    public int getOrientation() {
-        return this.orientation;
+    public int getType() {
+        return this.type;
+    }
+
+    public String getAudioPath() {
+        return this.audioPath;
+    }
+
+    public Uri getAudioUri() {
+        return this.audioUri;
     }
 
     public Date getDate() {
         return this.creationDate;
-    }
-
-    public int getLanguageCode() {
-        return this.languageCode;
-    }
-
-    public boolean addBubble(Resources resources, ViewGroup placeArea) {
-        return true;
     }
 }
