@@ -85,6 +85,13 @@ public class WallActivity extends AppCompatActivity {
 
         populateProfile(postID);
         populateIdpToken();
+
+        // Add files path info at the bottom of the page
+        String photoPathInfo = "photo";
+        String audioPathInfo = "audio";
+        String filePathInfo = "photo location:\n" + photoPathInfo + "\n\naudio location:\n" + audioPathInfo;
+        TextView filePathInfoTextView = (TextView) findViewById(R.id.file_path_info);
+        filePathInfoTextView.setText(filePathInfo);
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -211,8 +218,9 @@ public class WallActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
-                    addPost(postAppendArea, data.getExtras());
-//                    PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
+//                    addPost(postAppendArea, data.getExtras());
+                    PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
+                    addPost(postAppendArea, newPost);
                 }
                 break;
             default:
@@ -220,7 +228,7 @@ public class WallActivity extends AppCompatActivity {
         }
     }
 
-    private void addPost(ViewGroup postAppendArea, Bundle postbundle) {
+    private void addPost(ViewGroup postAppendArea, PostClass newPost) {
         // Fetch the data of the new post
 //        final String photoPath = postBundle.getString("photoPath");
 //        final String audioPath = postBundle.getString("audioPath");
@@ -228,7 +236,7 @@ public class WallActivity extends AppCompatActivity {
 //        final int bubbleX = postBundle.getInt("bubbleX");
 //        final int bubbleY = postBundle.getInt("bubbleY");
 
-        PostClass newPost = (PostClass) postbundle.getParcelable("newPost");
+//        PostClass newPost = (PostClass) postbundle.getParcelable("newPost");
         SpeechBubble newSpeechBubble = newPost.getSpeechBubble(0);
         final String photoPath = newPost.getPhotoPath();
         final String audioPath = newSpeechBubble.getAudioPath();
@@ -303,18 +311,6 @@ public class WallActivity extends AppCompatActivity {
                 AudioHelper.playAudioLocal(audioPath);
             }
         });
-
-        // Add files path info at the bottom of the post
-        String fileInfoText = "photo location:\n" + photoPath + "\n\naudio location:\n" + audioPath;
-        TextView fileInfoTextView = new TextView(this);
-        fileInfoTextView.setText(fileInfoText);
-        fileInfoTextView.setPadding(
-                localRes.getDimensionPixelSize(R.dimen.activity_horizontal_margin),
-                0,
-                localRes.getDimensionPixelSize(R.dimen.activity_horizontal_margin),
-                0
-        );
-        postAppendArea.addView(fileInfoTextView);
     }
 
     private void startMain() {

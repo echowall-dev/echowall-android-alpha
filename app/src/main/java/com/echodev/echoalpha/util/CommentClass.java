@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class CommentClass {
 
-    private String postID, userID, userEmail;
+    private String postID, userID, userEmail, commentID, content;
     private Date creationDate;
     private int languageCode;
 

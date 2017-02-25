@@ -66,7 +66,7 @@ public class PostActivity extends AppCompatActivity {
 
     private Resources localRes;
     private static String appName, audioFormat;
-    private boolean appDirExist;
+    private boolean appDirExist, postReady;
     private String userID, userEmail, postID;
     private String photoFilePath, audioFilePath;
 
@@ -77,6 +77,7 @@ public class PostActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         currentPostState = PostClass.STATE_PHOTO_PREPARE;
+        postReady = false;
 
         Bundle bundle = getIntent().getExtras();
         userID = bundle.getString("userID");
@@ -167,6 +168,7 @@ public class PostActivity extends AppCompatActivity {
             AudioHelper.stopRecording(audioFilePath);
 
             newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
+            postReady = false;
         }
 
         return true;
@@ -227,7 +229,9 @@ public class PostActivity extends AppCompatActivity {
 
         bubbleImageView.setOnTouchListener(adjustBubbleListener);
 
-        newPost.setCurrentPostState(PostClass.STATE_POST_READY);
+//        newPost.setCurrentPostState(PostClass.STATE_POST_READY);
+        newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
+        postReady = true;
     }
 
     private View.OnTouchListener adjustBubbleListener = new View.OnTouchListener() {
@@ -272,25 +276,30 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.finish_btn)
     public void finishPost() {
-        if (!newPost.matchCurrentPostState(PostClass.STATE_POST_READY)) {
+//        if (!newPost.matchCurrentPostState(PostClass.STATE_POST_READY)) {
+//            return;
+//        }
+
+        if (!postReady) {
             return;
         }
 
         newPost.addSpeechBubble(speechBubble);
 
-        Bundle bundle = new Bundle();
+//        Bundle bundle = new Bundle();
 //        bundle.putString("photoPath", photoFilePath);
 //        bundle.putString("audioPath", audioFilePath);
 //        bundle.putInt("bubbleType", finalType);
 //        bundle.putInt("bubbleX", finalX);
 //        bundle.putInt("bubbleY", finalY);
-        bundle.putParcelable("newPost", newPost);
+//        bundle.putParcelable("newPost", newPost);
 
 //        newPost.setCurrentPostState(PostClass.STATE_PHOTO_PREPARE);
 
         Intent intent = new Intent();
 //        intent.putExtra("newPost", newPost);
-        intent.putExtras(bundle);
+//        intent.putExtras(bundle);
+        intent.putExtra("newPost", newPost);
 
         setResult(RESULT_OK, intent);
         finish();

@@ -43,6 +43,43 @@ public class SpeechBubble implements Parcelable {
         this.type = type;
     }
 
+    // Getters
+    public String getPostID() {
+        return this.postID;
+    }
+
+    public String getUserID() {
+        return this.userID;
+    }
+
+    public String getUserEmail() {
+        return this.userEmail;
+    }
+
+    public int getX() {
+        return this.x;
+    }
+
+    public int getY() {
+        return this.y;
+    }
+
+    public int getType() {
+        return this.type;
+    }
+
+    public String getAudioPath() {
+        return this.audioPath;
+    }
+
+    public Uri getAudioUri() {
+        return this.audioUri;
+    }
+
+    public Date getDate() {
+        return this.creationDate;
+    }
+
     // Setters
     public SpeechBubble setPostID(String postID) {
         this.postID = postID;
@@ -87,43 +124,6 @@ public class SpeechBubble implements Parcelable {
     public SpeechBubble setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
         return this;
-    }
-
-    // Getters
-    public String getPostID() {
-        return this.postID;
-    }
-
-    public String getUserID() {
-        return this.userID;
-    }
-
-    public String getUserEmail() {
-        return this.userEmail;
-    }
-
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
-    public int getType() {
-        return this.type;
-    }
-
-    public String getAudioPath() {
-        return this.audioPath;
-    }
-
-    public Uri getAudioUri() {
-        return this.audioUri;
-    }
-
-    public Date getDate() {
-        return this.creationDate;
     }
 
     // Parcelable implementation
