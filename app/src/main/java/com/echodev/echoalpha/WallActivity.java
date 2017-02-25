@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
@@ -225,11 +224,6 @@ public class WallActivity extends AppCompatActivity {
     private void addPost(ViewGroup postAppendArea, PostClass newPost) {
         // Fetch the data of the new post
         SpeechBubble newSpeechBubble = newPost.getSpeechBubble(0);
-        final String photoPath = newPost.getPhotoPath();
-        final String audioPath = newSpeechBubble.getAudioPath();
-        final int bubbleType = newSpeechBubble.getType();
-        final int bubbleX = newSpeechBubble.getX();
-        final int bubbleY = newSpeechBubble.getY();
 
         // Prepare an empty post
         View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, true);
@@ -250,48 +244,11 @@ public class WallActivity extends AppCompatActivity {
 
         // Add the photo
 //        ImageHelper.setPicFromFile(postImage, photoPath);
-        ImageHelper.setPicFromFile(postImage, postAppendArea.getWidth(), photoPath);
+        ImageHelper.setPicFromFile(postImage, postAppendArea.getWidth(), newPost.getPhotoPath());
 
         // Add the speech bubble at target position
-
-        // Get the dimensions of the View
-        int targetW = localRes.getDimensionPixelSize(R.dimen.bubble_width);
-        int targetH = localRes.getDimensionPixelSize(R.dimen.bubble_height);
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetW, targetH);
-        layoutParams.leftMargin = bubbleX;
-        layoutParams.topMargin = bubbleY;
-
-        ImageView bubbleImageView = new ImageView(this);
-        bubbleImageView.setLayoutParams(layoutParams);
-
-//        ImageButton bubbleImageButton = new ImageButton(this);
-//        bubbleImageButton.setLayoutParams(layoutParams);
-//        bubbleImageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//        bubbleImageButton.setAdjustViewBounds(true);
-//        bubbleImageButton.setPadding(0, 0, 0, 0);
-//        bubbleImageButton.setBackgroundColor(localRes.getColor(android.R.color.transparent));
-
-        postImageArea.addView(bubbleImageView);
-
-        switch (bubbleType) {
-            case SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT:
-                ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
-                break;
-            case SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT:
-                ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
-                break;
-            default:
-                break;
-        }
-
-        // Bind play audio function to the speech bubble
-        bubbleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AudioHelper.playAudioLocal(audioPath);
-            }
-        });
+        newSpeechBubble.addBubbleImage(newSpeechBubble.getX(), newSpeechBubble.getY(), postImageArea, localRes, this);
+        newSpeechBubble.bindPlayListener();
     }
 
     private void startMain() {

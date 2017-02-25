@@ -64,8 +64,6 @@ public class PostActivity extends AppCompatActivity {
     ImageView previewImage;
 
     // Instance variables
-    private ImageView bubbleImageView;
-    private int dX, dY, targetX, targetY;
     private PostClass newPost;
     private SpeechBubble speechBubble;
 
@@ -104,11 +102,12 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
+    // Photo handling
     @OnClick(R.id.camera_btn)
     public void dispatchTakePictureIntent(View view) {
-        if (!newPost.matchCurrentPostState(PostClass.STATE_PHOTO_PREPARE)) {
-            return;
-        }
+//        if (!newPost.matchCurrentPostState(PostClass.STATE_PHOTO_PREPARE)) {
+//            return;
+//        }
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -152,8 +151,8 @@ public class PostActivity extends AppCompatActivity {
                     newPost.setPhotoPath(photoFilePath);
 
                     // Set post state to not ready
-                    newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
-                    newPost.setPostReady(false);
+//                    newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
+//                    newPost.setPostReady(false);
                 }
                 break;
             default:
@@ -161,11 +160,16 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
+    // Audio handling
     @OnTouch(R.id.record_btn)
     public boolean recordAudioLocal(View view, MotionEvent event) {
-        if (!appDirExist || !newPost.matchCurrentPostState(PostClass.STATE_AUDIO_PREPARE)) {
+        if (!appDirExist) {
             return false;
         }
+
+//        if (!newPost.matchCurrentPostState(PostClass.STATE_AUDIO_PREPARE)) {
+//            return false;
+//        }
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -177,8 +181,8 @@ public class PostActivity extends AppCompatActivity {
                 AudioHelper.stopRecording(audioFilePath);
 
                 // Set post state to not ready
-                newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
-                newPost.setPostReady(false);
+//                newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
+//                newPost.setPostReady(false);
                 break;
             default:
                 return false;
@@ -189,11 +193,16 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.play_btn)
     public void playAudioLocal(View view) {
-        if (appDirExist && newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE)) {
+//        if (appDirExist && newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE)) {
+//            AudioHelper.playAudioLocal(audioFilePath);
+//        }
+
+        if (appDirExist) {
             AudioHelper.playAudioLocal(audioFilePath);
         }
     }
 
+    // Speech Bubble handling
     @OnClick(R.id.add_bubble_btn_l)
     public void addSpeechBubbleL() {
         addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT);
@@ -205,85 +214,37 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void addSpeechBubble(final int bubbleType) {
-        if (!newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE)) {
-            return;
-        }
+//        if (!newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE)) {
+//            return;
+//        }
 
         speechBubble = new SpeechBubble(newPost.getPostIDString(), newPost.getUserEmail());
         speechBubble.setAudioPath(audioFilePath);
 
-        // Get the dimensions of the View
-        int targetW = localRes.getDimensionPixelSize(R.dimen.bubble_width);
-        int targetH = localRes.getDimensionPixelSize(R.dimen.bubble_height);
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetW, targetH);
-        layoutParams.leftMargin = (int) ((previewArea.getWidth() - targetW) * 0.5);
-        layoutParams.topMargin = (int) ((previewArea.getHeight() - targetH) * 0.5);
-        speechBubble.setX(layoutParams.leftMargin);
-        speechBubble.setY(layoutParams.topMargin);
-
-        bubbleImageView = new ImageView(this);
-        bubbleImageView.setLayoutParams(layoutParams);
-        previewArea.addView(bubbleImageView);
-
         if (bubbleType == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) {
             speechBubble.setType(SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT);
-            ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
         } else if (bubbleType == SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT) {
             speechBubble.setType(SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT);
-            ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
         }
 
-        bubbleImageView.setOnTouchListener(adjustBubbleListener);
+        // Add a new ImageView at the center of the ViewGroup
+        int targetW = localRes.getDimensionPixelSize(R.dimen.bubble_width);
+        int targetH = localRes.getDimensionPixelSize(R.dimen.bubble_height);
+        int centerX = (int) ((previewArea.getWidth() - targetW) * 0.5);
+        int centerY = (int) ((previewArea.getHeight() - targetH) * 0.5);
+        speechBubble.addBubbleImage(centerX, centerY, previewArea, localRes, this);
+        speechBubble.bindAdjustListener();
 
         // Set post state to not ready
-        newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
-        newPost.setPostReady(false);
+//        newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
+//        newPost.setPostReady(false);
     }
 
-    private View.OnTouchListener adjustBubbleListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            final int rawX = (int) event.getRawX();
-            final int rawY = (int) event.getRawY();
-
-            switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
-                    RelativeLayout.LayoutParams layoutParamsDown = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                    // leftMargin and topMargin hold the current coordinates of the view
-                    dX = rawX - layoutParamsDown.leftMargin;
-                    dY = rawY - layoutParamsDown.topMargin;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    // To ensure the view won't be dragged out of the layout's boundary
-                    targetX = (rawX - dX < 0 || rawX - dX + view.getWidth() > previewImage.getWidth()) ? view.getLeft() : rawX - dX;
-                    targetY = (rawY - dY < 0 || rawY - dY + view.getHeight() > previewImage.getHeight()) ? view.getTop() : rawY - dY;
-                    RelativeLayout.LayoutParams layoutParamsMove = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                    layoutParamsMove.leftMargin = targetX;
-                    layoutParamsMove.topMargin = targetY;
-                    layoutParamsMove.rightMargin = -250;
-                    layoutParamsMove.bottomMargin = -250;
-                    view.setLayoutParams(layoutParamsMove);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    speechBubble.setX(targetX);
-                    speechBubble.setY(targetY);
-                case MotionEvent.ACTION_POINTER_UP:
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    break;
-                default:
-                    return false;
-            }
-            previewArea.invalidate();
-            return true;
-        }
-    };
-
     @OnClick(R.id.finish_bubble_btn)
-    public void finishBuuble() {
-        speechBubble.setBubbleReady(true);
+    public void finishBubble() {
+//        speechBubble.setBubbleReady(true);
         newPost.addSpeechBubble(speechBubble);
-        newPost.setPostReady(true);
+//        newPost.setPostReady(true);
     }
 
     @OnLongClick(R.id.finish_bubble_btn)
@@ -293,9 +254,9 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.finish_btn)
     public void finishPost() {
-        if (!newPost.isPostReady()) {
-            return;
-        }
+//        if (!newPost.isPostReady()) {
+//            return;
+//        }
 
         Intent intent = new Intent();
         intent.putExtra("newPost", newPost);
