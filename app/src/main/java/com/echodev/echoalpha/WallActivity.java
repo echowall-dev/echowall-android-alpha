@@ -117,14 +117,9 @@ public class WallActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         String contentText = "";
-//        contentText += Environment.getExternalStorageDirectory().getAbsolutePath();
-//        contentText += "\nYou have signed in as";
         contentText += "You have signed in as";
         contentText += "\n" + currentEmail;
         contentText += "\n" + currentUid;
-//        contentText += "\n" + postID;
-//        contentText += "\n" + timeStamp + "_audio" + ".3gp";
-//        contentText += "\n" + timeStamp + "_image" + ".jpg";
 
         IDText.setText(contentText);
 
@@ -218,7 +213,6 @@ public class WallActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
-//                    addPost(postAppendArea, data.getExtras());
                     PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
                     addPost(postAppendArea, newPost);
                 }
@@ -230,25 +224,12 @@ public class WallActivity extends AppCompatActivity {
 
     private void addPost(ViewGroup postAppendArea, PostClass newPost) {
         // Fetch the data of the new post
-//        final String photoPath = postBundle.getString("photoPath");
-//        final String audioPath = postBundle.getString("audioPath");
-//        final int bubbleType = postBundle.getInt("bubbleType");
-//        final int bubbleX = postBundle.getInt("bubbleX");
-//        final int bubbleY = postBundle.getInt("bubbleY");
-
-//        PostClass newPost = (PostClass) postbundle.getParcelable("newPost");
         SpeechBubble newSpeechBubble = newPost.getSpeechBubble(0);
         final String photoPath = newPost.getPhotoPath();
         final String audioPath = newSpeechBubble.getAudioPath();
         final int bubbleType = newSpeechBubble.getType();
         final int bubbleX = newSpeechBubble.getX();
         final int bubbleY = newSpeechBubble.getY();
-
-//        final String photoPath = postBundle.getString("photoPath");
-//        final String audioPath = postBundle.getString("audioPath");
-//        final int bubbleType = postBundle.getInt("bubbleType");
-//        final int bubbleX = postBundle.getInt("bubbleX");
-//        final int bubbleY = postBundle.getInt("bubbleY");
 
         // Prepare an empty post
         View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, true);

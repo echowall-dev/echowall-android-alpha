@@ -60,7 +60,7 @@ public class PostActivity extends AppCompatActivity {
     ImageView previewImage;
 
     private ImageView bubbleImageView;
-    private int dX, dY, targetX, targetY, finalX, finalY, finalType;
+    private int dX, dY, targetX, targetY;
     private PostClass newPost;
     private SpeechBubble speechBubble;
 
@@ -206,8 +206,6 @@ public class PostActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetW, targetH);
         layoutParams.leftMargin = (int) ((previewArea.getWidth() - targetW) * 0.5);
         layoutParams.topMargin = (int) ((previewArea.getHeight() - targetH) * 0.5);
-//        finalX = layoutParams.leftMargin;
-//        finalY = layoutParams.topMargin;
         speechBubble.setX(layoutParams.leftMargin);
         speechBubble.setY(layoutParams.topMargin);
 
@@ -216,20 +214,15 @@ public class PostActivity extends AppCompatActivity {
         previewArea.addView(bubbleImageView);
 
         if (bubbleType == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) {
-//            finalType = SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT;
-//            ImageHelper.setPicFromResources(bubbleImageView, localRes, R.drawable.speech_bubble_l);
             speechBubble.setType(SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT);
             ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_l);
         } else if (bubbleType == SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT) {
-//            finalType = SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT;
-//            ImageHelper.setPicFromResources(bubbleImageView, localRes, R.drawable.speech_bubble_r);
             speechBubble.setType(SpeechBubble.SPEECH_BUBBLE_TYPE_RIGHT);
             ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, localRes, R.drawable.speech_bubble_r);
         }
 
         bubbleImageView.setOnTouchListener(adjustBubbleListener);
 
-//        newPost.setCurrentPostState(PostClass.STATE_POST_READY);
         newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
         postReady = true;
     }
@@ -259,8 +252,6 @@ public class PostActivity extends AppCompatActivity {
                     view.setLayoutParams(layoutParamsMove);
                     break;
                 case MotionEvent.ACTION_UP:
-//                    finalX = targetX;
-//                    finalY = targetY;
                     speechBubble.setX(targetX);
                     speechBubble.setY(targetY);
                 case MotionEvent.ACTION_POINTER_UP:
@@ -276,29 +267,13 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.finish_btn)
     public void finishPost() {
-//        if (!newPost.matchCurrentPostState(PostClass.STATE_POST_READY)) {
-//            return;
-//        }
-
         if (!postReady) {
             return;
         }
 
         newPost.addSpeechBubble(speechBubble);
 
-//        Bundle bundle = new Bundle();
-//        bundle.putString("photoPath", photoFilePath);
-//        bundle.putString("audioPath", audioFilePath);
-//        bundle.putInt("bubbleType", finalType);
-//        bundle.putInt("bubbleX", finalX);
-//        bundle.putInt("bubbleY", finalY);
-//        bundle.putParcelable("newPost", newPost);
-
-//        newPost.setCurrentPostState(PostClass.STATE_PHOTO_PREPARE);
-
         Intent intent = new Intent();
-//        intent.putExtra("newPost", newPost);
-//        intent.putExtras(bundle);
         intent.putExtra("newPost", newPost);
 
         setResult(RESULT_OK, intent);
