@@ -19,6 +19,7 @@
     <string name="audio_format">.3gp</string>
     <string name="add_bubble_left">Add bubble left</string>
     <string name="add_bubble_right">Add bubble right</string>
-    <string name="finish">Finish</string>
+    <string name="finish_bubble">Finish bubble</string>
+    <string name="finish">Finish post</string>
     <string name="create_post">Create post</string>
 </resources>

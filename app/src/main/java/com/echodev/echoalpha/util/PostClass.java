@@ -26,15 +26,17 @@ public class PostClass implements Parcelable {
     private String postIDString = postID.toString();
 
     // Instance variables
-    private int currentPostState;
     private String userID, userEmail, photoPath;
     private ArrayList<SpeechBubble> speechBubbleList;
     private Date creationDate;
+    private int currentPostState;
+    private boolean postReady;
 
     // Constructors
     public PostClass() {
-        this.currentPostState = STATE_PHOTO_PREPARE;
         this.speechBubbleList = new ArrayList<SpeechBubble>();
+        this.currentPostState = STATE_PHOTO_PREPARE;
+        this.postReady = false;
     }
 
     // Getters
@@ -96,8 +98,14 @@ public class PostClass implements Parcelable {
         return this;
     }
 
-    public void setCurrentPostState(int currentPostState) {
+    public PostClass setCurrentPostState(int currentPostState) {
         this.currentPostState = currentPostState;
+        return this;
+    }
+
+    public PostClass setPostReady(boolean postReady) {
+        this.postReady = postReady;
+        return this;
     }
 
     // Class methods
@@ -130,14 +138,19 @@ public class PostClass implements Parcelable {
         return this.currentPostState == currentPostState;
     }
 
+    public boolean isPostReady() {
+        return this.postReady;
+    }
+
     // Parcelable implementation
     protected PostClass(Parcel in) {
         postIDString = in.readString();
-        currentPostState = in.readInt();
         userID = in.readString();
         userEmail = in.readString();
         photoPath = in.readString();
         speechBubbleList = in.createTypedArrayList(SpeechBubble.CREATOR);
+        currentPostState = in.readInt();
+        postReady = in.readByte() != 0;
     }
 
     public static final Creator<PostClass> CREATOR = new Creator<PostClass>() {
@@ -160,10 +173,11 @@ public class PostClass implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(postIDString);
-        dest.writeInt(currentPostState);
         dest.writeString(userID);
         dest.writeString(userEmail);
         dest.writeString(photoPath);
         dest.writeTypedList(speechBubbleList);
+        dest.writeInt(currentPostState);
+        dest.writeByte((byte) (postReady ? 1 : 0));
     }
 }

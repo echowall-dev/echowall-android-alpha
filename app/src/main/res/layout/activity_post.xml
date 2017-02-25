@@ -55,11 +55,21 @@
                 android:text="@string/add_bubble_right" />
         </LinearLayout>
 
-        <Button
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/finish_btn"
-            android:text="@string/finish" />
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/finish_bubble_btn"
+                android:text="@string/finish_bubble" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/finish_btn"
+                android:text="@string/finish" />
+        </LinearLayout>
 
     </LinearLayout>
 

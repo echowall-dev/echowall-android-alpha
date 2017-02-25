@@ -27,14 +27,15 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import butterknife.OnTouch;
 
 public class PostActivity extends AppCompatActivity {
 
+    // Request code for taking photo
     public static final int REQUEST_TAKE_PHOTO = 120;
 
-    private int currentPostState;
-
+    // Bind views by ButterKnife
     @BindView(R.id.camera_btn)
     Button cameraBtn;
 
@@ -50,6 +51,9 @@ public class PostActivity extends AppCompatActivity {
     @BindView(R.id.add_bubble_btn_r)
     Button addBubbleBtnR;
 
+    @BindView(R.id.finish_bubble_btn)
+    Button finishBubbleBtn;
+
     @BindView(R.id.finish_btn)
     Button finishBtn;
 
@@ -59,6 +63,7 @@ public class PostActivity extends AppCompatActivity {
     @BindView(R.id.preview_image)
     ImageView previewImage;
 
+    // Instance variables
     private ImageView bubbleImageView;
     private int dX, dY, targetX, targetY;
     private PostClass newPost;
@@ -66,8 +71,7 @@ public class PostActivity extends AppCompatActivity {
 
     private Resources localRes;
     private static String appName, audioFormat;
-    private boolean appDirExist, postReady;
-    private String userID, userEmail, postID;
+    private boolean appDirExist;
     private String photoFilePath, audioFilePath;
 
     @Override
@@ -76,21 +80,22 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
         ButterKnife.bind(this);
 
-        currentPostState = PostClass.STATE_PHOTO_PREPARE;
-        postReady = false;
-
+        // Fetch data from the previous Activity
         Bundle bundle = getIntent().getExtras();
-        userID = bundle.getString("userID");
-        userEmail = bundle.getString("userEmail");
+        String userID = bundle.getString("userID");
+        String userEmail = bundle.getString("userEmail");
+
+        // Create new Post instance
         newPost = new PostClass();
         newPost.setUserID(userID).setUserEmail(userEmail);
-        postID = newPost.getPostIDString();
 
+        // Check if app folder already exists
+        appDirExist = MainActivity.createAppDir();
+
+        // Prepare app resources for use
         localRes = this.getResources();
         appName = localRes.getString(R.string.app_name);
         audioFormat = localRes.getString(R.string.audio_format);
-
-        appDirExist = MainActivity.createAppDir();
 
         if (appDirExist) {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -146,7 +151,9 @@ public class PostActivity extends AppCompatActivity {
                     ImageHelper.setPicFromFile(previewImage, photoFilePath);
                     newPost.setPhotoPath(photoFilePath);
 
+                    // Set post state to not ready
                     newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
+                    newPost.setPostReady(false);
                 }
                 break;
             default:
@@ -160,15 +167,21 @@ public class PostActivity extends AppCompatActivity {
             return false;
         }
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            // Start recording
-            AudioHelper.startRecording(audioFilePath);
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            // Stop recording
-            AudioHelper.stopRecording(audioFilePath);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // Start recording
+                AudioHelper.startRecording(audioFilePath);
+                break;
+            case MotionEvent.ACTION_UP:
+                // Stop recording
+                AudioHelper.stopRecording(audioFilePath);
 
-            newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
-            postReady = false;
+                // Set post state to not ready
+                newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
+                newPost.setPostReady(false);
+                break;
+            default:
+                return false;
         }
 
         return true;
@@ -196,7 +209,7 @@ public class PostActivity extends AppCompatActivity {
             return;
         }
 
-        speechBubble = new SpeechBubble(postID, userEmail);
+        speechBubble = new SpeechBubble(newPost.getPostIDString(), newPost.getUserEmail());
         speechBubble.setAudioPath(audioFilePath);
 
         // Get the dimensions of the View
@@ -223,8 +236,9 @@ public class PostActivity extends AppCompatActivity {
 
         bubbleImageView.setOnTouchListener(adjustBubbleListener);
 
+        // Set post state to not ready
         newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
-        postReady = true;
+        newPost.setPostReady(false);
     }
 
     private View.OnTouchListener adjustBubbleListener = new View.OnTouchListener() {
@@ -265,13 +279,23 @@ public class PostActivity extends AppCompatActivity {
         }
     };
 
+    @OnClick(R.id.finish_bubble_btn)
+    public void finishBuuble() {
+        speechBubble.setBubbleReady(true);
+        newPost.addSpeechBubble(speechBubble);
+        newPost.setPostReady(true);
+    }
+
+    @OnLongClick(R.id.finish_bubble_btn)
+    public boolean editBubble() {
+        return false;
+    }
+
     @OnClick(R.id.finish_btn)
     public void finishPost() {
-        if (!postReady) {
+        if (!newPost.isPostReady()) {
             return;
         }
-
-        newPost.addSpeechBubble(speechBubble);
 
         Intent intent = new Intent();
         intent.putExtra("newPost", newPost);

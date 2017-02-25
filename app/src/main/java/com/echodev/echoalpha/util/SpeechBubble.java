@@ -12,20 +12,24 @@ import java.util.Date;
 
 public class SpeechBubble implements Parcelable {
 
+    // Class variables
     public static final int SPEECH_BUBBLE_TYPE_LEFT = 200;
     public static final int SPEECH_BUBBLE_TYPE_RIGHT = 201;
 
+    // Instance variables
     private String postID, userID, userEmail, bubbleID;
     private int x, y, type;
     private String audioPath;
     private Uri audioUri;
     private Date creationDate;
+    private boolean bubbleReady;
     private int languageCode;
 
     // Constructors
     public SpeechBubble(String postID, String userEmail) {
         this.postID = postID;
         this.userEmail = userEmail;
+        bubbleReady = false;
     }
 
     public SpeechBubble(String postID, String userEmail, int x, int y) {
@@ -33,6 +37,7 @@ public class SpeechBubble implements Parcelable {
         this.userEmail = userEmail;
         this.x = x;
         this.y = y;
+        this.bubbleReady = false;
     }
 
     public SpeechBubble(String postID, String userEmail, int x, int y, int type) {
@@ -41,6 +46,7 @@ public class SpeechBubble implements Parcelable {
         this.x = x;
         this.y = y;
         this.type = type;
+        this.bubbleReady = false;
     }
 
     // Getters
@@ -78,6 +84,10 @@ public class SpeechBubble implements Parcelable {
 
     public Date getDate() {
         return this.creationDate;
+    }
+
+    public boolean isBubbleReady() {
+        return this.bubbleReady;
     }
 
     // Setters
@@ -126,6 +136,11 @@ public class SpeechBubble implements Parcelable {
         return this;
     }
 
+    public SpeechBubble setBubbleReady(boolean bubbleReady) {
+        this.bubbleReady = bubbleReady;
+        return this;
+    }
+
     // Parcelable implementation
     protected SpeechBubble(Parcel in) {
         postID = in.readString();
@@ -137,6 +152,7 @@ public class SpeechBubble implements Parcelable {
         type = in.readInt();
         audioPath = in.readString();
         audioUri = in.readParcelable(Uri.class.getClassLoader());
+        bubbleReady = in.readByte() != 0;
         languageCode = in.readInt();
     }
 
@@ -168,6 +184,7 @@ public class SpeechBubble implements Parcelable {
         dest.writeInt(type);
         dest.writeString(audioPath);
         dest.writeParcelable(audioUri, flags);
+        dest.writeByte((byte) (bubbleReady ? 1 : 0));
         dest.writeInt(languageCode);
     }
 }
