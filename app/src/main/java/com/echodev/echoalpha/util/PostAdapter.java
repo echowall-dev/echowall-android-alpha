@@ -17,11 +17,22 @@ import java.util.ArrayList;
  * Created by Ho on 26/2/2017.
  */
 
+/*
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
+    private Context context;
     private ArrayList<PostClass> postList;
 
+    public PostAdapter() {
+        this.postList = new ArrayList<PostClass>();
+    }
+
     public PostAdapter(ArrayList<PostClass> postList) {
+        this.postList = postList;
+    }
+
+    public PostAdapter(Context context, ArrayList<PostClass> postList) {
+        this.context = context;
         this.postList = postList;
     }
 
@@ -73,3 +84,4 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
     }
 }
+*/

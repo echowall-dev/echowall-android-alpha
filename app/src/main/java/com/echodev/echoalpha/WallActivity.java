@@ -9,6 +9,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.echodev.echoalpha.util.ImageHelper;
+//import com.echodev.echoalpha.util.PostAdapter;
 import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.firebase.ui.auth.AuthUI;
@@ -29,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -59,11 +62,17 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.post_append_area)
     LinearLayout postAppendArea;
 
+//    @BindView()
+    RecyclerView postListArea;
+
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
 
     private Resources localRes;
+
+    private ArrayList<PostClass> postList;
+//    private PostAdapter postAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,7 +231,6 @@ public class WallActivity extends AppCompatActivity {
 
     private void addPost(ViewGroup postAppendArea, PostClass newPost) {
         // Fetch the data of the new post
-        SpeechBubble newSpeechBubble = newPost.getSpeechBubble(0);
         Long postLikeNumber = newPost.getLikeNumber();
         String postCreationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newPost.getCreationDate());
 
@@ -244,12 +252,13 @@ public class WallActivity extends AppCompatActivity {
         postCreationDateView.setText(postCreationDate);
 
         // Add the photo
-//        ImageHelper.setPicFromFile(postImage, photoPath);
         ImageHelper.setPicFromFile(postImageView, postAppendArea.getWidth(), newPost.getPhotoPath());
 
-        // Add the speech bubble at target position
-        newSpeechBubble.addBubbleImage(newSpeechBubble.getX(), newSpeechBubble.getY(), postImageArea, localRes, this);
-        newSpeechBubble.bindPlayListener();
+        // Add the speech bubbles at target position
+        for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {
+            speechBubble.addBubbleImage(speechBubble.getX(), speechBubble.getY(), postImageArea, localRes, this);
+            speechBubble.bindPlayListener();
+        }
     }
 
     private void startMain() {
