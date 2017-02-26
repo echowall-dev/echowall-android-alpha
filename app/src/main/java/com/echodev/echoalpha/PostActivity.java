@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
