@@ -9,6 +9,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.echodev.echoalpha.util.ImageHelper;
-//import com.echodev.echoalpha.util.PostAdapter;
+import com.echodev.echoalpha.util.PostAdapter;
 import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.firebase.ui.auth.AuthUI;
@@ -32,8 +33,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +61,7 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.post_append_area)
     LinearLayout postAppendArea;
 
-//    @BindView()
+//    @BindView(R.id.post_list_area)
     RecyclerView postListArea;
 
     private FirebaseAuth mAuth;
@@ -71,8 +70,8 @@ public class WallActivity extends AppCompatActivity {
 
     private Resources localRes;
 
-    private ArrayList<PostClass> postList;
-//    private PostAdapter postAdapter;
+//    private ArrayList<PostClass> postList;
+    private PostAdapter postAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +84,22 @@ public class WallActivity extends AppCompatActivity {
             return;
         }
 
-        mIdpResponse = IdpResponse.fromResultIntent(getIntent());
-
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
 
         localRes = this.getResources();
 
+        // use a linear layout manager
+        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        postListArea.setLayoutManager(linearLayoutManager);
+
+        // specify an adapter
+//        postList = new ArrayList<PostClass>();
+//        postAdapter = new PostAdapter(postList);
+        postAdapter = new PostAdapter(localRes, this, postListArea.getWidth());
+        postListArea.setAdapter(postAdapter);
+
+        mIdpResponse = IdpResponse.fromResultIntent(getIntent());
         populateProfile();
         populateIdpToken();
 
@@ -221,6 +229,7 @@ public class WallActivity extends AppCompatActivity {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
                     PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
+                    postAdapter.addPost(newPost);
                     addPost(postAppendArea, newPost);
                 }
                 break;
@@ -231,11 +240,11 @@ public class WallActivity extends AppCompatActivity {
 
     private void addPost(ViewGroup postAppendArea, PostClass newPost) {
         // Fetch the data of the new post
-        Long postLikeNumber = newPost.getLikeNumber();
+        long postLikeNumber = newPost.getLikeNumber();
         String postCreationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newPost.getCreationDate());
 
         // Prepare an empty post
-        View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, true);
+        View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, false);
 
         // Prepare the views of the post
         TextView postUserProfile = (TextView) view.findViewById(R.id.post_user_profile);
@@ -246,7 +255,7 @@ public class WallActivity extends AppCompatActivity {
         TextView postCreationDateView = (TextView) view.findViewById(R.id.post_creation_time);
 
         // Set template info
-        postUserProfile.setText(mUser.getEmail());
+        postUserProfile.setText(newPost.getUserEmail());
         postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
         postCaptionView.setText("Peter:\nWhat a beautiful day!");
         postCreationDateView.setText(postCreationDate);
@@ -259,6 +268,8 @@ public class WallActivity extends AppCompatActivity {
             speechBubble.addBubbleImage(speechBubble.getX(), speechBubble.getY(), postImageArea, localRes, this);
             speechBubble.bindPlayListener();
         }
+
+        postAppendArea.addView(view);
     }
 
     private void startMain() {
