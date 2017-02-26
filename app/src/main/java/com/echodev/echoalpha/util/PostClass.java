@@ -1,6 +1,7 @@
 package com.echodev.echoalpha.util;
 
 import android.os.Parcel;
+import android.os.ParcelUuid;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
@@ -22,18 +23,23 @@ public class PostClass implements Parcelable {
     // Class variables
     public static final String LOG_TAG = "PostClass";
 
-    private UUID postID = UUID.randomUUID();
-    private String postIDString = postID.toString();
-
     // Instance variables
-    private String userID, userEmail, photoPath;
+    private UUID postID;
+    private ParcelUuid postIDParcel;
+    private String postIDString, userID, userEmail, photoPath;
     private ArrayList<SpeechBubble> speechBubbleList;
     private Date creationDate;
+    private long likeNumber, commentNumber;
     private int currentPostState;
     private boolean postReady;
 
     // Constructors
     public PostClass() {
+        this.postID = UUID.randomUUID();
+        this.postIDParcel = new ParcelUuid(postID);
+        this.postIDString = postID.toString();
+        this.likeNumber = 0;
+        this.commentNumber = 0;
         this.speechBubbleList = new ArrayList<SpeechBubble>();
         this.currentPostState = STATE_PHOTO_PREPARE;
         this.postReady = false;
@@ -41,11 +47,15 @@ public class PostClass implements Parcelable {
 
     // Getters
     public UUID getPostID() {
-        return this.postID;
+        return postIDParcel.getUuid();
+    }
+
+    public ParcelUuid getPostIDParcel() {
+        return postIDParcel;
     }
 
     public String getPostIDString() {
-        return this.postID.toString();
+        return postIDString;
     }
 
     public String getUserID() {
@@ -60,16 +70,24 @@ public class PostClass implements Parcelable {
         return photoPath;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public long getLikeNumber() {
+        return likeNumber;
+    }
+
+    public long getCommentNumber() {
+        return commentNumber;
+    }
+
     public ArrayList<SpeechBubble> getSpeechBubbleList() {
         return speechBubbleList;
     }
 
     public int getCurrentPostState() {
         return currentPostState;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
     }
 
     // Setters
@@ -98,6 +116,16 @@ public class PostClass implements Parcelable {
         return this;
     }
 
+    public PostClass setLikeNumber(long likeNumber) {
+        this.likeNumber = likeNumber;
+        return this;
+    }
+
+    public PostClass setCommentNumber(long commentNumber) {
+        this.commentNumber = commentNumber;
+        return this;
+    }
+
     public PostClass setCurrentPostState(int currentPostState) {
         this.currentPostState = currentPostState;
         return this;
@@ -123,15 +151,15 @@ public class PostClass implements Parcelable {
     }
 
     public void addSpeechBubble(SpeechBubble speechBubble) {
-        this.speechBubbleList.add(speechBubble);
+        speechBubbleList.add(speechBubble);
     }
 
     public void removeSpeechBubble(SpeechBubble speechBubble) {
-        this.speechBubbleList.remove(speechBubble);
+        speechBubbleList.remove(speechBubble);
     }
 
     public SpeechBubble getSpeechBubble(int i) {
-        return this.speechBubbleList.get(i);
+        return speechBubbleList.get(i);
     }
 
     public boolean matchCurrentPostState(int currentPostState) {
@@ -139,18 +167,24 @@ public class PostClass implements Parcelable {
     }
 
     public boolean isPostReady() {
-        return this.postReady;
+        return postReady;
     }
 
     // Parcelable implementation
     protected PostClass(Parcel in) {
+        postIDParcel = in.readParcelable(ParcelUuid.class.getClassLoader());
         postIDString = in.readString();
         userID = in.readString();
         userEmail = in.readString();
         photoPath = in.readString();
         speechBubbleList = in.createTypedArrayList(SpeechBubble.CREATOR);
+        likeNumber = in.readLong();
+        commentNumber = in.readLong();
         currentPostState = in.readInt();
         postReady = in.readByte() != 0;
+
+        // Non-primitive data types handling for Parcelable
+        creationDate = new Date(in.readLong());
     }
 
     public static final Creator<PostClass> CREATOR = new Creator<PostClass>() {
@@ -172,12 +206,18 @@ public class PostClass implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(postIDParcel, flags);
         dest.writeString(postIDString);
         dest.writeString(userID);
         dest.writeString(userEmail);
         dest.writeString(photoPath);
         dest.writeTypedList(speechBubbleList);
+        dest.writeLong(likeNumber);
+        dest.writeLong(commentNumber);
         dest.writeInt(currentPostState);
         dest.writeByte((byte) (postReady ? 1 : 0));
+
+        // Non-primitive data types handling for Parcelable
+        dest.writeLong(creationDate.getTime());
     }
 }

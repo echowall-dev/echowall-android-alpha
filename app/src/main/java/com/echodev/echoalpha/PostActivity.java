@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
@@ -94,12 +95,6 @@ public class PostActivity extends AppCompatActivity {
         localRes = this.getResources();
         appName = localRes.getString(R.string.app_name);
         audioFormat = localRes.getString(R.string.audio_format);
-
-        if (appDirExist) {
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFilePath += "/" + appName + "/audio/" + userID + "_" + timeStamp + audioFormat;
-        }
     }
 
     // Photo handling
@@ -120,10 +115,9 @@ public class PostActivity extends AppCompatActivity {
 
                 // Save a file: path for use with ACTION_VIEW intents
                 photoFilePath = photoFile.getAbsolutePath();
-            } catch (IOException ex) {
+            } catch (IOException e) {
                 // Error occurred while creating the File
-                // Terminate the app
-                this.finishAffinity();
+                e.printStackTrace();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -159,6 +153,7 @@ public class PostActivity extends AppCompatActivity {
                 break;
         }
     }
+    // End of photo handling
 
     // Audio handling
     @OnTouch(R.id.record_btn)
@@ -167,6 +162,12 @@ public class PostActivity extends AppCompatActivity {
             return false;
         }
 
+        // Prepare new audio file path and name
+        if (audioFilePath == null || audioFilePath.isEmpty()) {
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            audioFilePath += "/" + appName + "/audio/" + newPost.getUserID() + "_" + timeStamp + audioFormat;
+        }
 //        if (!newPost.matchCurrentPostState(PostClass.STATE_AUDIO_PREPARE)) {
 //            return false;
 //        }
@@ -201,8 +202,9 @@ public class PostActivity extends AppCompatActivity {
             AudioHelper.playAudioLocal(audioFilePath);
         }
     }
+    // End of audio handling
 
-    // Speech Bubble handling
+    // Speech bubble handling
     @OnClick(R.id.add_bubble_btn_l)
     public void addSpeechBubbleL() {
         addSpeechBubble(SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT);
@@ -218,7 +220,7 @@ public class PostActivity extends AppCompatActivity {
 //            return;
 //        }
 
-        speechBubble = new SpeechBubble(newPost.getPostIDString(), newPost.getUserEmail());
+        speechBubble = new SpeechBubble(newPost.getPostID().toString(), newPost.getUserEmail());
         speechBubble.setAudioPath(audioFilePath);
 
         if (bubbleType == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) {
@@ -242,8 +244,11 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.finish_bubble_btn)
     public void finishBubble() {
-//        speechBubble.setBubbleReady(true);
+        speechBubble.setCreationDate(new Date());
         newPost.addSpeechBubble(speechBubble);
+        audioFilePath = null;
+
+//        speechBubble.setBubbleReady(true);
 //        newPost.setPostReady(true);
     }
 
@@ -251,12 +256,16 @@ public class PostActivity extends AppCompatActivity {
     public boolean editBubble() {
         return false;
     }
+    // End of speech bubble handling
 
+    // Finish creating post
     @OnClick(R.id.finish_btn)
     public void finishPost() {
 //        if (!newPost.isPostReady()) {
 //            return;
 //        }
+
+        newPost.setCreationDate(new Date());
 
         Intent intent = new Intent();
         intent.putExtra("newPost", newPost);

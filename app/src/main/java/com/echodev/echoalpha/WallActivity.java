@@ -224,6 +224,8 @@ public class WallActivity extends AppCompatActivity {
     private void addPost(ViewGroup postAppendArea, PostClass newPost) {
         // Fetch the data of the new post
         SpeechBubble newSpeechBubble = newPost.getSpeechBubble(0);
+        Long postLikeNumber = newPost.getLikeNumber();
+        String postCreationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newPost.getCreationDate());
 
         // Prepare an empty post
         View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, true);
@@ -231,20 +233,20 @@ public class WallActivity extends AppCompatActivity {
         // Prepare the views of the post
         TextView postUserProfile = (TextView) view.findViewById(R.id.post_user_profile);
         RelativeLayout postImageArea = (RelativeLayout) view.findViewById(R.id.post_image_area);
-        ImageView postImage = (ImageView) view.findViewById(R.id.post_image);
-        TextView postLikeNumber = (TextView) view.findViewById(R.id.post_like_number);
-        TextView postCaption = (TextView) view.findViewById(R.id.post_caption);
-        TextView postCreationTime = (TextView) view.findViewById(R.id.post_creation_time);
+        ImageView postImageView = (ImageView) view.findViewById(R.id.post_image);
+        TextView postLikeNumberView = (TextView) view.findViewById(R.id.post_like_number);
+        TextView postCaptionView = (TextView) view.findViewById(R.id.post_caption);
+        TextView postCreationDateView = (TextView) view.findViewById(R.id.post_creation_time);
 
         // Set template info
         postUserProfile.setText(mUser.getEmail());
-        postLikeNumber.setText("0 Like");
-        postCaption.setText("Peter:\nWhat a beautiful day!");
-        postCreationTime.setText("23/02/2017");
+        postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
+        postCaptionView.setText("Peter:\nWhat a beautiful day!");
+        postCreationDateView.setText(postCreationDate);
 
         // Add the photo
 //        ImageHelper.setPicFromFile(postImage, photoPath);
-        ImageHelper.setPicFromFile(postImage, postAppendArea.getWidth(), newPost.getPhotoPath());
+        ImageHelper.setPicFromFile(postImageView, postAppendArea.getWidth(), newPost.getPhotoPath());
 
         // Add the speech bubble at target position
         newSpeechBubble.addBubbleImage(newSpeechBubble.getX(), newSpeechBubble.getY(), postImageArea, localRes, this);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Parcel;
+import android.os.ParcelUuid;
 import android.os.Parcelable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,25 +15,28 @@ import android.widget.RelativeLayout;
 import com.echodev.echoalpha.R;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Ho on 19/2/2017.
  */
 
-public class SpeechBubble implements Parcelable, View.OnClickListener, View.OnTouchListener {
+public class SpeechBubble implements View.OnClickListener, View.OnTouchListener, Parcelable {
 
     // Class variables
     public static final int SPEECH_BUBBLE_TYPE_LEFT = 200;
     public static final int SPEECH_BUBBLE_TYPE_RIGHT = 201;
 
     // Instance variables
-    private String postID, userID, userEmail, bubbleID;
+    private UUID bubbleID;
+    private ParcelUuid bubbleIDParcel;
+    private String bubbleIDString, postID, userID, userEmail;
     private int x, y, type;
     private String audioPath;
     private Uri audioUri;
     private Date creationDate;
+    private long likeNumber, playNumber;
     private boolean bubbleReady;
-    private int languageCode;
 
     // Instance variables for adjusting the bubble
     private int dX, dY, targetX, targetY;
@@ -40,63 +44,98 @@ public class SpeechBubble implements Parcelable, View.OnClickListener, View.OnTo
 
     // Constructors
     public SpeechBubble(String postID, String userEmail) {
+        this.bubbleID = UUID.randomUUID();
+        this.bubbleIDParcel = new ParcelUuid(bubbleID);
+        this.bubbleIDString = bubbleID.toString();
         this.postID = postID;
         this.userEmail = userEmail;
-        bubbleReady = false;
+        this.likeNumber = 0;
+        this.playNumber = 0;
+        this.bubbleReady = false;
     }
 
     public SpeechBubble(String postID, String userEmail, int x, int y) {
+        this.bubbleID = UUID.randomUUID();
+        this.bubbleIDParcel = new ParcelUuid(bubbleID);
+        this.bubbleIDString = bubbleID.toString();
         this.postID = postID;
         this.userEmail = userEmail;
+        this.likeNumber = 0;
+        this.playNumber = 0;
+        this.bubbleReady = false;
         this.x = x;
         this.y = y;
-        this.bubbleReady = false;
     }
 
     public SpeechBubble(String postID, String userEmail, int x, int y, int type) {
+        this.bubbleID = UUID.randomUUID();
+        this.bubbleIDParcel = new ParcelUuid(bubbleID);
+        this.bubbleIDString = bubbleID.toString();
         this.postID = postID;
         this.userEmail = userEmail;
+        this.likeNumber = 0;
+        this.playNumber = 0;
+        this.bubbleReady = false;
         this.x = x;
         this.y = y;
         this.type = type;
-        this.bubbleReady = false;
     }
 
     // Getters
+    public UUID getBubbleID() {
+        return bubbleIDParcel.getUuid();
+    }
+
+    public ParcelUuid getBubbleIDParcel() {
+        return bubbleIDParcel;
+    }
+
+    public String getBubbleIDString() {
+        return bubbleIDString;
+    }
+
     public String getPostID() {
-        return this.postID;
+        return postID;
     }
 
     public String getUserID() {
-        return this.userID;
+        return userID;
     }
 
     public String getUserEmail() {
-        return this.userEmail;
+        return userEmail;
     }
 
     public int getX() {
-        return this.x;
+        return x;
     }
 
     public int getY() {
-        return this.y;
+        return y;
     }
 
     public int getType() {
-        return this.type;
+        return type;
     }
 
     public String getAudioPath() {
-        return this.audioPath;
+        return audioPath;
     }
 
     public Uri getAudioUri() {
-        return this.audioUri;
+        return audioUri;
     }
 
-    public Date getDate() {
-        return this.creationDate;
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public long getLikeNumber() {
+        return likeNumber;
+    }
+
+    public long getPlayNumber() {
+        return playNumber;
     }
 
     // Setters
@@ -142,6 +181,16 @@ public class SpeechBubble implements Parcelable, View.OnClickListener, View.OnTo
 
     public SpeechBubble setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+        return this;
+    }
+
+    public SpeechBubble setLikeNumber(long likeNumber) {
+        this.likeNumber = likeNumber;
+        return this;
+    }
+
+    public SpeechBubble setPlayNumber(long playNumber) {
+        this.playNumber = playNumber;
         return this;
     }
 
@@ -202,53 +251,6 @@ public class SpeechBubble implements Parcelable, View.OnClickListener, View.OnTo
         this.bubbleImageView.setOnTouchListener(adjustListener);
     }
 
-    // Parcelable implementation
-    protected SpeechBubble(Parcel in) {
-        postID = in.readString();
-        userID = in.readString();
-        userEmail = in.readString();
-        bubbleID = in.readString();
-        x = in.readInt();
-        y = in.readInt();
-        type = in.readInt();
-        audioPath = in.readString();
-        audioUri = in.readParcelable(Uri.class.getClassLoader());
-        bubbleReady = in.readByte() != 0;
-        languageCode = in.readInt();
-    }
-
-    public static final Creator<SpeechBubble> CREATOR = new Creator<SpeechBubble>() {
-        @Override
-        public SpeechBubble createFromParcel(Parcel in) {
-            return new SpeechBubble(in);
-        }
-
-        @Override
-        public SpeechBubble[] newArray(int size) {
-            return new SpeechBubble[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(postID);
-        dest.writeString(userID);
-        dest.writeString(userEmail);
-        dest.writeString(bubbleID);
-        dest.writeInt(x);
-        dest.writeInt(y);
-        dest.writeInt(type);
-        dest.writeString(audioPath);
-        dest.writeParcelable(audioUri, flags);
-        dest.writeByte((byte) (bubbleReady ? 1 : 0));
-        dest.writeInt(languageCode);
-    }
-
     // OnClickListener implementation
     @Override
     public void onClick(View view) {
@@ -292,5 +294,70 @@ public class SpeechBubble implements Parcelable, View.OnClickListener, View.OnTo
         }
         ((ViewGroup) view.getParent()).invalidate();
         return true;
+    }
+
+    // Parcelable implementation
+    protected SpeechBubble(Parcel in) {
+        bubbleIDParcel = in.readParcelable(ParcelUuid.class.getClassLoader());
+        bubbleIDString = in.readString();
+        postID = in.readString();
+        userID = in.readString();
+        userEmail = in.readString();
+        x = in.readInt();
+        y = in.readInt();
+        type = in.readInt();
+        audioPath = in.readString();
+        audioUri = in.readParcelable(Uri.class.getClassLoader());
+        likeNumber = in.readLong();
+        playNumber = in.readLong();
+        bubbleReady = in.readByte() != 0;
+        dX = in.readInt();
+        dY = in.readInt();
+        targetX = in.readInt();
+        targetY = in.readInt();
+
+        // Non-primitive data types handling for Parcelable
+        creationDate = new Date(in.readLong());
+    }
+
+    public static final Creator<SpeechBubble> CREATOR = new Creator<SpeechBubble>() {
+        @Override
+        public SpeechBubble createFromParcel(Parcel in) {
+            return new SpeechBubble(in);
+        }
+
+        @Override
+        public SpeechBubble[] newArray(int size) {
+            return new SpeechBubble[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(bubbleIDParcel, flags);
+        dest.writeString(bubbleIDString);
+        dest.writeString(postID);
+        dest.writeString(userID);
+        dest.writeString(userEmail);
+        dest.writeInt(x);
+        dest.writeInt(y);
+        dest.writeInt(type);
+        dest.writeString(audioPath);
+        dest.writeParcelable(audioUri, flags);
+        dest.writeLong(likeNumber);
+        dest.writeLong(playNumber);
+        dest.writeByte((byte) (bubbleReady ? 1 : 0));
+        dest.writeInt(dX);
+        dest.writeInt(dY);
+        dest.writeInt(targetX);
+        dest.writeInt(targetY);
+
+        // Non-primitive data types handling for Parcelable
+        dest.writeLong(creationDate.getTime());
     }
 }
