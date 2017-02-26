@@ -39,8 +39,11 @@ import butterknife.OnClick;
 public class WallActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "Record_audio_message";
+
+    // Request code for creating new post
     private static final int REQUEST_CODE_POST = 110;
 
+    // Bind views by ButterKnife
     @BindView(android.R.id.content)
     View mRootView;
 
@@ -61,7 +64,6 @@ public class WallActivity extends AppCompatActivity {
     private IdpResponse mIdpResponse;
 
     private Resources localRes;
-    private String postID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +82,8 @@ public class WallActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         localRes = this.getResources();
-        postID = UUID.randomUUID().toString();
 
-        populateProfile(postID);
+        populateProfile();
         populateIdpToken();
 
         // Add files path info at the bottom of the page
@@ -110,10 +111,9 @@ public class WallActivity extends AppCompatActivity {
     }
 
     @MainThread
-    private void populateProfile(String postID) {
+    private void populateProfile() {
         String currentUid = mUser.getUid();
         String currentEmail = mUser.getEmail();
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         String contentText = "";
         contentText += "You have signed in as";
@@ -198,7 +198,6 @@ public class WallActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("userID", mUser.getUid());
         bundle.putString("userEmail", mUser.getEmail());
-        bundle.putString("postID", postID);
 
         Intent intent = new Intent();
         intent.setClass(this, PostActivity.class);

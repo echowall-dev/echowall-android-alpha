@@ -54,8 +54,8 @@ public class PostActivity extends AppCompatActivity {
     @BindView(R.id.finish_bubble_btn)
     Button finishBubbleBtn;
 
-    @BindView(R.id.finish_btn)
-    Button finishBtn;
+    @BindView(R.id.finish_post_btn)
+    Button finishPostBtn;
 
     @BindView(R.id.preview_area)
     RelativeLayout previewArea;
@@ -258,7 +258,7 @@ public class PostActivity extends AppCompatActivity {
     // End of speech bubble handling
 
     // Finish creating post
-    @OnClick(R.id.finish_btn)
+    @OnClick(R.id.finish_post_btn)
     public void finishPost() {
 //        if (!newPost.isPostReady()) {
 //            return;

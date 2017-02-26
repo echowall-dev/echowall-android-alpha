@@ -67,7 +67,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/finish_btn"
+                android:id="@+id/finish_post_btn"
                 android:text="@string/finish" />
         </LinearLayout>
 
