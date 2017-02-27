@@ -23,7 +23,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     private Resources resources;
     private Context context;
-    private int postWidth;
     private ArrayList<PostClass> postList;
 
     // Constructors
@@ -37,13 +36,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.postList = new ArrayList<PostClass>();
     }
 
-    public PostAdapter(Resources resources, Context context, int postWidth) {
-        this.resources = resources;
-        this.context = context;
-        this.postWidth = postWidth;
-        this.postList = new ArrayList<PostClass>();
-    }
-
     // Getters
     public ArrayList<PostClass> getPostList() {
         return postList;
@@ -54,13 +46,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.postList = postList;
     }
 
-    // Instance methods
+    // Instance methods for modifying the dataset
     public void addPost(PostClass post) {
         postList.add(post);
     }
 
+    public void addPost(int i, PostClass post) {
+        postList.add(i, post);
+    }
+
     public void removePost(PostClass post) {
         postList.remove(post);
+    }
+
+    public void removePost(int i) {
+        postList.remove(i);
     }
 
     @Override
@@ -79,13 +79,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         String postCreationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(post.getCreationDate());
 
         // Set template info for the post
-        holder.postUserProfile.setText(post.getUserEmail());
+        holder.postUserProfileView.setText(post.getUserEmail());
         holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
         holder.postCaptionView.setText("Peter:\nWhat a beautiful day!");
         holder.postCreationDateView.setText(postCreationDate);
 
         // Add the photo to the post
-        ImageHelper.setPicFromFile(holder.postImageView, postWidth, post.getPhotoPath());
+        ImageHelper.setPicFromFile(holder.postImageView, post.getWidth(), post.getPhotoPath());
 
         // Add the speech bubbles at target position
         for (SpeechBubble speechBubble : post.getSpeechBubbleList()) {
@@ -100,14 +100,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfile, postLikeNumberView, postCaptionView, postCreationDateView;
+        public TextView postUserProfileView, postLikeNumberView, postCaptionView, postCreationDateView;
         public RelativeLayout postImageArea;
         public ImageView postImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             // Prepare the views of the post
-            postUserProfile = (TextView) itemView.findViewById(R.id.post_user_profile);
+            postUserProfileView = (TextView) itemView.findViewById(R.id.post_user_profile);
             postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_image_area);
             postImageView = (ImageView) itemView.findViewById(R.id.post_image);
             postLikeNumberView = (TextView) itemView.findViewById(R.id.post_like_number);

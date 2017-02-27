@@ -64,7 +64,7 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.post_append_area)
     LinearLayout postAppendArea;
 
-//    @BindView(R.id.post_list_area)
+    @BindView(R.id.post_list_area)
     RecyclerView postListArea;
 
     private FirebaseAuth mAuth;
@@ -72,7 +72,6 @@ public class WallActivity extends AppCompatActivity {
     private IdpResponse mIdpResponse;
 
     private Resources localRes;
-
     private PostAdapter postAdapter;
 
     @Override
@@ -91,17 +90,13 @@ public class WallActivity extends AppCompatActivity {
 
         localRes = this.getResources();
 
-        /*
         // use a linear layout manager
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
         postListArea.setLayoutManager(linearLayoutManager);
 
         // specify an adapter
-//        postList = new ArrayList<PostClass>();
-//        postAdapter = new PostAdapter(postList);
-        postAdapter = new PostAdapter(localRes, this, postListArea.getWidth());
+        postAdapter = new PostAdapter(localRes, this);
         postListArea.setAdapter(postAdapter);
-        */
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
         populateProfile();
@@ -111,7 +106,7 @@ public class WallActivity extends AppCompatActivity {
         String photoPathInfo = "photo";
         String audioPathInfo = "audio";
         String filePathInfo = "photo location:\n" + photoPathInfo + "\n\naudio location:\n" + audioPathInfo;
-        filePathInfoTextView.setText(filePathInfo);
+//        filePathInfoTextView.setText(filePathInfo);
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -232,9 +227,12 @@ public class WallActivity extends AppCompatActivity {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
                     PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
-//                    postAdapter.addPost(newPost);
                     newPost.setWidth(postAppendArea.getWidth());
-                    addPost(postAppendArea, newPost);
+
+                    postAdapter.addPost(newPost);
+                    postAdapter.notifyItemInserted(postAdapter.getPostList().size());
+
+//                    addPost(postAppendArea, newPost);
                 }
                 break;
             default:
