@@ -19,20 +19,11 @@ import java.util.Date;
 
 public class ImageHelper {
 
-    private static final String LOG_TAG = "ImageHelper";
-
-    private String mPostID, mUserID, mUserEmail;
-
-    public ImageHelper(String userID, String postID) {
-        this.mUserID = userID;
-        this.mPostID = postID;
-    }
-
-    public static void setPicFromResources(ImageView imgView, Resources appRes, int imgID) {
+    public static void setPicFromResources(ImageView imgView, Resources appResources, int imgID) {
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(appRes, imgID, bmOptions);
+        BitmapFactory.decodeResource(appResources, imgID, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
@@ -50,15 +41,15 @@ public class ImageHelper {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeResource(appRes, imgID, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeResource(appResources, imgID, bmOptions);
         imgView.setImageBitmap(bitmap);
     }
 
-    public static void setPicFromResources(ImageView imgView, final int targetW, final int targetH, Resources appRes, int imgID) {
+    public static void setPicFromResources(ImageView imgView, final int targetW, final int targetH, Resources appResources, int imgID) {
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(appRes, imgID, bmOptions);
+        BitmapFactory.decodeResource(appResources, imgID, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
 
@@ -70,7 +61,7 @@ public class ImageHelper {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeResource(appRes, imgID, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeResource(appResources, imgID, bmOptions);
         imgView.setImageBitmap(bitmap);
     }
 
@@ -146,7 +137,7 @@ public class ImageHelper {
     public static File createImageFile(File storageDir) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = timeStamp + "_";
+        String imageFileName = timeStamp;
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         return image;
@@ -159,24 +150,6 @@ public class ImageHelper {
         mediaScanIntent.setData(contentUri);
 
         return mediaScanIntent;
-    }
-
-    public ImageHelper setUserID(String userID) {
-        this.mUserID = userID;
-        return this;
-    }
-
-    public ImageHelper setPostID(String postID) {
-        this.mPostID = postID;
-        return this;
-    }
-
-    public String getUserID() {
-        return this.mUserID;
-    }
-
-    public String getPostID() {
-        return this.mPostID;
     }
 
     /**

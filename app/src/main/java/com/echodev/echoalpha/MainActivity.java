@@ -34,10 +34,10 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "EchoAlphaMain";
+    private static final String LOG_TAG = "Echo_Alpha_Main";
 
     // Request code
-    private static final int RC_SIGN_IN = 100;
+    public static final int RC_SIGN_IN = 100;
     public static final int REQUEST_CODE_All_PERMISSIONS = 101;
 
     // Bind views by ButterKnife
@@ -53,9 +53,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.quit_btn)
     Button quitBtn;
 
-    private Resources localRes;
+    private Resources localResources;
     private static String appName;
-    private boolean allPermissionGranted;
     private IdpResponse mIdpResponse;
 
     @Override
@@ -64,15 +63,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        localRes = this.getResources();
-        appName = localRes.getString(R.string.app_name);
+        localResources = this.getResources();
+        appName = localResources.getString(R.string.app_name);
 
         // To ensure the set-picture function is called after the activity's drawing phase is finished
         coverImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 coverImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                ImageHelper.setPicFromResources(coverImage, localRes, R.drawable.cover_lowres);
+                ImageHelper.setPicFromResources(coverImage, localResources, R.drawable.cover_lowres);
             }
         });
 

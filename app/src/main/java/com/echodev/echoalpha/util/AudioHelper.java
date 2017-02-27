@@ -1,12 +1,16 @@
 package com.echodev.echoalpha.util;
 
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Environment;
 
 import com.echodev.echoalpha.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Ho on 6/2/2017.
@@ -14,25 +18,13 @@ import java.io.IOException;
 
 public class AudioHelper {
 
-    private static final String LOG_TAG = "AudioHelper";
-
     private static MediaRecorder mRecorder;
-    private MediaPlayer mPlayer;
-    private String mFileName;
 
-    private String mPostID, mUserID, mUserEmail;
-
-    public AudioHelper(String userID, String postID) {
-        this.mUserID = userID;
-        this.mPostID = postID;
-        this.mFileName = userID + "_" + postID + R.string.audio_format;
-    }
-
-    public static void startRecording(String audioName) {
+    public static void startRecording(String audioPath) {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(audioName);
+        mRecorder.setOutputFile(audioPath);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         try {
             mRecorder.prepare();
@@ -42,7 +34,7 @@ public class AudioHelper {
         mRecorder.start();
     }
 
-    public static void stopRecording(String audioName) {
+    public static void stopRecording(String audioPath) {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
@@ -63,21 +55,14 @@ public class AudioHelper {
         }
     }
 
-    public AudioHelper setUserID(String userID) {
-        this.mUserID = userID;
-        return this;
-    }
+    public static String createAudioFile(Resources resources, String userID) {
+        String appName = resources.getString(R.string.app_name);
+        String audioFormat = resources.getString(R.string.audio_format);
 
-    public AudioHelper setPostID(String postID) {
-        this.mPostID = postID;
-        return this;
-    }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        audioFilePath += "/" + appName + "/audio/" + userID + "_" + timeStamp + audioFormat;
 
-    public String getUserID() {
-        return this.mUserID;
-    }
-
-    public String getPostID() {
-        return this.mPostID;
+        return audioFilePath;
     }
 }

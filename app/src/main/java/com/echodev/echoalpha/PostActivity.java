@@ -21,7 +21,6 @@ import com.echodev.echoalpha.util.PostClass;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -31,6 +30,8 @@ import butterknife.OnLongClick;
 import butterknife.OnTouch;
 
 public class PostActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = "Echo_Alpha_Post";
 
     // Request code for taking photo
     public static final int REQUEST_TAKE_PHOTO = 120;
@@ -67,9 +68,8 @@ public class PostActivity extends AppCompatActivity {
     private PostClass newPost;
     private SpeechBubble speechBubble;
 
-    private Resources localRes;
-    private static String appName, audioFormat;
-    private boolean appDirExist;
+    private Resources localResources;
+    private boolean appDirExist, audioBubbleEditing;
     private String photoFilePath, audioFilePath;
 
     @Override
@@ -89,19 +89,18 @@ public class PostActivity extends AppCompatActivity {
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
+        audioBubbleEditing = false;
 
         // Prepare app resources for use
-        localRes = this.getResources();
-        appName = localRes.getString(R.string.app_name);
-        audioFormat = localRes.getString(R.string.audio_format);
+        localResources = this.getResources();
     }
 
     // Photo handling
     @OnClick(R.id.camera_btn)
     public void dispatchTakePictureIntent(View view) {
-//        if (!newPost.matchCurrentPostState(PostClass.STATE_PHOTO_PREPARE)) {
-//            return;
-//        }
+        if (!newPost.matchCurrentPostState(PostClass.STATE_PHOTO_PREPARE)) {
+            return;
+        }
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -144,8 +143,8 @@ public class PostActivity extends AppCompatActivity {
                     newPost.setPhotoPath(photoFilePath);
 
                     // Set post state to not ready
-//                    newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
-//                    newPost.setPostReady(false);
+                    newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
+                    newPost.setPostReady(true);
                 }
                 break;
             default:
@@ -157,19 +156,18 @@ public class PostActivity extends AppCompatActivity {
     // Audio handling
     @OnTouch(R.id.record_btn)
     public boolean recordAudioLocal(View view, MotionEvent event) {
-        if (!appDirExist) {
+        if (!newPost.matchCurrentPostState(PostClass.STATE_AUDIO_PREPARE) || audioBubbleEditing || !appDirExist) {
             return false;
         }
 
         // Prepare new audio file path and name
         if (audioFilePath == null || audioFilePath.isEmpty()) {
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            audioFilePath += "/" + appName + "/audio/" + newPost.getUserID() + "_" + timeStamp + audioFormat;
+            audioFilePath = AudioHelper.createAudioFile(localResources, newPost.getUserID());
         }
-//        if (!newPost.matchCurrentPostState(PostClass.STATE_AUDIO_PREPARE)) {
-//            return false;
-//        }
+
+        if (speechBubble == null) {
+            speechBubble = new SpeechBubble(newPost.getPostID().toString(), newPost.getUserEmail());
+        }
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -181,8 +179,9 @@ public class PostActivity extends AppCompatActivity {
                 AudioHelper.stopRecording(audioFilePath);
 
                 // Set post state to not ready
-//                newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
-//                newPost.setPostReady(false);
+                newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
+                newPost.setPostReady(false);
+                audioBubbleEditing = true;
                 break;
             default:
                 return false;
@@ -193,11 +192,7 @@ public class PostActivity extends AppCompatActivity {
 
     @OnClick(R.id.play_btn)
     public void playAudioLocal(View view) {
-//        if (appDirExist && newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE)) {
-//            AudioHelper.playAudioLocal(audioFilePath);
-//        }
-
-        if (appDirExist) {
+        if (newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE) && audioBubbleEditing && appDirExist) {
             AudioHelper.playAudioLocal(audioFilePath);
         }
     }
@@ -215,11 +210,10 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void addSpeechBubble(final int bubbleType) {
-//        if (!newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE)) {
-//            return;
-//        }
+        if (!newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE) || !audioBubbleEditing || speechBubble.isBubbleReady() || !appDirExist) {
+            return;
+        }
 
-        speechBubble = new SpeechBubble(newPost.getPostID().toString(), newPost.getUserEmail());
         speechBubble.setAudioPath(audioFilePath);
 
         if (bubbleType == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) {
@@ -229,26 +223,29 @@ public class PostActivity extends AppCompatActivity {
         }
 
         // Add a new ImageView at the center of the ViewGroup
-        int targetW = localRes.getDimensionPixelSize(R.dimen.bubble_width);
-        int targetH = localRes.getDimensionPixelSize(R.dimen.bubble_height);
+        int targetW = localResources.getDimensionPixelSize(R.dimen.bubble_width);
+        int targetH = localResources.getDimensionPixelSize(R.dimen.bubble_height);
         int centerX = (int) ((previewArea.getWidth() - targetW) * 0.5);
         int centerY = (int) ((previewArea.getHeight() - targetH) * 0.5);
-        speechBubble.addBubbleImage(centerX, centerY, previewArea, localRes, this);
+        speechBubble.addBubbleImage(centerX, centerY, previewArea, localResources, this);
         speechBubble.bindAdjustListener();
-
-        // Set post state to not ready
-//        newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
-//        newPost.setPostReady(false);
+        speechBubble.setBubbleReady(true);
     }
 
     @OnClick(R.id.finish_bubble_btn)
     public void finishBubble() {
+        if (!audioBubbleEditing || !speechBubble.isBubbleReady()) {
+            return;
+        }
+
         speechBubble.setCreationDate(new Date());
         newPost.addSpeechBubble(speechBubble);
         audioFilePath = null;
+        speechBubble = null;
 
-//        speechBubble.setBubbleReady(true);
-//        newPost.setPostReady(true);
+        audioBubbleEditing = false;
+        newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
+        newPost.setPostReady(true);
     }
 
     @OnLongClick(R.id.finish_bubble_btn)
@@ -260,9 +257,9 @@ public class PostActivity extends AppCompatActivity {
     // Finish creating post
     @OnClick(R.id.finish_post_btn)
     public void finishPost() {
-//        if (!newPost.isPostReady()) {
-//            return;
-//        }
+        if (!newPost.isPostReady()) {
+            return;
+        }
 
         newPost.setCreationDate(new Date());
 

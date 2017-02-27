@@ -18,15 +18,11 @@ public class PostClass implements Parcelable {
     public static final int STATE_PHOTO_PREPARE = 0;
     public static final int STATE_AUDIO_PREPARE = 1;
     public static final int STATE_BUBBLE_PREPARE = 2;
-    public static final int STATE_POST_READY = 3;
-
-    // Class variables
-    public static final String LOG_TAG = "PostClass";
 
     // Instance variables
     private UUID postID;
     private ParcelUuid postIDParcel;
-    private String postIDString, userID, userEmail, photoPath;
+    private String postIDString, userID, userEmail, photoPath, platform;
     private ArrayList<SpeechBubble> speechBubbleList;
     private Date creationDate;
     private long likeNumber, commentNumber;
@@ -34,13 +30,14 @@ public class PostClass implements Parcelable {
     private boolean postReady;
 
     // Post width and height, set to match the layout
-    int width, height;
+    private int width, height;
 
     // Constructors
     public PostClass() {
         this.postID = UUID.randomUUID();
         this.postIDParcel = new ParcelUuid(postID);
         this.postIDString = postID.toString();
+        this.platform = "Android";
         this.likeNumber = 0;
         this.commentNumber = 0;
         this.speechBubbleList = new ArrayList<SpeechBubble>();
@@ -71,6 +68,10 @@ public class PostClass implements Parcelable {
 
     public String getPhotoPath() {
         return photoPath;
+    }
+
+    public String getPlatform() {
+        return platform;
     }
 
     public Date getCreationDate() {
@@ -198,6 +199,7 @@ public class PostClass implements Parcelable {
         userID = in.readString();
         userEmail = in.readString();
         photoPath = in.readString();
+        platform = in.readString();
         speechBubbleList = in.createTypedArrayList(SpeechBubble.CREATOR);
         likeNumber = in.readLong();
         commentNumber = in.readLong();
@@ -234,6 +236,7 @@ public class PostClass implements Parcelable {
         dest.writeString(userID);
         dest.writeString(userEmail);
         dest.writeString(photoPath);
+        dest.writeString(platform);
         dest.writeTypedList(speechBubbleList);
         dest.writeLong(likeNumber);
         dest.writeLong(commentNumber);

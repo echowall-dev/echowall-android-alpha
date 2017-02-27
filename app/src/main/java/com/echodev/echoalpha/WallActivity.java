@@ -3,6 +3,7 @@ package com.echodev.echoalpha;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Environment;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -11,19 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.PostAdapter;
 import com.echodev.echoalpha.util.PostClass;
-import com.echodev.echoalpha.util.SpeechBubble;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,19 +25,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class WallActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = "Record_audio_message";
+    private static final String LOG_TAG = "Echo_Alpha_Wall";
 
     // Request code for creating new post
-    private static final int REQUEST_CODE_POST = 110;
+    public static final int REQUEST_CODE_POST = 110;
 
     // Bind views by ButterKnife
     @BindView(android.R.id.content)
@@ -58,9 +49,6 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.create_post_btn)
     Button createPostBtn;
 
-    @BindView(R.id.file_path_info)
-    TextView filePathInfoTextView;
-
     @BindView(R.id.post_list_area)
     RecyclerView postListArea;
 
@@ -68,7 +56,7 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
 
-    private Resources localRes;
+    private Resources localResources;
     private PostAdapter postAdapter;
 
     @Override
@@ -85,25 +73,20 @@ public class WallActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
 
-        localRes = this.getResources();
+        // Prepare app resources for use
+        localResources = this.getResources();
 
         // use a linear layout manager
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
         postListArea.setLayoutManager(linearLayoutManager);
 
         // specify an adapter
-        postAdapter = new PostAdapter(localRes, this);
+        postAdapter = new PostAdapter(localResources, this);
         postListArea.setAdapter(postAdapter);
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
         populateProfile();
         populateIdpToken();
-
-        // Add files path info at the bottom of the page
-        String photoPathInfo = "photo";
-        String audioPathInfo = "audio";
-        String filePathInfo = "photo location:\n" + photoPathInfo + "\n\naudio location:\n" + audioPathInfo;
-//        filePathInfoTextView.setText(filePathInfo);
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -225,6 +208,14 @@ public class WallActivity extends AppCompatActivity {
                     PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
                     newPost.setWidth(postListArea.getWidth());
 
+                    // Show files path info on the page
+                    String appName = localResources.getString(R.string.app_name);
+                    String photoPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/audio/";
+                    String audioPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.echodev.echoalpha/files/Pictures/";
+                    String filePathInfo = "photo location:\n" + photoPathInfo + "\naudio location:\n" + audioPathInfo;
+                    IDTextView.setText(filePathInfo);
+
+                    // Add the new post into the dateset of the RecyclerView Adapter
                     postAdapter.addPost(newPost);
                     postAdapter.notifyItemInserted(postAdapter.getPostList().size());
                 }
