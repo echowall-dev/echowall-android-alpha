@@ -48,9 +48,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical" />
 
-        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/post_list_area"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/file_path_info"

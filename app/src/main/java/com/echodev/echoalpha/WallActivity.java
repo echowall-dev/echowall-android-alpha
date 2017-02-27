@@ -58,6 +58,9 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.create_post_btn)
     Button createPostBtn;
 
+    @BindView(R.id.file_path_info)
+    TextView filePathInfoTextView;
+
     @BindView(R.id.post_append_area)
     LinearLayout postAppendArea;
 
@@ -70,7 +73,6 @@ public class WallActivity extends AppCompatActivity {
 
     private Resources localRes;
 
-//    private ArrayList<PostClass> postList;
     private PostAdapter postAdapter;
 
     @Override
@@ -89,6 +91,7 @@ public class WallActivity extends AppCompatActivity {
 
         localRes = this.getResources();
 
+        /*
         // use a linear layout manager
         RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
         postListArea.setLayoutManager(linearLayoutManager);
@@ -98,6 +101,7 @@ public class WallActivity extends AppCompatActivity {
 //        postAdapter = new PostAdapter(postList);
         postAdapter = new PostAdapter(localRes, this, postListArea.getWidth());
         postListArea.setAdapter(postAdapter);
+        */
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
         populateProfile();
@@ -107,7 +111,6 @@ public class WallActivity extends AppCompatActivity {
         String photoPathInfo = "photo";
         String audioPathInfo = "audio";
         String filePathInfo = "photo location:\n" + photoPathInfo + "\n\naudio location:\n" + audioPathInfo;
-        TextView filePathInfoTextView = (TextView) findViewById(R.id.file_path_info);
         filePathInfoTextView.setText(filePathInfo);
     }
 
@@ -229,7 +232,8 @@ public class WallActivity extends AppCompatActivity {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
                     PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
-                    postAdapter.addPost(newPost);
+//                    postAdapter.addPost(newPost);
+                    newPost.setWidth(postAppendArea.getWidth());
                     addPost(postAppendArea, newPost);
                 }
                 break;
@@ -261,7 +265,7 @@ public class WallActivity extends AppCompatActivity {
         postCreationDateView.setText(postCreationDate);
 
         // Add the photo
-        ImageHelper.setPicFromFile(postImageView, postAppendArea.getWidth(), newPost.getPhotoPath());
+        ImageHelper.setPicFromFile(postImageView, newPost.getWidth(), newPost.getPhotoPath());
 
         // Add the speech bubbles at target position
         for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {

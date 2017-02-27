@@ -33,6 +33,9 @@ public class PostClass implements Parcelable {
     private int currentPostState;
     private boolean postReady;
 
+    // Post width and height, set to match the layout
+    int width, height;
+
     // Constructors
     public PostClass() {
         this.postID = UUID.randomUUID();
@@ -90,6 +93,14 @@ public class PostClass implements Parcelable {
         return currentPostState;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     // Setters
     public PostClass setUserID(String userID) {
         this.userID = userID;
@@ -133,6 +144,16 @@ public class PostClass implements Parcelable {
 
     public PostClass setPostReady(boolean postReady) {
         this.postReady = postReady;
+        return this;
+    }
+
+    public PostClass setWidth(int width) {
+        this.width = width;
+        return this;
+    }
+
+    public PostClass setHeight(int height) {
+        this.height = height;
         return this;
     }
 
@@ -182,6 +203,8 @@ public class PostClass implements Parcelable {
         commentNumber = in.readLong();
         currentPostState = in.readInt();
         postReady = in.readByte() != 0;
+        width = in.readInt();
+        height = in.readInt();
 
         // Non-primitive data types handling for Parcelable
         creationDate = new Date(in.readLong());
@@ -216,6 +239,8 @@ public class PostClass implements Parcelable {
         dest.writeLong(commentNumber);
         dest.writeInt(currentPostState);
         dest.writeByte((byte) (postReady ? 1 : 0));
+        dest.writeInt(width);
+        dest.writeInt(height);
 
         // Non-primitive data types handling for Parcelable
         dest.writeLong(creationDate.getTime());
