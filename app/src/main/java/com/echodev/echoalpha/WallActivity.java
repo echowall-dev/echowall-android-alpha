@@ -50,7 +50,7 @@ public class WallActivity extends AppCompatActivity {
     View mRootView;
 
     @BindView(R.id.identity_text)
-    TextView IDText;
+    TextView IDTextView;
 
     @BindView(R.id.sign_out_btn)
     Button signOutBtn;
@@ -132,7 +132,7 @@ public class WallActivity extends AppCompatActivity {
         contentText += "\n" + currentEmail;
         contentText += "\n" + currentUid;
 
-        IDText.setText(contentText);
+        IDTextView.setText(contentText);
 
         /*
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -201,8 +201,7 @@ public class WallActivity extends AppCompatActivity {
 
     @MainThread
     private void showSnackbar(@StringRes int errorMessageRes) {
-        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG)
-                .show();
+        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.create_post_btn)
