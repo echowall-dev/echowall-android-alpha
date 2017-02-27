@@ -61,9 +61,6 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.file_path_info)
     TextView filePathInfoTextView;
 
-    @BindView(R.id.post_append_area)
-    LinearLayout postAppendArea;
-
     @BindView(R.id.post_list_area)
     RecyclerView postListArea;
 
@@ -227,51 +224,15 @@ public class WallActivity extends AppCompatActivity {
             case REQUEST_CODE_POST:
                 if (resultCode == RESULT_OK) {
                     PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
-                    newPost.setWidth(postAppendArea.getWidth());
+                    newPost.setWidth(postListArea.getWidth());
 
                     postAdapter.addPost(newPost);
                     postAdapter.notifyItemInserted(postAdapter.getPostList().size());
-
-//                    addPost(postAppendArea, newPost);
                 }
                 break;
             default:
                 break;
         }
-    }
-
-    private void addPost(ViewGroup postAppendArea, PostClass newPost) {
-        // Fetch the data of the new post
-        long postLikeNumber = newPost.getLikeNumber();
-        String postCreationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newPost.getCreationDate());
-
-        // Prepare an empty post
-        View view = LayoutInflater.from(postAppendArea.getContext()).inflate(R.layout.post_layout, postAppendArea, false);
-
-        // Prepare the views of the post
-        TextView postUserProfile = (TextView) view.findViewById(R.id.post_user_profile);
-        RelativeLayout postImageArea = (RelativeLayout) view.findViewById(R.id.post_image_area);
-        ImageView postImageView = (ImageView) view.findViewById(R.id.post_image);
-        TextView postLikeNumberView = (TextView) view.findViewById(R.id.post_like_number);
-        TextView postCaptionView = (TextView) view.findViewById(R.id.post_caption);
-        TextView postCreationDateView = (TextView) view.findViewById(R.id.post_creation_time);
-
-        // Set template info
-        postUserProfile.setText(newPost.getUserEmail());
-        postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        postCaptionView.setText("Peter:\nWhat a beautiful day!");
-        postCreationDateView.setText(postCreationDate);
-
-        // Add the photo
-        ImageHelper.setPicFromFile(postImageView, newPost.getWidth(), newPost.getPhotoPath());
-
-        // Add the speech bubbles at target position
-        for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {
-            speechBubble.addBubbleImage(speechBubble.getX(), speechBubble.getY(), postImageArea, localRes, this);
-            speechBubble.bindPlayListener();
-        }
-
-        postAppendArea.addView(view);
     }
 
     private void startMain() {
