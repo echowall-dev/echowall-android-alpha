@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity {
     public void signIn(View view) {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
-                        .setTheme(R.style.TestTheme)
-                        .setLogo(R.drawable.app_logo_cut)
+                        .setTheme(R.style.AlphaTheme)
+                        .setLogo(R.drawable.echowall_logo_center_500px)
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
