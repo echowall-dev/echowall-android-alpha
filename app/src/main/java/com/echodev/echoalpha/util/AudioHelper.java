@@ -19,8 +19,11 @@ import java.util.Date;
 public class AudioHelper {
 
     private static MediaRecorder mRecorder;
+    private static boolean isRecording = false;
 
-    public static void startRecording(String audioPath) {
+    public static boolean startRecording(String audioPath) {
+        boolean startSuccess;
+
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -29,15 +32,31 @@ public class AudioHelper {
         try {
             mRecorder.prepare();
         } catch (IOException e) {
+            startSuccess = false;
             e.printStackTrace();
         }
         mRecorder.start();
+
+        isRecording = true;
+        startSuccess = true;
+
+        return startSuccess;
     }
 
-    public static void stopRecording(String audioPath) {
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
+    public static boolean stopRecording() {
+        boolean stopSuccess = false;
+
+        if (isRecording && mRecorder != null) {
+            mRecorder.stop();
+            mRecorder.reset();
+            mRecorder.release();
+            mRecorder = null;
+            isRecording = false;
+
+            stopSuccess = true;
+        }
+
+        return stopSuccess;
     }
 
     public static void playAudioLocal(String audioPath) {

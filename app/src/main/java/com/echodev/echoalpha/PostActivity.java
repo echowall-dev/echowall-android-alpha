@@ -154,8 +154,8 @@ public class PostActivity extends AppCompatActivity {
     // End of photo handling
 
     // Audio handling
-    @OnTouch(R.id.record_btn)
-    public boolean recordAudioLocal(View view, MotionEvent event) {
+    @OnLongClick(R.id.record_btn)
+    public boolean recordAudioLocalStart() {
         if (!newPost.matchCurrentPostState(PostClass.STATE_AUDIO_PREPARE) || audioBubbleEditing || !appDirExist) {
             return false;
         }
@@ -169,32 +169,41 @@ public class PostActivity extends AppCompatActivity {
             speechBubble = new SpeechBubble(newPost.getPostID().toString(), newPost.getUserEmail());
         }
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                // Start recording
-                AudioHelper.startRecording(audioFilePath);
-                break;
-            case MotionEvent.ACTION_UP:
-                // Stop recording
-                AudioHelper.stopRecording(audioFilePath);
+        // Start recording
+        boolean startSuccess = AudioHelper.startRecording(audioFilePath);
 
-                // Set post state to not ready
+        return startSuccess;
+    }
+
+    @OnTouch(R.id.record_btn)
+    public boolean recordAudioLocalControl(View view, MotionEvent event) {
+        if (!newPost.matchCurrentPostState(PostClass.STATE_AUDIO_PREPARE) || audioBubbleEditing || !appDirExist) {
+            return false;
+        }
+
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            // Stop recording
+            boolean stopSuccess = AudioHelper.stopRecording();
+
+            // Set post state to not ready if recording stops successfully
+            if (stopSuccess) {
                 newPost.setCurrentPostState(PostClass.STATE_BUBBLE_PREPARE);
                 newPost.setPostReady(false);
                 audioBubbleEditing = true;
-                break;
-            default:
-                return false;
+            }
         }
 
-        return true;
+        // This OnTouch event needs to return false for the LonClick event to work
+        return false;
     }
 
     @OnClick(R.id.play_btn)
-    public void playAudioLocal(View view) {
+    public boolean playAudioLocal(View view) {
         if (newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE) && audioBubbleEditing && appDirExist) {
             AudioHelper.playAudioLocal(audioFilePath);
+            return true;
         }
+        return false;
     }
     // End of audio handling
 
@@ -246,11 +255,6 @@ public class PostActivity extends AppCompatActivity {
         audioBubbleEditing = false;
         newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
         newPost.setPostReady(true);
-    }
-
-    @OnLongClick(R.id.finish_bubble_btn)
-    public boolean editBubble() {
-        return false;
     }
     // End of speech bubble handling
 

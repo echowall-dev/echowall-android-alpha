@@ -76,8 +76,10 @@ public class WallActivity extends AppCompatActivity {
         // Prepare app resources for use
         localResources = this.getResources();
 
-        // use a linear layout manager
-        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        // Use a linear layout manager
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        linearLayoutManager.setReverseLayout(true);
+//        linearLayoutManager.setStackFromEnd(true);
         postListArea.setLayoutManager(linearLayoutManager);
 
         // specify an adapter
