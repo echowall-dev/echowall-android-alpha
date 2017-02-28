@@ -78,7 +78,7 @@ public class WallActivity extends AppCompatActivity {
 
         // Use a linear layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setReverseLayout(true);
 //        linearLayoutManager.setStackFromEnd(true);
         postListArea.setLayoutManager(linearLayoutManager);
 
@@ -217,9 +217,10 @@ public class WallActivity extends AppCompatActivity {
                     String filePathInfo = "photo location:\n" + photoPathInfo + "\naudio location:\n" + audioPathInfo;
                     IDTextView.setText(filePathInfo);
 
-                    // Add the new post into the dateset of the RecyclerView Adapter
+                    // Add the new post into the dataset of the RecyclerView Adapter
                     postAdapter.addPost(newPost);
-                    postAdapter.notifyItemInserted(postAdapter.getPostList().size());
+                    postAdapter.notifyItemInserted(postAdapter.getPostList().size() - 1);
+                    postListArea.scrollToPosition(postAdapter.getPostList().size() - 1);
                 }
                 break;
             default:

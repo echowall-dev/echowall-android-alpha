@@ -169,7 +169,7 @@ public class PostActivity extends AppCompatActivity {
             speechBubble = new SpeechBubble(newPost.getPostID().toString(), newPost.getUserEmail());
         }
 
-        // Start recording
+        // Start recording when button is clicked and held but not for a short click
         boolean startSuccess = AudioHelper.startRecording(audioFilePath);
 
         return startSuccess;
@@ -182,7 +182,7 @@ public class PostActivity extends AppCompatActivity {
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            // Stop recording
+            // Stop recording when button is released
             boolean stopSuccess = AudioHelper.stopRecording();
 
             // Set post state to not ready if recording stops successfully
@@ -198,12 +198,10 @@ public class PostActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.play_btn)
-    public boolean playAudioLocal(View view) {
+    public void playAudioLocal(View view) {
         if (newPost.matchCurrentPostState(PostClass.STATE_BUBBLE_PREPARE) && audioBubbleEditing && appDirExist) {
             AudioHelper.playAudioLocal(audioFilePath);
-            return true;
         }
-        return false;
     }
     // End of audio handling
 
