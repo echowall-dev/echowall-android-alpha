@@ -1,11 +1,10 @@
 .idea/
-!*.apk
 
 # Created by https://www.gitignore.io/api/linux,macos,windows,android,jetbrains,sublimetext
 
 ### Android ###
 # Built application files
-*.apk
+#*.apk
 *.ap_
 
 # Files for the ART/Dalvik VM
