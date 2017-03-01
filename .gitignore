@@ -1,4 +1,5 @@
 .idea/
+!*.apk
 
 # Created by https://www.gitignore.io/api/linux,macos,windows,android,jetbrains,sublimetext
 
