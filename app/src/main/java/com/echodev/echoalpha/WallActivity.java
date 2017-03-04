@@ -24,6 +24,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,6 +60,12 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
 
+    private FirebaseDatabase mDb;
+    private DatabaseReference mDbRef;
+
+    private FirebaseStorage mStorage;
+    private StorageReference mStorageRef;
+
     private Resources localResources;
     private PostAdapter postAdapter;
 
@@ -66,8 +76,8 @@ public class WallActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser == null) {
-            startMain();
-            return;
+//            startMain();
+//            return;
         }
 
         setContentView(R.layout.activity_wall);
@@ -93,6 +103,9 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.sign_out_btn)
     public void signOut() {
+        startMain();
+
+        /*
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -105,17 +118,21 @@ public class WallActivity extends AppCompatActivity {
                         }
                     }
                 });
+        */
     }
 
     @MainThread
     private void populateProfile() {
-        String currentUid = mUser.getUid();
-        String currentEmail = mUser.getEmail();
+//        String userID = mUser.getUid();
+//        String userEmail = mUser.getEmail();
+
+        String userID = "user001";
+        String userEmail = "user001@echowall.com";
 
         String contentText = "";
         contentText += "You have signed in as";
-        contentText += "\n" + currentEmail;
-        contentText += "\n" + currentUid;
+        contentText += "\n" + userEmail;
+        contentText += "\n" + userID;
 
         IDTextView.setText(contentText);
 
@@ -191,9 +208,15 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
+//        String userID = mUser.getUid();
+//        String userEmail = mUser.getEmail();
+
+        String userID = "user001";
+        String userEmail = "user001@echowall.com";
+
         Bundle bundle = new Bundle();
-        bundle.putString("userID", mUser.getUid());
-        bundle.putString("userEmail", mUser.getEmail());
+        bundle.putString("userID", userID);
+        bundle.putString("userEmail", userEmail);
 
         Intent intent = new Intent();
         intent.setClass(this, PostActivity.class);

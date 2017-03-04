@@ -71,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 coverImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                ImageHelper.setPicFromResources(coverImage, localResources, R.drawable.cover_lowres);
+//                ImageHelper.setPicFromResources(coverImage, localResources, R.drawable.cover_lowres);
+                ImageHelper.setPicFromResources(coverImage, localResources, R.drawable.app_logo_cut_wide);
             }
         });
 
         requestPermission();
 
+        /*
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             // User is signed in
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // User is signed out
         }
+        */
     }
 
     // Prepare app directory
@@ -152,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.sign_in_btn)
     public void signIn(View view) {
+        startWall();
+
+        /*
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setTheme(R.style.AlphaTheme)
@@ -162,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                         .setIsSmartLockEnabled(false)
                         .build(),
                 RC_SIGN_IN);
+        */
     }
 
     @Override
