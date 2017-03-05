@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
 
 import java.text.SimpleDateFormat;
@@ -85,7 +86,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.postCreationDateView.setText(postCreationDate);
 
         // Add the photo to the post
-        ImageHelper.setPicFromFile(holder.postImageView, post.getWidth(), post.getPhotoPath());
+        Glide.with(context)
+                .load(post.getPhotoPath())
+                .asBitmap()
+                .into(holder.postImageView);
+
 
         // Add the speech bubbles at target position
         for (SpeechBubble speechBubble : post.getSpeechBubbleList()) {

@@ -14,11 +14,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.echodev.echoalpha.util.ImageHelper;
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -66,19 +65,14 @@ public class MainActivity extends AppCompatActivity {
         localResources = this.getResources();
         appName = localResources.getString(R.string.app_name);
 
-        // To ensure the set-picture function is called after the activity's drawing phase is finished
-        coverImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                coverImage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                ImageHelper.setPicFromResources(coverImage, localResources, R.drawable.cover_lowres);
-                ImageHelper.setPicFromResources(coverImage, localResources, R.drawable.app_logo_cut_wide);
-            }
-        });
+        // Load the cover image
+        Glide.with(this)
+                .load(R.drawable.cover_lowres)
+                .asBitmap()
+                .into(coverImage);
 
         requestPermission();
 
-        /*
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             // User is signed in
@@ -86,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // User is signed out
         }
-        */
     }
 
     // Prepare app directory
@@ -155,20 +148,18 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.sign_in_btn)
     public void signIn(View view) {
-        startWall();
-
-        /*
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setTheme(R.style.AlphaTheme)
-                        .setLogo(R.drawable.echowall_logo_center_500px)
+                        .setLogo(R.drawable.app_logo_cut)
                         .setProviders(Arrays.asList(
                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
                         .setIsSmartLockEnabled(false)
                         .build(),
                 RC_SIGN_IN);
-        */
+
+//        startWall();
     }
 
     @Override

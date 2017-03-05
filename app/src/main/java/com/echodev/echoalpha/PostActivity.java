@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.echodev.echoalpha.util.ImageHelper;
@@ -138,8 +139,16 @@ public class PostActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
+                    // Add the photo to the phone's gallery
                     galleryAddPic();
-                    ImageHelper.setPicFromFile(previewImage, photoFilePath);
+
+                    // Load the photo into preview area
+                    Glide.with(this)
+                            .load(photoFilePath)
+                            .asBitmap()
+                            .into(previewImage);
+
+                    // Add the photo to the new Post object
                     newPost.setPhotoPath(photoFilePath);
 
                     // Set post state to not ready
@@ -234,7 +243,7 @@ public class PostActivity extends AppCompatActivity {
         int targetH = localResources.getDimensionPixelSize(R.dimen.bubble_height);
         int centerX = (int) ((previewArea.getWidth() - targetW) * 0.5);
         int centerY = (int) ((previewArea.getHeight() - targetH) * 0.5);
-        speechBubble.addBubbleImage(centerX, centerY, previewArea, localResources, this);
+        speechBubble.addBubbleImage(centerX, centerY, previewArea, localResources, this.getApplicationContext());
         speechBubble.bindAdjustListener();
         speechBubble.setBubbleReady(true);
     }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
 
 import java.util.Date;
@@ -221,10 +222,16 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         // Fill the ImageView with the corresponding speech bubble image
         switch (this.type) {
             case SPEECH_BUBBLE_TYPE_LEFT:
-                ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, resources, R.drawable.speech_bubble_l);
+                Glide.with(context)
+                        .load(R.drawable.speech_bubble_l)
+                        .fitCenter()
+                        .into(bubbleImageView);
                 break;
             case SPEECH_BUBBLE_TYPE_RIGHT:
-                ImageHelper.setPicFromResources(bubbleImageView, targetW, targetH, resources, R.drawable.speech_bubble_r);
+                Glide.with(context)
+                        .load(R.drawable.speech_bubble_r)
+                        .fitCenter()
+                        .into(bubbleImageView);
                 break;
             default:
                 break;

@@ -76,8 +76,8 @@ public class WallActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         if (mUser == null) {
-//            startMain();
-//            return;
+            startMain();
+            return;
         }
 
         setContentView(R.layout.activity_wall);
@@ -103,9 +103,6 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.sign_out_btn)
     public void signOut() {
-        startMain();
-
-        /*
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -118,16 +115,17 @@ public class WallActivity extends AppCompatActivity {
                         }
                     }
                 });
-        */
+
+//        startMain();
     }
 
     @MainThread
     private void populateProfile() {
-//        String userID = mUser.getUid();
-//        String userEmail = mUser.getEmail();
+        String userID = mUser.getUid();
+        String userEmail = mUser.getEmail();
 
-        String userID = "user001";
-        String userEmail = "user001@echowall.com";
+//        String userID = "user001";
+//        String userEmail = "user001@echowall.com";
 
         String contentText = "";
         contentText += "You have signed in as";
@@ -208,11 +206,11 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
-//        String userID = mUser.getUid();
-//        String userEmail = mUser.getEmail();
+        String userID = mUser.getUid();
+        String userEmail = mUser.getEmail();
 
-        String userID = "user001";
-        String userEmail = "user001@echowall.com";
+//        String userID = "user001";
+//        String userEmail = "user001@echowall.com";
 
         Bundle bundle = new Bundle();
         bundle.putString("userID", userID);
