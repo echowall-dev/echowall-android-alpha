@@ -1,5 +1,6 @@
 package com.echodev.echoalpha.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,8 @@ public class FirebasePost {
     public FirebasePost(String creatorID) {
         this.creatorID = creatorID;
         this.postID = UUID.randomUUID().toString();
+        this.collaboratorIDList = new ArrayList<String>();
+        this.speechBubbleIDList = new ArrayList<String>();
         this.likeNumber = 0;
         this.commentNumber = 0;
         this.shareNumber = 0;
