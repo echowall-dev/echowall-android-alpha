@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.ParcelUuid;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -22,10 +23,10 @@ public class PostClass implements Parcelable {
     // Instance variables
     private UUID postID;
     private ParcelUuid postIDParcel;
-    private String postIDString, userID, userEmail, photoPath, platform;
+    private String postIDString, userID, userEmail, userName, photoPath, caption, platform;
     private ArrayList<SpeechBubble> speechBubbleList;
     private Date creationDate;
-    private long likeNumber, commentNumber;
+    private long likeNumber, commentNumber, shareNumber;
     private int currentPostState;
     private boolean postReady;
 
@@ -40,6 +41,7 @@ public class PostClass implements Parcelable {
         this.platform = "Android";
         this.likeNumber = 0;
         this.commentNumber = 0;
+        this.shareNumber = 0;
         this.speechBubbleList = new ArrayList<SpeechBubble>();
         this.currentPostState = STATE_PHOTO_PREPARE;
         this.postReady = false;
@@ -66,8 +68,16 @@ public class PostClass implements Parcelable {
         return userEmail;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
     public String getPhotoPath() {
         return photoPath;
+    }
+
+    public String getCaption() {
+        return caption;
     }
 
     public String getPlatform() {
@@ -78,12 +88,20 @@ public class PostClass implements Parcelable {
         return creationDate;
     }
 
+    public String getCreationDateString() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(creationDate);
+    }
+
     public long getLikeNumber() {
         return likeNumber;
     }
 
     public long getCommentNumber() {
         return commentNumber;
+    }
+
+    public long getShareNumber() {
+        return shareNumber;
     }
 
     public ArrayList<SpeechBubble> getSpeechBubbleList() {
@@ -113,8 +131,18 @@ public class PostClass implements Parcelable {
         return this;
     }
 
+    public PostClass setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
+
     public PostClass setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+        return this;
+    }
+
+    public PostClass setCaption(String caption) {
+        this.caption = caption;
         return this;
     }
 
@@ -135,6 +163,11 @@ public class PostClass implements Parcelable {
 
     public PostClass setCommentNumber(long commentNumber) {
         this.commentNumber = commentNumber;
+        return this;
+    }
+
+    public PostClass setShareNumber(long shareNumber) {
+        this.shareNumber = shareNumber;
         return this;
     }
 
@@ -176,8 +209,20 @@ public class PostClass implements Parcelable {
         speechBubbleList.add(speechBubble);
     }
 
+    public void addSpeechBubble(int i, SpeechBubble speechBubble) {
+        speechBubbleList.add(i, speechBubble);
+    }
+
     public void removeSpeechBubble(SpeechBubble speechBubble) {
         speechBubbleList.remove(speechBubble);
+    }
+
+    public void removeSpeechBubble(int i) {
+        speechBubbleList.remove(i);
+    }
+
+    public void setSpeechBubble(int i, SpeechBubble speechBubble) {
+        speechBubbleList.set(i, speechBubble);
     }
 
     public SpeechBubble getSpeechBubble(int i) {
@@ -198,11 +243,14 @@ public class PostClass implements Parcelable {
         postIDString = in.readString();
         userID = in.readString();
         userEmail = in.readString();
+        userName = in.readString();
         photoPath = in.readString();
+        caption = in.readString();
         platform = in.readString();
         speechBubbleList = in.createTypedArrayList(SpeechBubble.CREATOR);
         likeNumber = in.readLong();
         commentNumber = in.readLong();
+        shareNumber = in.readLong();
         currentPostState = in.readInt();
         postReady = in.readByte() != 0;
         width = in.readInt();
@@ -235,11 +283,14 @@ public class PostClass implements Parcelable {
         dest.writeString(postIDString);
         dest.writeString(userID);
         dest.writeString(userEmail);
+        dest.writeString(userName);
         dest.writeString(photoPath);
+        dest.writeString(caption);
         dest.writeString(platform);
         dest.writeTypedList(speechBubbleList);
         dest.writeLong(likeNumber);
         dest.writeLong(commentNumber);
+        dest.writeLong(shareNumber);
         dest.writeInt(currentPostState);
         dest.writeByte((byte) (postReady ? 1 : 0));
         dest.writeInt(width);

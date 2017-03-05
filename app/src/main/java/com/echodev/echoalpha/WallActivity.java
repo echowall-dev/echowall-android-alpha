@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.echodev.echoalpha.util.AudioHelper;
+import com.echodev.echoalpha.util.FirebaseUserClass;
 import com.echodev.echoalpha.util.PostAdapter;
 import com.echodev.echoalpha.util.PostClass;
 import com.firebase.ui.auth.AuthUI;
@@ -59,6 +60,7 @@ public class WallActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
+    private String userID, userEmail, userName;
     private IdpResponse mIdpResponse;
 
     private FirebaseDatabase mDb;
@@ -79,6 +81,14 @@ public class WallActivity extends AppCompatActivity {
         if (mUser == null) {
             startMain();
             return;
+        } else {
+            userID = mUser.getUid();
+            userEmail = mUser.getEmail();
+//            userName = mUser.getDisplayName();
+            userName = "Peter";
+
+            // TODO: Push the user info to Firebase database if it has not been stored
+            FirebaseUserClass firebaseUser = new FirebaseUserClass(userID, userEmail, userName);
         }
 
         setContentView(R.layout.activity_wall);
@@ -125,9 +135,6 @@ public class WallActivity extends AppCompatActivity {
 
     @MainThread
     private void populateProfile() {
-        String userID = mUser.getUid();
-        String userEmail = mUser.getEmail();
-
 //        String userID = "user001";
 //        String userEmail = "user001@echowall.com";
 
@@ -135,6 +142,7 @@ public class WallActivity extends AppCompatActivity {
         contentText += "You have signed in as";
         contentText += "\n" + userEmail;
         contentText += "\n" + userID;
+        contentText += "\n" + userName;
 
         IDTextView.setText(contentText);
 
@@ -210,15 +218,13 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
-        String userID = mUser.getUid();
-        String userEmail = mUser.getEmail();
-
 //        String userID = "user001";
 //        String userEmail = "user001@echowall.com";
 
         Bundle bundle = new Bundle();
         bundle.putString("userID", userID);
         bundle.putString("userEmail", userEmail);
+        bundle.putString("userName", userName);
 
         Intent intent = new Intent();
         intent.setClass(this, PostActivity.class);

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
     private String audioPath;
     private Uri audioUri;
     private Date creationDate;
-    private long likeNumber, playNumber;
+    private long playNumber;
     private boolean bubbleReady;
 
     // Instance variables for adjusting the bubble
@@ -44,13 +45,20 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
     private ImageView bubbleImageView;
 
     // Constructors
+    public SpeechBubble() {
+        this.bubbleID = UUID.randomUUID();
+        this.bubbleIDParcel = new ParcelUuid(bubbleID);
+        this.bubbleIDString = bubbleID.toString();
+        this.playNumber = 0;
+        this.bubbleReady = false;
+    }
+
     public SpeechBubble(String postID, String userEmail) {
         this.bubbleID = UUID.randomUUID();
         this.bubbleIDParcel = new ParcelUuid(bubbleID);
         this.bubbleIDString = bubbleID.toString();
         this.postID = postID;
         this.userEmail = userEmail;
-        this.likeNumber = 0;
         this.playNumber = 0;
         this.bubbleReady = false;
     }
@@ -61,7 +69,6 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         this.bubbleIDString = bubbleID.toString();
         this.postID = postID;
         this.userEmail = userEmail;
-        this.likeNumber = 0;
         this.playNumber = 0;
         this.bubbleReady = false;
         this.x = x;
@@ -74,7 +81,6 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         this.bubbleIDString = bubbleID.toString();
         this.postID = postID;
         this.userEmail = userEmail;
-        this.likeNumber = 0;
         this.playNumber = 0;
         this.bubbleReady = false;
         this.x = x;
@@ -131,8 +137,8 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         return creationDate;
     }
 
-    public long getLikeNumber() {
-        return likeNumber;
+    public String getCreationDateString() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(creationDate);
     }
 
     public long getPlayNumber() {
@@ -182,11 +188,6 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
 
     public SpeechBubble setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
-        return this;
-    }
-
-    public SpeechBubble setLikeNumber(long likeNumber) {
-        this.likeNumber = likeNumber;
         return this;
     }
 
@@ -315,7 +316,6 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         type = in.readInt();
         audioPath = in.readString();
         audioUri = in.readParcelable(Uri.class.getClassLoader());
-        likeNumber = in.readLong();
         playNumber = in.readLong();
         bubbleReady = in.readByte() != 0;
         dX = in.readInt();
@@ -356,7 +356,6 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         dest.writeInt(type);
         dest.writeString(audioPath);
         dest.writeParcelable(audioUri, flags);
-        dest.writeLong(likeNumber);
         dest.writeLong(playNumber);
         dest.writeByte((byte) (bubbleReady ? 1 : 0));
         dest.writeInt(dX);

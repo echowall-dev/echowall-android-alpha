@@ -10,16 +10,22 @@ import java.util.UUID;
 
 public class FirebasePost {
 
-    private String postID, creatorID, photoUrl, postCaption, creationDate;
+    // Instance variables
+    private String postID, creatorID, photoUrl, caption, creationDate;
     private List<String> collaboratorIDList, speechBubbleIDList;
     private long likeNumber, commentNumber, shareNumber;
 
+    // Constructors
     public FirebasePost() {
+        // Required by Firebase
     }
 
     public FirebasePost(String creatorID) {
-        this.creatorID = creatorID;
         this.postID = UUID.randomUUID().toString();
+        this.creatorID = creatorID;
+        this.photoUrl = "";
+        this.caption = "";
+        this.creationDate = "";
         this.collaboratorIDList = new ArrayList<String>();
         this.speechBubbleIDList = new ArrayList<String>();
         this.likeNumber = 0;
@@ -27,6 +33,24 @@ public class FirebasePost {
         this.shareNumber = 0;
     }
 
+    public FirebasePost(PostClass post) {
+        this.postID = post.getPostIDString();
+        this.creatorID = post.getUserID();
+        this.photoUrl = "";
+        this.caption = post.getCaption();
+        this.creationDate = post.getCreationDateString();
+        this.collaboratorIDList = new ArrayList<String>();
+        this.speechBubbleIDList = new ArrayList<String>();
+        this.likeNumber = post.getLikeNumber();
+        this.commentNumber = post.getLikeNumber();
+        this.shareNumber = post.getShareNumber();
+
+        for (SpeechBubble speechBubble : post.getSpeechBubbleList()) {
+            speechBubbleIDList.add(speechBubble.getBubbleIDString());
+        }
+    }
+
+    // Getters
     public String getPostID() {
         return postID;
     }
@@ -39,8 +63,8 @@ public class FirebasePost {
         return photoUrl;
     }
 
-    public String getPostCaption() {
-        return postCaption;
+    public String getCaption() {
+        return caption;
     }
 
     public String getCreationDate() {
@@ -67,6 +91,7 @@ public class FirebasePost {
         return shareNumber;
     }
 
+    // Setters
     public void setPostID(String postID) {
         this.postID = postID;
     }
@@ -79,8 +104,8 @@ public class FirebasePost {
         this.photoUrl = photoUrl;
     }
 
-    public void setPostCaption(String postCaption) {
-        this.postCaption = postCaption;
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
     public void setCreationDate(String creationDate) {
@@ -105,5 +130,55 @@ public class FirebasePost {
 
     public void setShareNumber(long shareNumber) {
         this.shareNumber = shareNumber;
+    }
+
+    // Instance methods - collaboratorIDList
+    public void addCollaboratorID(String collaboratorID) {
+        collaboratorIDList.add(collaboratorID);
+    }
+
+    public void addCollaboratorID(int i, String collaboratorID) {
+        collaboratorIDList.add(i, collaboratorID);
+    }
+
+    public void removeCollaboratorID(String collaboratorID) {
+        collaboratorIDList.remove(collaboratorID);
+    }
+
+    public void removeCollaboratorID(int i) {
+        collaboratorIDList.remove(i);
+    }
+
+    public void setCollaboratorID(int i, String collaboratorID) {
+        collaboratorIDList.set(i, collaboratorID);
+    }
+
+    public String getCollaboratorID(int i) {
+        return collaboratorIDList.get(i);
+    }
+
+    // Instance methods - speechBubbleIDList
+    public void addSpeechBubbleID(String collaboratorID) {
+        speechBubbleIDList.add(collaboratorID);
+    }
+
+    public void addSpeechBubbleID(int i, String collaboratorID) {
+        speechBubbleIDList.add(i, collaboratorID);
+    }
+
+    public void removeSpeechBubbleID(String collaboratorID) {
+        speechBubbleIDList.remove(collaboratorID);
+    }
+
+    public void removeSpeechBubbleID(int i) {
+        speechBubbleIDList.remove(i);
+    }
+
+    public void setSpeechBubbleID(int i, String collaboratorID) {
+        speechBubbleIDList.set(i, collaboratorID);
+    }
+
+    public String getSpeechBubbleID(int i) {
+        return speechBubbleIDList.get(i);
     }
 }

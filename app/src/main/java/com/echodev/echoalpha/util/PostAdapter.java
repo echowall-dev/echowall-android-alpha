@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -77,14 +76,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         // Fetch the data of the post
         long postLikeNumber = post.getLikeNumber();
-        String postCreationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(post.getCreationDate());
 
         // Set template info for the post
         holder.postUserProfileView.setText(post.getUserEmail());
         holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        holder.postUserNameView.setText("Peter:");
-        holder.postCaptionView.setText("What a beautiful day!");
-        holder.postCreationDateView.setText(postCreationDate);
+        holder.postUserNameView.setText(post.getUserName());
+        holder.postCaptionView.setText(post.getCaption());
+        holder.postCreationDateView.setText(post.getCreationDateString());
 
         // Add the photo to the post
         Glide.with(context)

@@ -16,9 +16,17 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.util.AudioHelper;
+import com.echodev.echoalpha.util.FirebasePost;
+import com.echodev.echoalpha.util.FirebaseSpeechBubble;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.PostClass;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,20 +81,40 @@ public class PostActivity extends AppCompatActivity {
     private boolean appDirExist, audioBubbleEditing;
     private String photoFilePath, audioFilePath;
 
+    // Firebase instances
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    private FirebaseDatabase mDb;
+    private DatabaseReference mDbRef;
+
+    private FirebaseStorage mStorage;
+    private StorageReference mStorageRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         ButterKnife.bind(this);
 
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDb = FirebaseDatabase.getInstance();
+        mDbRef = mDb.getReference();
+        mStorage = FirebaseStorage.getInstance();
+        mStorageRef = mStorage.getReference();
+
         // Fetch data from the previous Activity
         Bundle bundle = getIntent().getExtras();
         String userID = bundle.getString("userID");
         String userEmail = bundle.getString("userEmail");
+        String userName = bundle.getString("userName");
 
         // Create new Post instance
         newPost = new PostClass();
-        newPost.setUserID(userID).setUserEmail(userEmail);
+        newPost.setUserID(userID)
+                .setUserEmail(userEmail)
+                .setUserName(userName);
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
@@ -175,7 +203,10 @@ public class PostActivity extends AppCompatActivity {
         }
 
         if (speechBubble == null) {
-            speechBubble = new SpeechBubble(newPost.getPostID().toString(), newPost.getUserEmail());
+            speechBubble = new SpeechBubble();
+            speechBubble.setPostID(newPost.getPostIDString())
+                    .setUserID(newPost.getUserID())
+                    .setUserEmail(newPost.getUserEmail());
         }
 
         // Start recording when button is clicked and held but not for a short click
@@ -272,7 +303,10 @@ public class PostActivity extends AppCompatActivity {
             return;
         }
 
-        newPost.setCreationDate(new Date());
+        newPost.setCaption("What a beautiful day!")
+                .setCreationDate(new Date());
+
+        uploadToFirebase(newPost);
 
         Intent intent = new Intent();
         intent.putExtra("newPost", newPost);
@@ -281,7 +315,14 @@ public class PostActivity extends AppCompatActivity {
         finish();
     }
 
-    public void uploadToFirebase() {
+    public void uploadToFirebase(PostClass newPost) {
+        FirebasePost newFirebasePost = new FirebasePost(newPost);
+        // TODO: Push the post to Firebase database
+        newFirebasePost.setPhotoUrl(newPost.getPhotoPath());
 
+        for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {
+        	// TODO: Push the speech bubble to Firebase database
+            FirebaseSpeechBubble newFirebaseBubble = new FirebaseSpeechBubble(speechBubble);
+        }
     }
 }
