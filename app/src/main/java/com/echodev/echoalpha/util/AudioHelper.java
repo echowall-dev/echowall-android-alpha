@@ -1,6 +1,7 @@
 package com.echodev.echoalpha.util;
 
 import android.content.res.Resources;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -72,6 +73,18 @@ public class AudioHelper {
             mPlayer.start();
 //            mPlayer.release();
         }
+    }
+
+    public static void playAudioOnline(String audioUrl) {
+        MediaPlayer mPlayer = new MediaPlayer();
+        mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mPlayer.setDataSource(audioUrl);
+            mPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mPlayer.start();
     }
 
     public static String createAudioFile(Resources resources, String userID) {

@@ -17,21 +17,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
- * Created by Ho on 26/2/2017.
+ * Created by Ho on 5/3/2017.
  */
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapter.ViewHolder> {
 
     private Resources resources;
     private Context context;
     private ArrayList<PostClass> postList;
 
     // Constructors
-    public PostAdapter() {
+    public FirebasePostAdapter() {
         this.postList = new ArrayList<PostClass>();
     }
 
-    public PostAdapter(Resources resources, Context context) {
+    public FirebasePostAdapter(Resources resources, Context context) {
         this.resources = resources;
         this.context = context;
         this.postList = new ArrayList<PostClass>();
@@ -65,14 +65,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     @Override
-    public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FirebasePostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new post
         View postView = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_layout, parent, false);
-        return new PostAdapter.ViewHolder(postView);
+        return new FirebasePostAdapter.ViewHolder(postView);
     }
 
     @Override
-    public void onBindViewHolder(PostAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(FirebasePostAdapter.ViewHolder holder, int position) {
         PostClass post = postList.get(position);
 
         // Fetch the data of the post
@@ -82,8 +82,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         // Set template info for the post
         holder.postUserProfileView.setText(post.getUserEmail());
         holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        holder.postUserNameView.setText("Peter:");
-        holder.postCaptionView.setText("What a beautiful day!");
+        holder.postCaptionView.setText("Peter:\nWhat a beautiful day!");
         holder.postCreationDateView.setText(postCreationDate);
 
         // Add the photo to the post
@@ -106,7 +105,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfileView, postLikeNumberView, postUserNameView, postCaptionView, postCreationDateView;
+        public TextView postUserProfileView, postLikeNumberView, postCaptionView, postCreationDateView;
         public RelativeLayout postImageArea;
         public ImageView postImageView;
 
@@ -117,7 +116,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_image_area);
             postImageView = (ImageView) itemView.findViewById(R.id.post_image);
             postLikeNumberView = (TextView) itemView.findViewById(R.id.post_like_number);
-            postUserNameView = (TextView) itemView.findViewById(R.id.post_user_name);
             postCaptionView = (TextView) itemView.findViewById(R.id.post_caption);
             postCreationDateView = (TextView) itemView.findViewById(R.id.post_creation_time);
         }

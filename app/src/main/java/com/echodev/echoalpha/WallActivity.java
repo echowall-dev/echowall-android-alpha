@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.PostAdapter;
 import com.echodev.echoalpha.util.PostClass;
 import com.firebase.ui.auth.AuthUI;
@@ -93,7 +94,7 @@ public class WallActivity extends AppCompatActivity {
         postListArea.setLayoutManager(linearLayoutManager);
 
         // specify an adapter
-        postAdapter = new PostAdapter(localResources, this);
+        postAdapter = new PostAdapter(localResources, this.getApplicationContext());
         postListArea.setAdapter(postAdapter);
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
@@ -117,6 +118,9 @@ public class WallActivity extends AppCompatActivity {
                 });
 
 //        startMain();
+
+//        String audioUrl = "https://firebasestorage.googleapis.com/v0/b/echoalpha-a289a.appspot.com/o/audio%2Fvoice_170305.3gp?alt=media&token=c19de445-513c-4ab7-8a49-dc940d2684f9";
+//        AudioHelper.playAudioOnline(audioUrl);
     }
 
     @MainThread

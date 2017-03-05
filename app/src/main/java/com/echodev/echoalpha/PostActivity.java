@@ -280,4 +280,8 @@ public class PostActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
+
+    public void uploadToFirebase() {
+
+    }
 }
