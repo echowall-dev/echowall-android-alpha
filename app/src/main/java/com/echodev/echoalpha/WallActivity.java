@@ -62,6 +62,7 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private String userID, userEmail, userName;
     private IdpResponse mIdpResponse;
+    FirebaseUserClass firebaseUser;
 
     private FirebaseDatabase mDb;
     private DatabaseReference mDbRef;
@@ -88,7 +89,8 @@ public class WallActivity extends AppCompatActivity {
             userName = "Peter";
 
             // TODO: Push the user info to Firebase database if it has not been stored
-            FirebaseUserClass firebaseUser = new FirebaseUserClass(userID, userEmail, userName);
+            firebaseUser = new FirebaseUserClass(userID, userEmail, userName);
+            firebaseUser.setProPicUrl(mUser.getPhotoUrl().toString());
         }
 
         setContentView(R.layout.activity_wall);

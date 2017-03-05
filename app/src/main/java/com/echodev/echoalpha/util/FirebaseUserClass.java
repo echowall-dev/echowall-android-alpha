@@ -1,10 +1,13 @@
 package com.echodev.echoalpha.util;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Ho on 5/3/2017.
  */
 
-public class FirebaseUserClass {
+public class FirebaseUserClass implements Parcelable {
 
     // Instance variables
     private String userID, userEmail, userName, proPicUrl, description;
@@ -101,5 +104,44 @@ public class FirebaseUserClass {
 
     public void setFollowerNumber(long followerNumber) {
         this.followerNumber = followerNumber;
+    }
+
+    // Parcelable implementation
+    protected FirebaseUserClass(Parcel in) {
+        userID = in.readString();
+        userEmail = in.readString();
+        userName = in.readString();
+        proPicUrl = in.readString();
+        description = in.readString();
+        friendNumber = in.readLong();
+        followerNumber = in.readLong();
+    }
+
+    public static final Creator<FirebaseUserClass> CREATOR = new Creator<FirebaseUserClass>() {
+        @Override
+        public FirebaseUserClass createFromParcel(Parcel in) {
+            return new FirebaseUserClass(in);
+        }
+
+        @Override
+        public FirebaseUserClass[] newArray(int size) {
+            return new FirebaseUserClass[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userID);
+        dest.writeString(userEmail);
+        dest.writeString(userName);
+        dest.writeString(proPicUrl);
+        dest.writeString(description);
+        dest.writeLong(friendNumber);
+        dest.writeLong(followerNumber);
     }
 }
