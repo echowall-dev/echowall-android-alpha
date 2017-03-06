@@ -1,4 +1,6 @@
-package com.echodev.echoalpha.util;
+package com.echodev.echoalpha.firebase;
+
+import com.echodev.echoalpha.util.SpeechBubble;
 
 import java.util.UUID;
 

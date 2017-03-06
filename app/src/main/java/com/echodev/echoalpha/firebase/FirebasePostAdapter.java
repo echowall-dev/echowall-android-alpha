@@ -1,4 +1,4 @@
-package com.echodev.echoalpha.util;
+package com.echodev.echoalpha.firebase;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
+import com.echodev.echoalpha.util.PostClass;
+import com.echodev.echoalpha.util.SpeechBubble;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

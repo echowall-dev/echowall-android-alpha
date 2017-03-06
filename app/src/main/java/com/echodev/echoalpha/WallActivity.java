@@ -16,8 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.echodev.echoalpha.util.AudioHelper;
-import com.echodev.echoalpha.util.FirebaseUserClass;
+import com.echodev.echoalpha.firebase.FirebaseUserClass;
 import com.echodev.echoalpha.util.PostAdapter;
 import com.echodev.echoalpha.util.PostClass;
 import com.firebase.ui.auth.AuthUI;

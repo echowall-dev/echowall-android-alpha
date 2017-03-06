@@ -1,4 +1,4 @@
-package com.echodev.echoalpha.util;
+package com.echodev.echoalpha.firebase;
 
 import android.os.Parcel;
 import android.os.Parcelable;

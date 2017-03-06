@@ -1,4 +1,7 @@
-package com.echodev.echoalpha.util;
+package com.echodev.echoalpha.firebase;
+
+import com.echodev.echoalpha.util.PostClass;
+import com.echodev.echoalpha.util.SpeechBubble;
 
 import java.util.ArrayList;
 import java.util.List;
