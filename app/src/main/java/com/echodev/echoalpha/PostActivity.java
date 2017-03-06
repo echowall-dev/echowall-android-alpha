@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,12 +22,15 @@ import com.echodev.echoalpha.firebase.FirebaseSpeechBubble;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.PostClass;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -315,7 +319,7 @@ public class PostActivity extends AppCompatActivity {
         newPost.setCaption("What a beautiful day!")
                 .setCreationDate(new Date());
 
-        /*
+
         // Upload files and data to Firebase
         String photoUrl = uploadToFirebaseStorage(newPost.getPhotoPath(), STORAGE_PHOTO);
         newPost.setPhotoUri(photoUrl);
@@ -327,6 +331,7 @@ public class PostActivity extends AppCompatActivity {
             newPost.setSpeechBubble(i, speechBubble);
         }
 
+        /*
         uploadToFirebaseDatabse(newPost);
         // End of uploading
         */
@@ -335,7 +340,7 @@ public class PostActivity extends AppCompatActivity {
         intent.putExtra("newPost", newPost);
 
         setResult(RESULT_OK, intent);
-        finish();
+//        finish();
     }
 
     public String uploadToFirebaseStorage(String filePath, int storageType) {
@@ -343,8 +348,40 @@ public class PostActivity extends AppCompatActivity {
 
         if (storageType == STORAGE_PHOTO) {
             // TODO: Upload the photo to Firebase storage
+            Uri photoUri = Uri.fromFile(new File(filePath));
+            StorageReference photoRef = mStorageRef.child("picture/" + photoUri.getLastPathSegment());
+            UploadTask uploadTask = photoRef.putFile(photoUri);
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    // Handle successful uploads
+                }
+            });
         } else if (storageType == STORAGE_AUDIO) {
             // TODO: Upload the audio to Firebase storage
+            Uri audioUri = Uri.fromFile(new File(filePath));
+            StorageReference audioRef = mStorageRef.child("audio/" + audioUri.getLastPathSegment());
+            UploadTask uploadTask = audioRef.putFile(audioUri);
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    // Handle successful uploads
+                }
+            });
         }
 
         return firebaseFileUrl;

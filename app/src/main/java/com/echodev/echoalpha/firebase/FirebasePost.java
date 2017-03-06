@@ -14,7 +14,7 @@ import java.util.UUID;
 public class FirebasePost {
 
     // Instance variables
-    private String postID, creatorID, photoUrl, caption, creationDate;
+    private String postID, creatorID, photoUrl, photoName, caption, creationDate;
     private List<String> collaboratorIDList, speechBubbleIDList;
     private long likeNumber, commentNumber, shareNumber;
 
@@ -27,6 +27,7 @@ public class FirebasePost {
         this.postID = UUID.randomUUID().toString();
         this.creatorID = creatorID;
         this.photoUrl = "";
+        this.photoName = "";
         this.caption = "";
         this.creationDate = "";
         this.collaboratorIDList = new ArrayList<String>();
@@ -40,6 +41,7 @@ public class FirebasePost {
         this.postID = post.getPostIDString();
         this.creatorID = post.getUserID();
         this.photoUrl = post.getPhotoUriString();
+        this.photoName = post.getPhotoUri().getLastPathSegment();
         this.caption = post.getCaption();
         this.creationDate = post.getCreationDateString();
         this.collaboratorIDList = new ArrayList<String>();
@@ -64,6 +66,10 @@ public class FirebasePost {
 
     public String getPhotoUrl() {
         return photoUrl;
+    }
+
+    public String getPhotoName() {
+        return photoName;
     }
 
     public String getCaption() {
@@ -105,6 +111,10 @@ public class FirebasePost {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
     }
 
     public void setCaption(String caption) {

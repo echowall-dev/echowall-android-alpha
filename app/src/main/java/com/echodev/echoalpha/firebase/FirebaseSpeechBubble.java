@@ -11,7 +11,7 @@ import java.util.UUID;
 public class FirebaseSpeechBubble {
 
     // Instance variables
-    private String bubbleID, postID, creatorID, audioUrl, creationDate;
+    private String bubbleID, postID, creatorID, audioUrl, audioName, creationDate;
     private long x, y, type, playNumber;
 
     // Constructors
@@ -24,6 +24,7 @@ public class FirebaseSpeechBubble {
         this.postID = postID;
         this.creatorID = creatorID;
         this.audioUrl = "";
+        this.audioName = "";
         this.creationDate = "";
         this.x = 0;
         this.y = 0;
@@ -36,6 +37,7 @@ public class FirebaseSpeechBubble {
         this.postID = speechBubble.getPostID();
         this.creatorID = speechBubble.getUserID();
         this.audioUrl = speechBubble.getAudioUriString();
+        this.audioName = speechBubble.getAudioUri().getLastPathSegment();
         this.creationDate = speechBubble.getCreationDateString();
         this.x = speechBubble.getX();
         this.y = speechBubble.getY();
@@ -58,6 +60,10 @@ public class FirebaseSpeechBubble {
 
     public String getAudioUrl() {
         return audioUrl;
+    }
+
+    public String getAudioName() {
+        return audioName;
     }
 
     public String getCreationDate() {
@@ -95,6 +101,10 @@ public class FirebaseSpeechBubble {
 
     public void setAudioUrl(String audioUrl) {
         this.audioUrl = audioUrl;
+    }
+
+    public void setAudioName(String audioName) {
+        this.audioName = audioName;
     }
 
     public void setCreationDate(String creationDate) {

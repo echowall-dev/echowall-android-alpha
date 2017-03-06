@@ -245,9 +245,11 @@ public class WallActivity extends AppCompatActivity {
 
                     // Show files path info on the page
                     String appName = this.getResources().getString(R.string.app_name);
+                    String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
                     String photoPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/picture/";
                     String audioPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/audio/";
-                    String filePathInfo = "photo location:\n" + photoPathInfo + "\naudio location:\n" + audioPathInfo;
+//                    String filePathInfo = "photo location:\n" + photoPathInfo + "\naudio location:\n" + audioPathInfo;
+                    String filePathInfo = "file location:\n" + appPathInfo;
                     IDTextView.setText(filePathInfo);
 
                     // Add the new post into the dataset of the RecyclerView Adapter
