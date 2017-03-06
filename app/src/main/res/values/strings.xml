@@ -17,6 +17,7 @@
     <string name="sign_out_failed">Sign out failed</string>
     <string name="app_folder">EchoAlpha/</string>
     <string name="audio_format">.3gp</string>
+    <string name="image_format">.jpg</string>
     <string name="add_bubble_left">Add bubble left</string>
     <string name="add_bubble_right">Add bubble right</string>
     <string name="finish_bubble">Finish bubble</string>

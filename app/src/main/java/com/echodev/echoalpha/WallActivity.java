@@ -81,13 +81,20 @@ public class WallActivity extends AppCompatActivity {
             return;
         } else {
             // TODO: Push the user info to Firebase database if it has not been stored
-            firebaseUser = new FirebaseUserClass(mUser.getUid(), mUser.getEmail(), mUser.getDisplayName());
+            firebaseUser = new FirebaseUserClass(
+                    mUser.getUid(),
+                    mUser.getEmail(),
+                    mUser.getDisplayName()
+            );
             if (mUser.getPhotoUrl() != null) {
                 firebaseUser.setProPicUrl(mUser.getPhotoUrl().toString());
-            } else {
-                firebaseUser.setProPicUrl("");
             }
         }
+
+        mDb = FirebaseDatabase.getInstance();
+        mDbRef = mDb.getReference();
+        mStorage = FirebaseStorage.getInstance();
+        mStorageRef = mStorage.getReference();
 
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);

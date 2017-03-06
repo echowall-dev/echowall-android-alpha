@@ -110,15 +110,12 @@ public class PostActivity extends AppCompatActivity {
 
         // Fetch data from the previous Activity
         Bundle bundle = getIntent().getExtras();
-        String userID = bundle.getString("userID");
-        String userEmail = bundle.getString("userEmail");
-        String userName = bundle.getString("userName");
 
         // Create new Post instance
         newPost = new PostClass();
-        newPost.setUserID(userID)
-                .setUserEmail(userEmail)
-                .setUserName(userName);
+        newPost.setUserID(bundle.getString("userID"))
+                .setUserEmail(bundle.getString("userEmail"))
+                .setUserName(bundle.getString("userName"));
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
@@ -158,6 +155,12 @@ public class PostActivity extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
+
+            /*
+            photoFilePath = ImageHelper.createImageFile(localResources, newPost.getUserID());
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFilePath);
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            */
         }
     }
 

@@ -6,7 +6,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.widget.ImageView;
+
+import com.echodev.echoalpha.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +29,17 @@ public class ImageHelper {
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         return image;
+    }
+
+    public static String createImageFile(Resources resources, String userID) {
+        String appName = resources.getString(R.string.app_name);
+        String imageFormat = resources.getString(R.string.image_format);
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        imagePath += "/" + appName + "/picture/" + userID + "_" + timeStamp + imageFormat;
+
+        return imagePath;
     }
 
     public static Intent galleryAddPicIntent(String imgPath) {
