@@ -133,6 +133,10 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         return audioUri;
     }
 
+    public String getAudioUriString() {
+        return audioUri.toString();
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }
@@ -183,6 +187,11 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
 
     public SpeechBubble setAudioUri(Uri audioUri) {
         this.audioUri = audioUri;
+        return this;
+    }
+
+    public SpeechBubble setAudioUri(String audrioUrlString) {
+        this.audioUri = Uri.parse(audrioUrlString);
         return this;
     }
 

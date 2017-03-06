@@ -45,6 +45,10 @@ public class PostActivity extends AppCompatActivity {
     // Request code for taking photo
     public static final int REQUEST_TAKE_PHOTO = 120;
 
+    // Request code for Firebase Storage
+    public static final int STORAGE_PHOTO = 220;
+    public static final int STORAGE_AUDIO = 221;
+
     // Bind views by ButterKnife
     @BindView(R.id.camera_btn)
     Button cameraBtn;
@@ -306,7 +310,21 @@ public class PostActivity extends AppCompatActivity {
         newPost.setCaption("What a beautiful day!")
                 .setCreationDate(new Date());
 
-        uploadToFirebase(newPost);
+        /*
+        // Upload files and data to Firebase
+        String photoUrl = uploadToFirebaseStorage(newPost.getPhotoPath(), STORAGE_PHOTO);
+        newPost.setPhotoUri(photoUrl);
+
+        for (int i=0; i<newPost.getSpeechBubbleList().size(); i++) {
+            SpeechBubble speechBubble = newPost.getSpeechBubble(i);
+            String audioUrl = uploadToFirebaseStorage(speechBubble.getAudioPath(), STORAGE_AUDIO);
+            speechBubble.setAudioUri(audioUrl);
+            newPost.setSpeechBubble(i, speechBubble);
+        }
+
+        uploadToFirebaseDatabse(newPost);
+        // End of uploading
+        */
 
         Intent intent = new Intent();
         intent.putExtra("newPost", newPost);
@@ -315,7 +333,21 @@ public class PostActivity extends AppCompatActivity {
         finish();
     }
 
-    public void uploadToFirebase(PostClass newPost) {
+    public String uploadToFirebaseStorage(String filePath, int storageType) {
+        String firebaseFileUrl = "";
+
+        if (storageType == STORAGE_PHOTO) {
+            // TODO: Upload the photo to Firebase storage
+        } else if (storageType == STORAGE_AUDIO) {
+            // TODO: Upload the audio to Firebase storage
+        }
+
+        return firebaseFileUrl;
+    }
+
+    public boolean uploadToFirebaseDatabse(PostClass newPost) {
+        boolean uploadSuccess = true;
+
         FirebasePost newFirebasePost = new FirebasePost(newPost);
         // TODO: Push the post to Firebase database
         newFirebasePost.setPhotoUrl(newPost.getPhotoPath());
@@ -324,5 +356,7 @@ public class PostActivity extends AppCompatActivity {
         	// TODO: Push the speech bubble to Firebase database
             FirebaseSpeechBubble newFirebaseBubble = new FirebaseSpeechBubble(speechBubble);
         }
+
+        return uploadSuccess;
     }
 }

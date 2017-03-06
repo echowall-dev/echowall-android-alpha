@@ -35,7 +35,7 @@ public class FirebaseSpeechBubble {
         this.bubbleID = speechBubble.getBubbleIDString();
         this.postID = speechBubble.getPostID();
         this.creatorID = speechBubble.getUserID();
-        this.audioUrl = "";
+        this.audioUrl = speechBubble.getAudioUriString();
         this.creationDate = speechBubble.getCreationDateString();
         this.x = speechBubble.getX();
         this.y = speechBubble.getY();

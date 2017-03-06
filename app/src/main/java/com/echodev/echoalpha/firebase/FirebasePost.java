@@ -39,7 +39,7 @@ public class FirebasePost {
     public FirebasePost(PostClass post) {
         this.postID = post.getPostIDString();
         this.creatorID = post.getUserID();
-        this.photoUrl = "";
+        this.photoUrl = post.getPhotoUriString();
         this.caption = post.getCaption();
         this.creationDate = post.getCreationDateString();
         this.collaboratorIDList = new ArrayList<String>();

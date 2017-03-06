@@ -59,7 +59,6 @@ public class WallActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private String userID, userEmail, userName;
     private IdpResponse mIdpResponse;
     FirebaseUserClass firebaseUser;
 
@@ -69,7 +68,6 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseStorage mStorage;
     private StorageReference mStorageRef;
 
-    private Resources localResources;
     private PostAdapter postAdapter;
 
     @Override
@@ -82,21 +80,17 @@ public class WallActivity extends AppCompatActivity {
             startMain();
             return;
         } else {
-            userID = mUser.getUid();
-            userEmail = mUser.getEmail();
-//            userName = mUser.getDisplayName();
-            userName = "Peter";
-
             // TODO: Push the user info to Firebase database if it has not been stored
-            firebaseUser = new FirebaseUserClass(userID, userEmail, userName);
-            firebaseUser.setProPicUrl(mUser.getPhotoUrl().toString());
+            firebaseUser = new FirebaseUserClass(mUser.getUid(), mUser.getEmail(), mUser.getDisplayName());
+            if (mUser.getPhotoUrl() != null) {
+                firebaseUser.setProPicUrl(mUser.getPhotoUrl().toString());
+            } else {
+                firebaseUser.setProPicUrl("");
+            }
         }
 
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
-
-        // Prepare app resources for use
-        localResources = this.getResources();
 
         // Use a linear layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -105,7 +99,7 @@ public class WallActivity extends AppCompatActivity {
         postListArea.setLayoutManager(linearLayoutManager);
 
         // specify an adapter
-        postAdapter = new PostAdapter(localResources, this.getApplicationContext());
+        postAdapter = new PostAdapter(this.getResources(), this.getApplicationContext());
         postListArea.setAdapter(postAdapter);
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
@@ -141,9 +135,9 @@ public class WallActivity extends AppCompatActivity {
 
         String contentText = "";
         contentText += "You have signed in as";
-        contentText += "\n" + userEmail;
-        contentText += "\n" + userID;
-        contentText += "\n" + userName;
+        contentText += "\n" + firebaseUser.getUserName();
+        contentText += "\n" + firebaseUser.getUserEmail();
+        contentText += "\n" + firebaseUser.getUserID();
 
         IDTextView.setText(contentText);
 
@@ -223,9 +217,9 @@ public class WallActivity extends AppCompatActivity {
 //        String userEmail = "user001@echowall.com";
 
         Bundle bundle = new Bundle();
-        bundle.putString("userID", userID);
-        bundle.putString("userEmail", userEmail);
-        bundle.putString("userName", userName);
+        bundle.putString("userID", firebaseUser.getUserID());
+        bundle.putString("userEmail", firebaseUser.getUserEmail());
+        bundle.putString("userName", firebaseUser.getUserName());
 
         Intent intent = new Intent();
         intent.setClass(this, PostActivity.class);
@@ -243,7 +237,7 @@ public class WallActivity extends AppCompatActivity {
                     newPost.setWidth(postListArea.getWidth());
 
                     // Show files path info on the page
-                    String appName = localResources.getString(R.string.app_name);
+                    String appName = this.getResources().getString(R.string.app_name);
                     String photoPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.echodev.echoalpha/files/Pictures/";
                     String audioPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/audio/";
                     String filePathInfo = "photo location:\n" + photoPathInfo + "\naudio location:\n" + audioPathInfo;

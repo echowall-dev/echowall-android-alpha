@@ -1,5 +1,6 @@
 package com.echodev.echoalpha.util;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.ParcelUuid;
 import android.os.Parcelable;
@@ -24,6 +25,7 @@ public class PostClass implements Parcelable {
     private UUID postID;
     private ParcelUuid postIDParcel;
     private String postIDString, userID, userEmail, userName, photoPath, caption, platform;
+    private Uri photoUri;
     private ArrayList<SpeechBubble> speechBubbleList;
     private Date creationDate;
     private long likeNumber, commentNumber, shareNumber;
@@ -82,6 +84,14 @@ public class PostClass implements Parcelable {
 
     public String getPlatform() {
         return platform;
+    }
+
+    public Uri getPhotoUri() {
+        return photoUri;
+    }
+
+    public String getPhotoUriString() {
+        return photoUri.toString();
     }
 
     public Date getCreationDate() {
@@ -143,6 +153,16 @@ public class PostClass implements Parcelable {
 
     public PostClass setCaption(String caption) {
         this.caption = caption;
+        return this;
+    }
+
+    public PostClass setPhotoUri(Uri photoUri) {
+        this.photoUri = photoUri;
+        return this;
+    }
+
+    public PostClass setPhotoUri(String photoUrlString) {
+        this.photoUri = Uri.parse(photoUrlString);
         return this;
     }
 
@@ -247,6 +267,7 @@ public class PostClass implements Parcelable {
         photoPath = in.readString();
         caption = in.readString();
         platform = in.readString();
+        photoUri = in.readParcelable(Uri.class.getClassLoader());
         speechBubbleList = in.createTypedArrayList(SpeechBubble.CREATOR);
         likeNumber = in.readLong();
         commentNumber = in.readLong();
@@ -287,6 +308,7 @@ public class PostClass implements Parcelable {
         dest.writeString(photoPath);
         dest.writeString(caption);
         dest.writeString(platform);
+        dest.writeParcelable(photoUri, flags);
         dest.writeTypedList(speechBubbleList);
         dest.writeLong(likeNumber);
         dest.writeLong(commentNumber);
