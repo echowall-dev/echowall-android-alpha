@@ -245,7 +245,7 @@ public class WallActivity extends AppCompatActivity {
 
                     // Show files path info on the page
                     String appName = this.getResources().getString(R.string.app_name);
-                    String photoPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.echodev.echoalpha/files/Pictures/";
+                    String photoPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/picture/";
                     String audioPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/audio/";
                     String filePathInfo = "photo location:\n" + photoPathInfo + "\naudio location:\n" + audioPathInfo;
                     IDTextView.setText(filePathInfo);

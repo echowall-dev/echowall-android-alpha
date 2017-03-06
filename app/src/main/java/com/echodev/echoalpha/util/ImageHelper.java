@@ -44,8 +44,8 @@ public class ImageHelper {
 
     public static Intent galleryAddPicIntent(String imgPath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(imgPath);
-        Uri contentUri = Uri.fromFile(f);
+        File photoFile = new File(imgPath);
+        Uri contentUri = Uri.fromFile(photoFile);
         mediaScanIntent.setData(contentUri);
 
         return mediaScanIntent;

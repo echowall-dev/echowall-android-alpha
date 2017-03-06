@@ -135,6 +135,7 @@ public class PostActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            /*
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -155,12 +156,13 @@ public class PostActivity extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
-
-            /*
-            photoFilePath = ImageHelper.createImageFile(localResources, newPost.getUserID());
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFilePath);
-            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             */
+
+            photoFilePath = ImageHelper.createImageFile(localResources, newPost.getUserID());
+            File photoFile = new File(photoFilePath);
+            Uri photoUri = Uri.fromFile(photoFile);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
     }
 
