@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.util.AudioHelper;
@@ -26,6 +28,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,6 +47,7 @@ import butterknife.OnTouch;
 
 public class PostActivity extends AppCompatActivity {
 
+    // Debug log
     private static final String LOG_TAG = "Echo_Alpha_Post";
 
     // Request code for taking photo
@@ -54,6 +58,9 @@ public class PostActivity extends AppCompatActivity {
     public static final int STORAGE_AUDIO = 221;
 
     // Bind views by ButterKnife
+    @BindView(R.id.activity_post)
+    View mRootView;
+
     @BindView(R.id.camera_btn)
     Button cameraBtn;
 
@@ -98,6 +105,9 @@ public class PostActivity extends AppCompatActivity {
 
     private FirebaseStorage mStorage;
     private StorageReference mStorageRef;
+
+    // Bubble number counter
+    private int bubbleNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +202,7 @@ public class PostActivity extends AppCompatActivity {
                     // Add the photo to the new Post object
                     newPost.setPhotoPath(photoFilePath);
 
-                    // Set post state to not ready
+                    // Set post state to ready
                     newPost.setCurrentPostState(PostClass.STATE_AUDIO_PREPARE);
                     newPost.setPostReady(true);
                 }
@@ -246,7 +256,7 @@ public class PostActivity extends AppCompatActivity {
             }
         }
 
-        // This OnTouch event needs to return false for the LonClick event to work
+        // This OnTouch event has to return false for the LonClick event to work
         return false;
     }
 
@@ -319,11 +329,11 @@ public class PostActivity extends AppCompatActivity {
         newPost.setCaption("What a beautiful day!")
                 .setCreationDate(new Date());
 
-
         // Upload files and data to Firebase
-        String photoUrl = uploadToFirebaseStorage(newPost.getPhotoPath(), STORAGE_PHOTO);
-        newPost.setPhotoUri(photoUrl);
+        uploadToFirebaseStorage(newPost.getPhotoPath(), STORAGE_PHOTO, 0);
+//        newPost.setPhotoUri(photoUrl);
 
+        /*
         for (int i=0; i<newPost.getSpeechBubbleList().size(); i++) {
             SpeechBubble speechBubble = newPost.getSpeechBubble(i);
             String audioUrl = uploadToFirebaseStorage(speechBubble.getAudioPath(), STORAGE_AUDIO);
@@ -331,21 +341,20 @@ public class PostActivity extends AppCompatActivity {
             newPost.setSpeechBubble(i, speechBubble);
         }
 
-        /*
         uploadToFirebaseDatabse(newPost);
         // End of uploading
         */
 
+        /*
         Intent intent = new Intent();
         intent.putExtra("newPost", newPost);
+        */
 
-        setResult(RESULT_OK, intent);
+//        setResult(RESULT_OK, intent);
 //        finish();
     }
 
-    public String uploadToFirebaseStorage(String filePath, int storageType) {
-        String firebaseFileUrl = "";
-
+    public void uploadToFirebaseStorage(String filePath, int storageType, final int counter) {
         if (storageType == STORAGE_PHOTO) {
             // TODO: Upload the photo to Firebase storage
             Uri photoUri = Uri.fromFile(new File(filePath));
@@ -356,12 +365,25 @@ public class PostActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     // Handle unsuccessful uploads
+                    Snackbar.make(mRootView, "Upload failed", Snackbar.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     // Handle successful uploads
+                    String downloadUrl = taskSnapshot.getDownloadUrl().toString();
+                    newPost.setPhotoUri(downloadUrl);
+
+//                    Snackbar.make(mRootView, "Photo uploaded", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mRootView, newPost.getPhotoUriString(), Snackbar.LENGTH_SHORT).show();
+
+                    // Upload all audio file to Firebase
+                    for (int i=0; i<newPost.getSpeechBubbleList().size(); i++) {
+                        SpeechBubble speechBubble = newPost.getSpeechBubble(i);
+                        uploadToFirebaseStorage(speechBubble.getAudioPath(), STORAGE_AUDIO, i);
+//                        speechBubble.setAudioUri(audioUrl);
+//                        newPost.setSpeechBubble(i, speechBubble);
+                    }
                 }
             });
         } else if (storageType == STORAGE_AUDIO) {
@@ -374,31 +396,80 @@ public class PostActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     // Handle unsuccessful uploads
+                    Snackbar.make(mRootView, "Upload failed", Snackbar.LENGTH_SHORT).show();
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     // Handle successful uploads
+                    String downloadUrl = taskSnapshot.getDownloadUrl().toString();
+
+                    SpeechBubble speechBubble = newPost.getSpeechBubble(counter);
+                    speechBubble.setAudioUri(downloadUrl);
+                    newPost.setSpeechBubble(counter, speechBubble);
+
+                    Snackbar.make(mRootView, "Audio uploaded", Snackbar.LENGTH_SHORT).show();
+//                    Snackbar.make(mRootView, downloadUrl, Snackbar.LENGTH_SHORT).show();
+
+                    bubbleNumber++;
+
+                    if (bubbleNumber == newPost.getSpeechBubbleList().size()) {
+                        bubbleNumber = 0;
+                        uploadToFirebaseDatabse(newPost);
+                    }
                 }
             });
         }
-
-        return firebaseFileUrl;
     }
 
-    public boolean uploadToFirebaseDatabse(PostClass newPost) {
-        boolean uploadSuccess = true;
+    public void uploadToFirebaseDatabse(final PostClass newPost) {
+//        Snackbar.make(mRootView, "Bubble number is " + bubbleNumber, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mRootView, newPost.getSpeechBubble(1).getAudioUriString(), Snackbar.LENGTH_SHORT).show();
 
         FirebasePost newFirebasePost = new FirebasePost(newPost);
         // TODO: Push the post to Firebase database
-        newFirebasePost.setPhotoUrl(newPost.getPhotoPath());
 
+        DatabaseReference mPostRef = mDbRef.child("post").child(newFirebasePost.getPostID());
+        mPostRef.setValue(newFirebasePost, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Snackbar.make(mRootView, "Databse photo failed", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    // TODO: Push all the speech bubbles to Firebase database
+                    Snackbar.make(mRootView, "Databse photo success", Snackbar.LENGTH_SHORT).show();
+
+                    for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {
+                        FirebaseSpeechBubble newFirebaseBubble = new FirebaseSpeechBubble(speechBubble);
+
+                        DatabaseReference mBubbleRef = mDbRef.child("bubble").child(newFirebaseBubble.getBubbleID());
+                        mBubbleRef.setValue(newFirebaseBubble, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError != null) {
+                                    Snackbar.make(mRootView, "Databse bubble failed", Snackbar.LENGTH_SHORT).show();
+                                } else {
+                                    bubbleNumber++;
+                                    if (bubbleNumber == newPost.getSpeechBubbleList().size()) {
+                                        bubbleNumber = 0;
+
+//                                        setResult(RESULT_OK);
+                                        setResult(RESULT_CANCELED);
+                                        finish();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        /*
         for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {
         	// TODO: Push the speech bubble to Firebase database
             FirebaseSpeechBubble newFirebaseBubble = new FirebaseSpeechBubble(speechBubble);
         }
-
-        return uploadSuccess;
+        */
     }
 }

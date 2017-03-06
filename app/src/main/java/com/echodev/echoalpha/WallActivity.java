@@ -25,8 +25,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -36,10 +39,30 @@ import butterknife.OnClick;
 
 public class WallActivity extends AppCompatActivity {
 
+    // Debug log
     private static final String LOG_TAG = "Echo_Alpha_Wall";
 
     // Request code for creating new post
     public static final int REQUEST_CODE_POST = 110;
+
+    // Storage code for starting different Activities
+    private static final int STORAGE_LOCAL = 120;
+    private static final int STORAGE_FIREBASE = 121;
+    private int storageCode;
+
+    // Instance variables
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private IdpResponse mIdpResponse;
+    FirebaseUserClass firebaseUser;
+
+    private FirebaseDatabase mDb;
+    private DatabaseReference mDbRef;
+
+    private FirebaseStorage mStorage;
+    private StorageReference mStorageRef;
+
+    private PostAdapter postAdapter;
 
     // Bind views by ButterKnife
     @BindView(android.R.id.content)
@@ -57,30 +80,23 @@ public class WallActivity extends AppCompatActivity {
     @BindView(R.id.post_list_area)
     RecyclerView postListArea;
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-    private IdpResponse mIdpResponse;
-    FirebaseUserClass firebaseUser;
-
-    private FirebaseDatabase mDb;
-    private DatabaseReference mDbRef;
-
-    private FirebaseStorage mStorage;
-    private StorageReference mStorageRef;
-
-    private PostAdapter postAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        storageCode = STORAGE_LOCAL;
+
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+        mDb = FirebaseDatabase.getInstance();
+        mDbRef = mDb.getReference();
+        mStorage = FirebaseStorage.getInstance();
+        mStorageRef = mStorage.getReference();
+
         if (mUser == null) {
             startMain();
             return;
         } else {
-            // TODO: Push the user info to Firebase database if it has not been stored
             firebaseUser = new FirebaseUserClass(
                     mUser.getUid(),
                     mUser.getEmail(),
@@ -89,12 +105,23 @@ public class WallActivity extends AppCompatActivity {
             if (mUser.getPhotoUrl() != null) {
                 firebaseUser.setProPicUrl(mUser.getPhotoUrl().toString());
             }
-        }
 
-        mDb = FirebaseDatabase.getInstance();
-        mDbRef = mDb.getReference();
-        mStorage = FirebaseStorage.getInstance();
-        mStorageRef = mStorage.getReference();
+            // Push the user data to Firebase database if it has not been stored
+            DatabaseReference mUserRef = mDbRef.child("user").child(firebaseUser.getUserID());
+            mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.exists()) {
+                        mDbRef.child("user").child(firebaseUser.getUserID()).setValue(firebaseUser);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
 
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
@@ -229,7 +256,11 @@ public class WallActivity extends AppCompatActivity {
         bundle.putString("userName", firebaseUser.getUserName());
 
         Intent intent = new Intent();
-        intent.setClass(this, PostActivity.class);
+        if (storageCode == STORAGE_LOCAL) {
+            intent.setClass(this, PostActivity.class);
+        } else if (storageCode == STORAGE_FIREBASE) {
+            intent.setClass(this, PostCreateActivity.class);
+        }
         intent.putExtras(bundle);
 
         startActivityForResult(intent, REQUEST_CODE_POST);
