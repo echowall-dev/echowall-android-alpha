@@ -55,7 +55,7 @@ public class PostActivity extends AppCompatActivity {
 
     // Activity result code
     public static final int RESULT_OK_FIREBASE = 300;
-    
+
     // Bind views by ButterKnife
     @BindView(R.id.activity_post)
     View mRootView;
@@ -191,7 +191,7 @@ public class PostActivity extends AppCompatActivity {
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
                     // Add the photo to the phone's gallery
-                    galleryAddPic();
+//                    galleryAddPic();
 
                     // Load the photo into preview area
                     Glide.with(this)
