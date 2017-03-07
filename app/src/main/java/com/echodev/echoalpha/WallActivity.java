@@ -2,7 +2,6 @@ package com.echodev.echoalpha;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Environment;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
@@ -155,18 +154,10 @@ public class WallActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-//        startMain();
-
-//        String audioUrl = "https://firebasestorage.googleapis.com/v0/b/echoalpha-a289a.appspot.com/o/audio%2Fvoice_170305.3gp?alt=media&token=c19de445-513c-4ab7-8a49-dc940d2684f9";
-//        AudioHelper.playAudioOnline(audioUrl);
     }
 
     @MainThread
     private void populateProfile() {
-//        String userID = "user001";
-//        String userEmail = "user001@echowall.com";
-
         String contentText = "";
         contentText += "You have signed in as";
         contentText += "\n" + firebaseUser.getUserName();
@@ -247,9 +238,6 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
-//        String userID = "user001";
-//        String userEmail = "user001@echowall.com";
-
         Bundle bundle = new Bundle();
         bundle.putString("userID", firebaseUser.getUserID());
         bundle.putString("userEmail", firebaseUser.getUserEmail());
@@ -277,9 +265,6 @@ public class WallActivity extends AppCompatActivity {
                     // Show files path info on the page
                     String appName = this.getResources().getString(R.string.app_name);
                     String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
-                    String photoPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/picture/";
-                    String audioPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/audio/";
-//                    String filePathInfo = "photo location:\n" + photoPathInfo + "\naudio location:\n" + audioPathInfo;
                     String filePathInfo = "file location:\n" + appPathInfo;
                     IDTextView.setText(filePathInfo);
 
