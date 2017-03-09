@@ -26,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +47,7 @@ public class PostCreateActivity extends AppCompatActivity {
     private FirebaseUserClass firebaseUser;
     private FirebasePost firebasePost;
     private FirebaseSpeechBubble firebaseBubble;
+    private ArrayList<FirebaseSpeechBubble> firebaseBubbleList;
 
     private Resources localResources;
     private boolean appDirExist, audioBubbleEditing;
@@ -104,6 +106,9 @@ public class PostCreateActivity extends AppCompatActivity {
                 bundle.getString("userName")
         );
 
+        // Create new ArrayList for storing speech bubbles before uploading to Firebase
+        firebaseBubbleList = new ArrayList<FirebaseSpeechBubble>();
+
         // Create new Post instance
         firebasePost = new FirebasePost(firebaseUser.getUserID());
 
@@ -123,16 +128,15 @@ public class PostCreateActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            photoFilePath = ImageHelper.createImageFile(localResources, firebasePost.getCreatorID());
-            File photoFile = new File(photoFilePath);
-            Uri photoUri = Uri.fromFile(photoFile);
+            firebasePost.setPhotoUrl(ImageHelper.createImageFile(localResources, firebasePost.getCreatorID()));
+            Uri photoUri = Uri.fromFile(new File(firebasePost.getPhotoUrl()));
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
     }
 
     private void galleryAddPic() {
-        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(photoFilePath);
+        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(firebasePost.getPhotoUrl());
         this.sendBroadcast(mediaScanIntent);
     }
 
@@ -146,12 +150,12 @@ public class PostCreateActivity extends AppCompatActivity {
 
                     // Load the photo into preview area
                     Glide.with(this)
-                            .load(photoFilePath)
+                            .load(firebasePost.getPhotoUrl())
                             .asBitmap()
                             .into(previewImage);
 
                     // Add the photo name to the new Post instance
-                    firebasePost.setPhotoName(Uri.parse(photoFilePath).getLastPathSegment());
+                    firebasePost.setPhotoName(Uri.parse(firebasePost.getPhotoUrl()).getLastPathSegment());
 
                     enterAudioPrepareStage();
                 } else {
@@ -203,9 +207,26 @@ public class PostCreateActivity extends AppCompatActivity {
     // End of audio handling
 
     // Speech bubble handling
+    View.OnClickListener setBubbleTypeListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.post_create_btn_0:
+                    firebaseBubble.setType("L");
+                    break;
+                case R.id.post_create_btn_1:
+                    firebaseBubble.setType("R");
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     View.OnClickListener finishBubbleListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            firebaseBubbleList.add(firebaseBubble);
             enterAudioPrepareStage();
         }
     };
@@ -215,24 +236,24 @@ public class PostCreateActivity extends AppCompatActivity {
     View.OnClickListener finishPostListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            // TODO: upload everything to Firebase
 
+            // TODO: when uploading is done
+            setResult(RESULT_OK);
+            finish();
         }
     };
 
     // State transition
     public void enterAudioPrepareStage() {
         btn0.setText(localResources.getString(R.string.record));
-        btn0.setOnLongClickListener(null);
-        btn0.setOnTouchListener(null);
         btn0.setOnLongClickListener(startRecordingListener);
         btn0.setOnTouchListener(stopRecordingListener);
 
         btn1.setText(localResources.getString(R.string.play));
-        btn1.setOnClickListener(null);
         btn1.setOnClickListener(playAudioListener);
 
         btnNext.setText(localResources.getString(R.string.finish));
-        btnNext.setOnClickListener(null);
         btnNext.setOnClickListener(finishPostListener);
     }
 
@@ -240,14 +261,14 @@ public class PostCreateActivity extends AppCompatActivity {
         btn0.setText(localResources.getString(R.string.add_bubble_left));
         btn0.setOnLongClickListener(null);
         btn0.setOnTouchListener(null);
+        // TODO
         btn0.setOnClickListener(null);
 
         btn1.setText(localResources.getString(R.string.add_bubble_right));
-        btn1.setOnClickListener(null);
+        // TODO
         btn1.setOnClickListener(null);
 
         btnNext.setText(localResources.getString(R.string.finish_bubble));
-        btnNext.setOnClickListener(null);
         btnNext.setOnClickListener(finishBubbleListener);
     }
 }

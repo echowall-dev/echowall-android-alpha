@@ -132,7 +132,7 @@ public class PostActivity extends AppCompatActivity {
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
-        audioBubbleEditing = false;
+//        audioBubbleEditing = false;
 
         // Prepare app resources for use
         localResources = this.getResources();

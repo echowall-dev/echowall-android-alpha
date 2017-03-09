@@ -11,8 +11,8 @@ import java.util.UUID;
 public class FirebaseSpeechBubble {
 
     // Instance variables
-    private String bubbleID, postID, creatorID, audioUrl, audioName, creationDate;
-    private long x, y, type, playNumber;
+    private String bubbleID, postID, creatorID, audioUrl, audioName, type, creationDate;
+    private long x, y, playNumber;
 
     // Constructors
     public FirebaseSpeechBubble() {
@@ -25,10 +25,10 @@ public class FirebaseSpeechBubble {
         this.creatorID = creatorID;
         this.audioUrl = "";
         this.audioName = "";
+        this.type = "";
         this.creationDate = "";
         this.x = 0;
         this.y = 0;
-        this.type = 0;
         this.playNumber = 0;
     }
 
@@ -38,10 +38,10 @@ public class FirebaseSpeechBubble {
         this.creatorID = speechBubble.getUserID();
         this.audioUrl = speechBubble.getAudioUriString();
         this.audioName = speechBubble.getAudioUri().getLastPathSegment().replace("audio/", "");
+        this.type = (speechBubble.getType() == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) ? "L" : "R";
         this.creationDate = speechBubble.getCreationDateString();
         this.x = (long) speechBubble.getX();
         this.y = (long) speechBubble.getY();
-        this.type = (long) speechBubble.getType();
         this.playNumber = speechBubble.getPlayNumber();
     }
 
@@ -66,6 +66,10 @@ public class FirebaseSpeechBubble {
         return audioName;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public String getCreationDate() {
         return creationDate;
     }
@@ -76,10 +80,6 @@ public class FirebaseSpeechBubble {
 
     public long getY() {
         return y;
-    }
-
-    public long getType() {
-        return type;
     }
 
     public long getPlayNumber() {
@@ -107,6 +107,10 @@ public class FirebaseSpeechBubble {
         this.audioName = audioName;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
@@ -117,10 +121,6 @@ public class FirebaseSpeechBubble {
 
     public void setY(long y) {
         this.y = y;
-    }
-
-    public void setType(long type) {
-        this.type = type;
     }
 
     public void setPlayNumber(long playNumber) {
