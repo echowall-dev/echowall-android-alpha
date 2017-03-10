@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.firebase.FirebasePost;
-import com.echodev.echoalpha.firebase.FirebaseSpeechBubble;
+import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.PostClass;
@@ -330,13 +330,15 @@ public class PostActivity extends AppCompatActivity {
                 .setCreationDate(new Date());
 
         // Upload files and data to Firebase
-//        uploadToFirebaseStorage(newPost.getPhotoPath(), STORAGE_PHOTO, 0);
+        uploadToFirebaseStorage(newPost.getPhotoPath(), STORAGE_PHOTO, 0);
 
+        /*
         Intent intent = new Intent();
         intent.putExtra("newPost", newPost);
 
         setResult(RESULT_OK, intent);
         finish();
+        */
     }
 
     public void uploadToFirebaseStorage(String filePath, int storageType, final int counter) {
@@ -417,8 +419,9 @@ public class PostActivity extends AppCompatActivity {
                     Snackbar.make(mRootView, "Photo to databse success", Snackbar.LENGTH_SHORT).show();
 
                     // Upload all speech bubbles data to Firebase database
+                    /*
                     for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {
-                        FirebaseSpeechBubble newFirebaseBubble = new FirebaseSpeechBubble(speechBubble);
+                        FirebaseBubble newFirebaseBubble = new FirebaseBubble(speechBubble);
 
                         DatabaseReference mBubbleRef = mDbRef.child("bubble").child(newFirebaseBubble.getBubbleID());
                         mBubbleRef.setValue(newFirebaseBubble, new DatabaseReference.CompletionListener() {
@@ -441,6 +444,7 @@ public class PostActivity extends AppCompatActivity {
                             }
                         });
                     }
+                    */
                 }
             }
         });

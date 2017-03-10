@@ -13,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.echodev.echoalpha.firebase.FirebaseBubbleWrapper;
 import com.echodev.echoalpha.firebase.FirebasePost;
-import com.echodev.echoalpha.firebase.FirebaseSpeechBubble;
+import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.firebase.FirebaseUserClass;
 import com.echodev.echoalpha.util.ImageHelper;
-import com.echodev.echoalpha.util.PostClass;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -45,9 +45,8 @@ public class PostCreateActivity extends AppCompatActivity {
 
     // Instance variables
     private FirebaseUserClass firebaseUser;
-    private FirebasePost firebasePost;
-    private FirebaseSpeechBubble firebaseBubble;
-    private ArrayList<FirebaseSpeechBubble> firebaseBubbleList;
+    private FirebasePost newPost;
+    private FirebaseBubbleWrapper bubbleWrapper;
 
     private Resources localResources;
     private boolean appDirExist, audioBubbleEditing;
@@ -106,11 +105,8 @@ public class PostCreateActivity extends AppCompatActivity {
                 bundle.getString("userName")
         );
 
-        // Create new ArrayList for storing speech bubbles before uploading to Firebase
-        firebaseBubbleList = new ArrayList<FirebaseSpeechBubble>();
-
         // Create new Post instance
-        firebasePost = new FirebasePost(firebaseUser.getUserID());
+        newPost = new FirebasePost(firebaseUser.getUserID());
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
@@ -128,15 +124,15 @@ public class PostCreateActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            firebasePost.setPhotoUrl(ImageHelper.createImageFile(localResources, firebasePost.getCreatorID()));
-            Uri photoUri = Uri.fromFile(new File(firebasePost.getPhotoUrl()));
+            newPost.setPhotoUrl(ImageHelper.createImageFile(localResources, newPost.getCreatorID()));
+            Uri photoUri = Uri.fromFile(new File(newPost.getPhotoUrl()));
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
     }
 
     private void galleryAddPic() {
-        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(firebasePost.getPhotoUrl());
+        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(newPost.getPhotoUrl());
         this.sendBroadcast(mediaScanIntent);
     }
 
@@ -150,12 +146,12 @@ public class PostCreateActivity extends AppCompatActivity {
 
                     // Load the photo into preview area
                     Glide.with(this)
-                            .load(firebasePost.getPhotoUrl())
+                            .load(newPost.getPhotoUrl())
                             .asBitmap()
                             .into(previewImage);
 
                     // Add the photo name to the new Post instance
-                    firebasePost.setPhotoName(Uri.parse(firebasePost.getPhotoUrl()).getLastPathSegment());
+                    newPost.setPhotoName(Uri.parse(newPost.getPhotoUrl()).getLastPathSegment());
 
                     enterAudioPrepareStage();
                 } else {
@@ -212,10 +208,10 @@ public class PostCreateActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.post_create_btn_0:
-                    firebaseBubble.setType("L");
+                    bubbleWrapper.setType("L");
                     break;
                 case R.id.post_create_btn_1:
-                    firebaseBubble.setType("R");
+                    bubbleWrapper.setType("R");
                     break;
                 default:
                     break;
@@ -226,7 +222,8 @@ public class PostCreateActivity extends AppCompatActivity {
     View.OnClickListener finishBubbleListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            firebaseBubbleList.add(firebaseBubble);
+            newPost.addBubble(bubbleWrapper.getBubble());
+            bubbleWrapper.setAdjustListener(null);
             enterAudioPrepareStage();
         }
     };
@@ -238,7 +235,7 @@ public class PostCreateActivity extends AppCompatActivity {
         public void onClick(View v) {
             // TODO: upload everything to Firebase
 
-            // TODO: when uploading is done
+            // TODO: when upload is done
             setResult(RESULT_OK);
             finish();
         }

@@ -83,7 +83,8 @@ public class WallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        storageCode = STORAGE_FIREBASE;
+        storageCode = STORAGE_LOCAL;
+//        storageCode = STORAGE_FIREBASE;
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();

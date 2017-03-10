@@ -8,18 +8,18 @@ import java.util.UUID;
  * Created by Ho on 5/3/2017.
  */
 
-public class FirebaseSpeechBubble {
+public class FirebaseBubble {
 
     // Instance variables
-    private String bubbleID, postID, creatorID, audioUrl, audioName, type, creationDate;
+    private String bubbleID, postID, creatorID, audioUrl, audioName, type, creationDate, platform;
     private long x, y, playNumber;
 
     // Constructors
-    public FirebaseSpeechBubble() {
+    public FirebaseBubble() {
         // Required by Firebase
     }
 
-    public FirebaseSpeechBubble(String postID, String creatorID) {
+    public FirebaseBubble(String postID, String creatorID) {
         this.bubbleID = UUID.randomUUID().toString();
         this.postID = postID;
         this.creatorID = creatorID;
@@ -27,12 +27,13 @@ public class FirebaseSpeechBubble {
         this.audioName = "";
         this.type = "";
         this.creationDate = "";
+        this.platform = "Android";
         this.x = 0;
         this.y = 0;
         this.playNumber = 0;
     }
 
-    public FirebaseSpeechBubble(SpeechBubble speechBubble) {
+    public FirebaseBubble(SpeechBubble speechBubble) {
         this.bubbleID = speechBubble.getBubbleIDString();
         this.postID = speechBubble.getPostID();
         this.creatorID = speechBubble.getUserID();
@@ -40,6 +41,7 @@ public class FirebaseSpeechBubble {
         this.audioName = speechBubble.getAudioUri().getLastPathSegment().replace("audio/", "");
         this.type = (speechBubble.getType() == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) ? "L" : "R";
         this.creationDate = speechBubble.getCreationDateString();
+        this.platform = "Android";
         this.x = (long) speechBubble.getX();
         this.y = (long) speechBubble.getY();
         this.playNumber = speechBubble.getPlayNumber();
@@ -72,6 +74,10 @@ public class FirebaseSpeechBubble {
 
     public String getCreationDate() {
         return creationDate;
+    }
+
+    public String getPlatform() {
+        return platform;
     }
 
     public long getX() {
@@ -114,6 +120,10 @@ public class FirebaseSpeechBubble {
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
+
+//    public void setPlatform(String platform) {
+//        this.platform = platform;
+//    }
 
     public void setX(long x) {
         this.x = x;

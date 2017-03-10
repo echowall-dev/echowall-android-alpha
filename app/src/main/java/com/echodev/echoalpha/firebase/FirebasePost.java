@@ -15,7 +15,8 @@ public class FirebasePost {
 
     // Instance variables
     private String postID, creatorID, photoUrl, photoName, caption, creationDate;
-    private List<String> collaboratorIDList, speechBubbleIDList;
+    private List<String> collaboratorIDList;
+    private List<FirebaseBubble> bubbleList;
     private long likeNumber, commentNumber, shareNumber;
 
     // Constructors
@@ -31,7 +32,7 @@ public class FirebasePost {
         this.caption = "";
         this.creationDate = "";
         this.collaboratorIDList = new ArrayList<String>();
-        this.speechBubbleIDList = new ArrayList<String>();
+        this.bubbleList = new ArrayList<FirebaseBubble>();
         this.likeNumber = 0;
         this.commentNumber = 0;
         this.shareNumber = 0;
@@ -45,13 +46,13 @@ public class FirebasePost {
         this.caption = post.getCaption();
         this.creationDate = post.getCreationDateString();
         this.collaboratorIDList = new ArrayList<String>();
-        this.speechBubbleIDList = new ArrayList<String>();
+        this.bubbleList = new ArrayList<FirebaseBubble>();
         this.likeNumber = post.getLikeNumber();
         this.commentNumber = post.getLikeNumber();
         this.shareNumber = post.getShareNumber();
 
         for (SpeechBubble speechBubble : post.getSpeechBubbleList()) {
-            speechBubbleIDList.add(speechBubble.getBubbleIDString());
+            bubbleList.add(new FirebaseBubble(speechBubble));
         }
     }
 
@@ -84,8 +85,8 @@ public class FirebasePost {
         return collaboratorIDList;
     }
 
-    public List<String> getSpeechBubbleIDList() {
-        return speechBubbleIDList;
+    public List<FirebaseBubble> getBubbleList() {
+        return bubbleList;
     }
 
     public long getLikeNumber() {
@@ -129,8 +130,8 @@ public class FirebasePost {
         this.collaboratorIDList = collaboratorIDList;
     }
 
-    public void setSpeechBubbleIDList(List<String> speechBubbleIDList) {
-        this.speechBubbleIDList = speechBubbleIDList;
+    public void setBubbleList(List<FirebaseBubble> bubbleList) {
+        this.bubbleList = bubbleList;
     }
 
     public void setLikeNumber(long likeNumber) {
@@ -170,28 +171,28 @@ public class FirebasePost {
         return collaboratorIDList.get(i);
     }
 
-    // Instance methods - speechBubbleIDList
-    public void addSpeechBubbleID(String collaboratorID) {
-        speechBubbleIDList.add(collaboratorID);
+    // Instance methods - bubbleList
+    public void addBubble(FirebaseBubble bubble) {
+        bubbleList.add(bubble);
     }
 
-    public void addSpeechBubbleID(int i, String collaboratorID) {
-        speechBubbleIDList.add(i, collaboratorID);
+    public void addBubble(int i, FirebaseBubble bubble) {
+        bubbleList.add(i, bubble);
     }
 
-    public void removeSpeechBubbleID(String collaboratorID) {
-        speechBubbleIDList.remove(collaboratorID);
+    public void removeBubble(FirebaseBubble bubble) {
+        bubbleList.remove(bubble);
     }
 
-    public void removeSpeechBubbleID(int i) {
-        speechBubbleIDList.remove(i);
+    public void removeBubble(int i) {
+        bubbleList.remove(i);
     }
 
-    public void setSpeechBubbleID(int i, String collaboratorID) {
-        speechBubbleIDList.set(i, collaboratorID);
+    public void setBubble(int i, FirebaseBubble bubble) {
+        bubbleList.set(i, bubble);
     }
 
-    public String getSpeechBubbleID(int i) {
-        return speechBubbleIDList.get(i);
+    public FirebaseBubble getBubble(int i) {
+        return bubbleList.get(i);
     }
 }
