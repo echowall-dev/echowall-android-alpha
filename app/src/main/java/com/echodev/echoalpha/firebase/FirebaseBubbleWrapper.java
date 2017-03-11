@@ -179,8 +179,7 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         }
 
         // Set the final value for x and y coordinate
-//        this.setX(positionX);
-//        this.setY(positionY);
+        // Convert px to dp for data storage
         this.setX(ImageHelper.convertPxToDp(positionX, context));
         this.setY(ImageHelper.convertPxToDp(positionY, context));
     }
@@ -227,8 +226,7 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
                 break;
             case MotionEvent.ACTION_UP:
                 // Set the final value for x and y coordinate
-//                this.setX(targetX);
-//                this.setY(targetY);
+                // Convert px to dp for data storage
                 this.setX((long) ImageHelper.convertPxToDp(targetX, context));
                 this.setY((long) ImageHelper.convertPxToDp(targetY, context));
                 break;

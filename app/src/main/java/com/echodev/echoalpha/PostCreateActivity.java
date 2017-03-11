@@ -292,9 +292,13 @@ public class PostCreateActivity extends AppCompatActivity {
 
                 Snackbar.make(rootView, "Photo storage success", Snackbar.LENGTH_SHORT).show();
 
-                for (int i=0; i<newPost.getBubbleList().size(); i++) {
-                    FirebaseBubble bubble = newPost.getBubble(i);
-                    uploadAudioToFirebaseStorage(i);
+                if (newPost.getBubbleList().size() > 0) {
+                    for (int i = 0; i < newPost.getBubbleList().size(); i++) {
+                        FirebaseBubble bubble = newPost.getBubble(i);
+                        uploadAudioToFirebaseStorage(i);
+                    }
+                } else {
+                    uploadPostToFirebaseDatabase();
                 }
             }
         });
@@ -332,14 +336,16 @@ public class PostCreateActivity extends AppCompatActivity {
     }
 
     private void uploadPostToFirebaseDatabase() {
-        DatabaseReference mPostRef = mDbRef.child("post").child(newPost.getPostID());
+//        DatabaseReference mPostRef = mDbRef.child("post").child(newPost.getPostID());
+        String postKey = "post_" + newPost.getCreationDate().replace(" ", "_").replace("-", "").replace(":", "");
+        DatabaseReference mPostRef = mDbRef.child("post").child(postKey);
         mPostRef.setValue(newPost, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Snackbar.make(rootView, "Photo to databse failed", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, "Post to databse failed", Snackbar.LENGTH_SHORT).show();
                 } else {
-                    Snackbar.make(rootView, "Photo to databse success", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, "Post to databse success", Snackbar.LENGTH_SHORT).show();
 
                     setResult(RESULT_OK);
                     finish();

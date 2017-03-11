@@ -23,7 +23,7 @@ public class FirebasePost {
 
     // Constructors
     public FirebasePost() {
-        // Required by Firebase
+        // Default constructor required by Firebase
     }
 
     public FirebasePost(FirebaseUserClass user) {

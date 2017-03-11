@@ -82,6 +82,8 @@ public class WallActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_wall);
+        ButterKnife.bind(this);
 
         activityRequestCode = REQUEST_CODE_POST_CREATE;
 
@@ -123,9 +125,6 @@ public class WallActivity extends AppCompatActivity {
             });
         }
 
-        setContentView(R.layout.activity_wall);
-        ButterKnife.bind(this);
-
         // Use a linear layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
@@ -140,6 +139,35 @@ public class WallActivity extends AppCompatActivity {
             firebasePostAdapter = new FirebasePostAdapter(this.getResources(), this.getApplicationContext());
             postListArea.setAdapter(firebasePostAdapter);
         }
+
+        DatabaseReference mPostRef = mDbRef.child("post");
+        mPostRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == firebasePostAdapter.getItemCount()) {
+                    return;
+                }
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    FirebasePost post = postSnapshot.getValue(FirebasePost.class);
+
+                    int position = firebasePostAdapter.indexOfPost(post);
+                    if (position < 0) {
+                        firebasePostAdapter.addPost(post);
+                        firebasePostAdapter.notifyItemInserted(firebasePostAdapter.getPostList().size() - 1);
+                        postListArea.scrollToPosition(firebasePostAdapter.getPostList().size() - 1);
+                    } else {
+                        // TODO: Edit post
+                        postListArea.scrollToPosition(firebasePostAdapter.getPostList().size() - 1);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
         populateProfile();

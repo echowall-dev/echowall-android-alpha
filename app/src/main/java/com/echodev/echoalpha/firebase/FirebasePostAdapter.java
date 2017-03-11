@@ -46,6 +46,14 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     // Setters
+    public void setResources(Resources resources) {
+        this.resources = resources;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public void setPostList(ArrayList<FirebasePost> postList) {
         this.postList = postList;
     }
@@ -71,6 +79,10 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         postList.set(i, post);
     }
 
+    public int indexOfPost(FirebasePost post) {
+        return postList.indexOf(post);
+    }
+
     public FirebasePost getPost(int i) {
         return postList.get(i);
     }
@@ -90,9 +102,10 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         long postLikeNumber = post.getLikeNumber();
 
         // Set template info for the post
-        holder.postUserProfileView.setText(post.getCreatorEmail());
+//        holder.postUserProfileView.setText(post.getCreatorEmail());
+        holder.postUserProfileView.setText("Post " + position);
         holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        holder.postUserNameView.setText(post.getCreatorName());
+        holder.postUserNameView.setText(post.getCreatorName() + ":");
         holder.postCaptionView.setText(post.getCaption());
         holder.postCreationDateView.setText(post.getCreationDate());
 
@@ -103,13 +116,16 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 .into(holder.postImageView);
 
         // Add the speech bubbles at target position
-        for (FirebaseBubble bubble : post.getBubbleList()) {
-            FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
-            int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), context);
-            int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), context);
-            bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImageArea, resources, context);
-//            bubbleWrapper.addBubbleImage((int) bubble.getX(), (int) bubble.getY(), holder.postImageArea, resources, context);
-            bubbleWrapper.bindPlayListener();
+        if (post.getBubbleList() != null && !post.getBubbleList().isEmpty()) {
+            for (FirebaseBubble bubble : post.getBubbleList()) {
+                FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
+
+                // Convert dp back to px for display
+                int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), context);
+                int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), context);
+                bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImageArea, resources, context);
+                bubbleWrapper.bindPlayListener();
+            }
         }
     }
 

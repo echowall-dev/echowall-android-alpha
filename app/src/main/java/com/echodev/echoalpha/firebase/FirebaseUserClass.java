@@ -17,7 +17,7 @@ public class FirebaseUserClass implements Parcelable {
 
     // Constructors
     public FirebaseUserClass() {
-        // Required by Firebase
+        // Default constructor required by Firebase
     }
 
     public FirebaseUserClass(String userID) {

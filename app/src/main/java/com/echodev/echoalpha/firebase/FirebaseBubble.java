@@ -18,7 +18,7 @@ public class FirebaseBubble {
 
     // Constructors
     public FirebaseBubble() {
-        // Required by Firebase
+        // Default constructor required by Firebase
     }
 
     public FirebaseBubble(String postID, String creatorID) {
