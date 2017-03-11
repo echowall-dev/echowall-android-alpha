@@ -90,7 +90,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 .asBitmap()
                 .into(holder.postImageView);
 
-
         // Add the speech bubbles at target position
         for (SpeechBubble speechBubble : post.getSpeechBubbleList()) {
             speechBubble.addBubbleImage(speechBubble.getX(), speechBubble.getY(), holder.postImageArea, resources, context);

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
+import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
 
@@ -26,39 +27,39 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
 
     private Resources resources;
     private Context context;
-    private ArrayList<PostClass> postList;
+    private ArrayList<FirebasePost> postList;
 
     // Constructors
     public FirebasePostAdapter() {
-        this.postList = new ArrayList<PostClass>();
+        this.postList = new ArrayList<FirebasePost>();
     }
 
     public FirebasePostAdapter(Resources resources, Context context) {
         this.resources = resources;
         this.context = context;
-        this.postList = new ArrayList<PostClass>();
+        this.postList = new ArrayList<FirebasePost>();
     }
 
     // Getters
-    public ArrayList<PostClass> getPostList() {
+    public ArrayList<FirebasePost> getPostList() {
         return postList;
     }
 
     // Setters
-    public void setPostList(ArrayList<PostClass> postList) {
+    public void setPostList(ArrayList<FirebasePost> postList) {
         this.postList = postList;
     }
 
     // Instance methods for modifying the dataset
-    public void addPost(PostClass post) {
+    public void addPost(FirebasePost post) {
         postList.add(post);
     }
 
-    public void addPost(int i, PostClass post) {
+    public void addPost(int i, FirebasePost post) {
         postList.add(i, post);
     }
 
-    public void removePost(PostClass post) {
+    public void removePost(FirebasePost post) {
         postList.remove(post);
     }
 
@@ -75,29 +76,31 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
 
     @Override
     public void onBindViewHolder(FirebasePostAdapter.ViewHolder holder, int position) {
-        PostClass post = postList.get(position);
+        FirebasePost post = postList.get(position);
 
         // Fetch the data of the post
         long postLikeNumber = post.getLikeNumber();
-        String postCreationDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(post.getCreationDate());
 
         // Set template info for the post
-        holder.postUserProfileView.setText(post.getUserEmail());
+        holder.postUserProfileView.setText(post.getCreatorID());
         holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        holder.postCaptionView.setText("Peter:\nWhat a beautiful day!");
-        holder.postCreationDateView.setText(postCreationDate);
+        holder.postUserNameView.setText(post.getCreatorName());
+        holder.postCaptionView.setText(post.getCaption());
+        holder.postCreationDateView.setText(post.getCreationDate());
 
         // Add the photo to the post
         Glide.with(context)
-                .load(post.getPhotoPath())
+                .load(post.getPhotoUrl())
                 .asBitmap()
                 .into(holder.postImageView);
 
-
         // Add the speech bubbles at target position
-        for (SpeechBubble speechBubble : post.getSpeechBubbleList()) {
-            speechBubble.addBubbleImage(speechBubble.getX(), speechBubble.getY(), holder.postImageArea, resources, context);
-            speechBubble.bindPlayListener();
+        for (FirebaseBubble bubble : post.getBubbleList()) {
+            FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
+            int positionX = ImageHelper.convertDpToPixel((int) bubble.getX(), context);
+            int positionY = ImageHelper.convertDpToPixel((int) bubble.getY(), context);
+            bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImageArea, resources, context);
+            bubbleWrapper.bindPlayListener();
         }
     }
 
@@ -107,7 +110,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfileView, postLikeNumberView, postCaptionView, postCreationDateView;
+        public TextView postUserProfileView, postLikeNumberView, postUserNameView, postCaptionView, postCreationDateView;
         public RelativeLayout postImageArea;
         public ImageView postImageView;
 
@@ -118,6 +121,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
             postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_image_area);
             postImageView = (ImageView) itemView.findViewById(R.id.post_image);
             postLikeNumberView = (TextView) itemView.findViewById(R.id.post_like_number);
+            postUserNameView = (TextView) itemView.findViewById(R.id.post_user_name);
             postCaptionView = (TextView) itemView.findViewById(R.id.post_caption);
             postCreationDateView = (TextView) itemView.findViewById(R.id.post_creation_time);
         }

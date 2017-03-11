@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.echodev.echoalpha.firebase.FirebasePost;
+import com.echodev.echoalpha.firebase.FirebasePostAdapter;
 import com.echodev.echoalpha.firebase.FirebaseUserClass;
 import com.echodev.echoalpha.util.PostAdapter;
 import com.echodev.echoalpha.util.PostClass;
@@ -43,17 +45,14 @@ public class WallActivity extends AppCompatActivity {
 
     // Request code for creating new post
     public static final int REQUEST_CODE_POST = 110;
-
-    // Storage code for starting different Activities
-    private static final int STORAGE_LOCAL = 120;
-    private static final int STORAGE_FIREBASE = 121;
-    private int storageCode;
+    public static final int REQUEST_CODE_POST_CREATE = 111;
+    private int activityRequestCode;
 
     // Instance variables
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
-    FirebaseUserClass firebaseUser;
+    private FirebaseUserClass firebaseUser;
 
     private FirebaseDatabase mDb;
     private DatabaseReference mDbRef;
@@ -62,6 +61,7 @@ public class WallActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
 
     private PostAdapter postAdapter;
+    private FirebasePostAdapter firebasePostAdapter;
 
     // Bind views by ButterKnife
     @BindView(android.R.id.content)
@@ -83,8 +83,7 @@ public class WallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        storageCode = STORAGE_LOCAL;
-//        storageCode = STORAGE_FIREBASE;
+        activityRequestCode = REQUEST_CODE_POST_CREATE;
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -102,6 +101,7 @@ public class WallActivity extends AppCompatActivity {
                     mUser.getEmail(),
                     mUser.getDisplayName()
             );
+
             if (mUser.getPhotoUrl() != null) {
                 firebaseUser.setProPicUrl(mUser.getPhotoUrl().toString());
             }
@@ -133,8 +133,13 @@ public class WallActivity extends AppCompatActivity {
         postListArea.setLayoutManager(linearLayoutManager);
 
         // specify an adapter
-        postAdapter = new PostAdapter(this.getResources(), this.getApplicationContext());
-        postListArea.setAdapter(postAdapter);
+        if (activityRequestCode == REQUEST_CODE_POST) {
+            postAdapter = new PostAdapter(this.getResources(), this.getApplicationContext());
+            postListArea.setAdapter(postAdapter);
+        } else {
+            firebasePostAdapter = new FirebasePostAdapter(this.getResources(), this.getApplicationContext());
+            postListArea.setAdapter(firebasePostAdapter);
+        }
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
         populateProfile();
@@ -239,20 +244,24 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
+        /*
         Bundle bundle = new Bundle();
         bundle.putString("userID", firebaseUser.getUserID());
         bundle.putString("userEmail", firebaseUser.getUserEmail());
         bundle.putString("userName", firebaseUser.getUserName());
+        */
 
         Intent intent = new Intent();
-        if (storageCode == STORAGE_LOCAL) {
+//        intent.putExtras(bundle);
+        intent.putExtra("currentUser", firebaseUser);
+
+        if (activityRequestCode == REQUEST_CODE_POST) {
             intent.setClass(this, PostActivity.class);
-        } else if (storageCode == STORAGE_FIREBASE) {
+        } else if (activityRequestCode == REQUEST_CODE_POST_CREATE) {
             intent.setClass(this, PostCreateActivity.class);
         }
-        intent.putExtras(bundle);
 
-        startActivityForResult(intent, REQUEST_CODE_POST);
+        startActivityForResult(intent, activityRequestCode);
     }
 
     @Override
@@ -273,6 +282,15 @@ public class WallActivity extends AppCompatActivity {
                     postAdapter.addPost(newPost);
                     postAdapter.notifyItemInserted(postAdapter.getPostList().size() - 1);
                     postListArea.scrollToPosition(postAdapter.getPostList().size() - 1);
+                }
+                break;
+            case REQUEST_CODE_POST_CREATE:
+                if (resultCode == RESULT_OK) {
+                    // Show files path info on the page
+                    String appName = this.getResources().getString(R.string.app_name);
+                    String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
+                    String filePathInfo = "file location:\n" + appPathInfo;
+                    IDTextView.setText(filePathInfo);
                 }
                 break;
             default:

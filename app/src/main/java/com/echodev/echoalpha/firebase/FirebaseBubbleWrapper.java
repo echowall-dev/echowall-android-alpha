@@ -14,36 +14,34 @@ import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
 
+import java.util.Date;
+
 /**
  * Created by Ho on 10/3/2017.
  */
 
 public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClickListener {
 
-    public FirebaseBubble bubble;
+    private FirebaseBubble bubble;
     private int dX, dY, targetX, targetY;
     private ImageView bubbleImageView;
     private Context context;
 
     // Constructors
-    public FirebaseBubbleWrapper(Context context) {
+    public FirebaseBubbleWrapper() {
         this.bubble = new FirebaseBubble();
-        this.context = context;
     }
 
-    public FirebaseBubbleWrapper(String postID, String creatorID, Context context) {
+    public FirebaseBubbleWrapper(String postID, String creatorID) {
         this.bubble = new FirebaseBubble(postID, creatorID);
-        this.context = context;
     }
 
-    public FirebaseBubbleWrapper(SpeechBubble speechBubble, Context context) {
+    public FirebaseBubbleWrapper(SpeechBubble speechBubble) {
         this.bubble = new FirebaseBubble(speechBubble);
-        this.context = context;
     }
 
-    public FirebaseBubbleWrapper(FirebaseBubble bubble, Context context) {
+    public FirebaseBubbleWrapper(FirebaseBubble bubble) {
         this.bubble = bubble;
-        this.context = context;
     }
 
     // Getters
@@ -128,9 +126,9 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         bubble.setCreationDate(creationDate);
     }
 
-//    public void setPlatform(String platform) {
-//        bubble.setPlatform(platform);
-//    }
+    public void setPlatform(String platform) {
+        bubble.setPlatform(platform);
+    }
 
     public void setX(long x) {
         bubble.setX(x);

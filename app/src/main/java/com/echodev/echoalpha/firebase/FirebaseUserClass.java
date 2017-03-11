@@ -3,6 +3,8 @@ package com.echodev.echoalpha.firebase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.UUID;
+
 /**
  * Created by Ho on 5/3/2017.
  */

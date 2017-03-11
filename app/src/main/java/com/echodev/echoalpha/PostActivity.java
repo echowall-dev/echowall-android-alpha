@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.echodev.echoalpha.firebase.FirebaseUserClass;
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.firebase.FirebasePost;
 import com.echodev.echoalpha.firebase.FirebaseBubble;
@@ -52,9 +53,6 @@ public class PostActivity extends AppCompatActivity {
     // Request code for Firebase Storage
     public static final int STORAGE_PHOTO = 220;
     public static final int STORAGE_AUDIO = 221;
-
-    // Activity result code
-    public static final int RESULT_OK_FIREBASE = 300;
 
     // Bind views by ButterKnife
     @BindView(R.id.activity_post)
@@ -122,13 +120,13 @@ public class PostActivity extends AppCompatActivity {
         mStorageRef = mStorage.getReference();
 
         // Fetch data from the previous Activity
-        Bundle bundle = getIntent().getExtras();
+        FirebaseUserClass firebaseUser = (FirebaseUserClass) getIntent().getParcelableExtra("currentUser");
 
         // Create new Post instance
         newPost = new PostClass();
-        newPost.setUserID(bundle.getString("userID"))
-                .setUserEmail(bundle.getString("userEmail"))
-                .setUserName(bundle.getString("userName"));
+        newPost.setUserID(firebaseUser.getUserID())
+                .setUserEmail(firebaseUser.getUserEmail())
+                .setUserName(firebaseUser.getUserName());
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
@@ -418,8 +416,11 @@ public class PostActivity extends AppCompatActivity {
                 } else {
                     Snackbar.make(mRootView, "Photo to databse success", Snackbar.LENGTH_SHORT).show();
 
-                    // Upload all speech bubbles data to Firebase database
+                    setResult(RESULT_OK);
+                    finish();
+
                     /*
+                    // Upload all speech bubbles data to Firebase database
                     for (SpeechBubble speechBubble : newPost.getSpeechBubbleList()) {
                         FirebaseBubble newFirebaseBubble = new FirebaseBubble(speechBubble);
 

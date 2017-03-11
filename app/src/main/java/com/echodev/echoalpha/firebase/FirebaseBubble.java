@@ -2,6 +2,8 @@ package com.echodev.echoalpha.firebase;
 
 import com.echodev.echoalpha.util.SpeechBubble;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -121,9 +123,9 @@ public class FirebaseBubble {
         this.creationDate = creationDate;
     }
 
-//    public void setPlatform(String platform) {
-//        this.platform = platform;
-//    }
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
 
     public void setX(long x) {
         this.x = x;

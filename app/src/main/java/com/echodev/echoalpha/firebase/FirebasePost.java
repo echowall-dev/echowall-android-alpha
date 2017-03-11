@@ -3,7 +3,9 @@ package com.echodev.echoalpha.firebase;
 import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +16,7 @@ import java.util.UUID;
 public class FirebasePost {
 
     // Instance variables
-    private String postID, creatorID, photoUrl, photoName, caption, creationDate;
+    private String postID, creatorID, creatorName, photoUrl, photoName, caption, creationDate;
     private List<String> collaboratorIDList;
     private List<FirebaseBubble> bubbleList;
     private long likeNumber, commentNumber, shareNumber;
@@ -24,9 +26,10 @@ public class FirebasePost {
         // Required by Firebase
     }
 
-    public FirebasePost(String creatorID) {
+    public FirebasePost(FirebaseUserClass user) {
         this.postID = UUID.randomUUID().toString();
-        this.creatorID = creatorID;
+        this.creatorID = user.getUserID();
+        this.creatorName = user.getUserName();
         this.photoUrl = "";
         this.photoName = "";
         this.caption = "";
@@ -41,6 +44,7 @@ public class FirebasePost {
     public FirebasePost(PostClass post) {
         this.postID = post.getPostIDString();
         this.creatorID = post.getUserID();
+        this.creatorName = post.getUserName();
         this.photoUrl = post.getPhotoUriString();
         this.photoName = post.getPhotoUri().getLastPathSegment().replace("picture/", "");
         this.caption = post.getCaption();
@@ -63,6 +67,10 @@ public class FirebasePost {
 
     public String getCreatorID() {
         return creatorID;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
     }
 
     public String getPhotoUrl() {
@@ -108,6 +116,10 @@ public class FirebasePost {
 
     public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     public void setPhotoUrl(String photoUrl) {
