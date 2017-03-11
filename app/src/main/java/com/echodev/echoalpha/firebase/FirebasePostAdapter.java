@@ -67,6 +67,14 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         postList.remove(i);
     }
 
+    public void setPost(int i, FirebasePost post) {
+        postList.set(i, post);
+    }
+
+    public FirebasePost getPost(int i) {
+        return postList.get(i);
+    }
+
     @Override
     public FirebasePostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new post
@@ -82,7 +90,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         long postLikeNumber = post.getLikeNumber();
 
         // Set template info for the post
-        holder.postUserProfileView.setText(post.getCreatorID());
+        holder.postUserProfileView.setText(post.getCreatorEmail());
         holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
         holder.postUserNameView.setText(post.getCreatorName());
         holder.postCaptionView.setText(post.getCaption());
@@ -97,9 +105,10 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         // Add the speech bubbles at target position
         for (FirebaseBubble bubble : post.getBubbleList()) {
             FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
-            int positionX = ImageHelper.convertDpToPixel((int) bubble.getX(), context);
-            int positionY = ImageHelper.convertDpToPixel((int) bubble.getY(), context);
+            int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), context);
+            int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), context);
             bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImageArea, resources, context);
+//            bubbleWrapper.addBubbleImage((int) bubble.getX(), (int) bubble.getY(), holder.postImageArea, resources, context);
             bubbleWrapper.bindPlayListener();
         }
     }

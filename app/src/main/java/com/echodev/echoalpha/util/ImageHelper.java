@@ -57,7 +57,7 @@ public class ImageHelper {
      * @param context
      * @return pixel
      */
-    public static int convertDpToPixel(int dp, Context context) {
+    public static int convertDpToPx(int dp, Context context) {
         return Math.round(dp * context.getResources().getDisplayMetrics().density);
     }
 
@@ -67,7 +67,7 @@ public class ImageHelper {
      * @param context
      * @return dp
      */
-    public static int convertPixelToDp(int px, Context context) {
+    public static int convertPxToDp(int px, Context context) {
         return Math.round(px / context.getResources().getDisplayMetrics().density);
     }
 }
