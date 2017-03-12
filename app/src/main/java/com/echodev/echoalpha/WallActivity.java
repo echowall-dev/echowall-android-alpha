@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,7 +67,7 @@ public class WallActivity extends AppCompatActivity {
 
     // Bind views by ButterKnife
     @BindView(android.R.id.content)
-    View mRootView;
+    View rootView;
 
     @BindView(R.id.identity_text)
     TextView IDTextView;
@@ -140,30 +142,103 @@ public class WallActivity extends AppCompatActivity {
             postListArea.setAdapter(firebasePostAdapter);
         }
 
-        DatabaseReference mPostRef = mDbRef.child("post");
-        mPostRef.addValueEventListener(new ValueEventListener() {
+        ValueEventListener fetchPostListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0 && firebasePostAdapter.getItemCount()==0) {
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         FirebasePost post = postSnapshot.getValue(FirebasePost.class);
                         firebasePostAdapter.addPost(post);
-//                        firebasePostAdapter.notifyItemInserted(firebasePostAdapter.getPostList().size() - 1);
+//                        firebasePostAdapter.notifyItemInserted(firebasePostAdapter.getItemCount() - 1);
+//                        postListArea.scrollToPosition(firebasePostAdapter.getItemCount() - 1);
                     }
                     firebasePostAdapter.notifyDataSetChanged();
-                    postListArea.scrollToPosition(firebasePostAdapter.getPostList().size() - 1);
+                    postListArea.scrollToPosition(firebasePostAdapter.getItemCount() - 1);
                 }
+
+//                if (firebasePostAdapter.getItemCount() > 0) {
+//                    postListArea.scrollToPosition(firebasePostAdapter.getItemCount() - 1);
+//                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+
+        ChildEventListener changePostListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                FirebasePost post = dataSnapshot.getValue(FirebasePost.class);
+
+                // TODO: Debug return -1 even post exists
+//                int position = firebasePostAdapter.indexOfPost(post);
+
+                int position = firebasePostAdapter.indexOfPostbyID(post.getPostID());
+
+                if (position < 0) {
+                    firebasePostAdapter.addPost(post);
+                    firebasePostAdapter.notifyItemInserted(firebasePostAdapter.getItemCount() - 1);
+                    postListArea.scrollToPosition(firebasePostAdapter.getItemCount() - 1);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                FirebasePost post = dataSnapshot.getValue(FirebasePost.class);
+
+                int position = firebasePostAdapter.indexOfPostbyID(post.getPostID());
+
+                if (position >= 0) {
+                    firebasePostAdapter.setPost(position, post);
+                    firebasePostAdapter.notifyItemChanged(position);
+                    postListArea.scrollToPosition(position);
+                } else {
+                    firebasePostAdapter.addPost(post);
+                    firebasePostAdapter.notifyItemInserted(firebasePostAdapter.getItemCount() - 1);
+                    postListArea.scrollToPosition(firebasePostAdapter.getItemCount() - 1);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                FirebasePost post = dataSnapshot.getValue(FirebasePost.class);
+
+                // TODO: Debug return -1 even post exists
+//                int position = firebasePostAdapter.indexOfPost(post);
+//                firebasePostAdapter.removePost(post);
+
+                int position = firebasePostAdapter.indexOfPostbyID(post.getPostID());
+//                Log.d(LOG_TAG, "post index: " + position);
+
+                firebasePostAdapter.removePost(position);
+                firebasePostAdapter.notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        DatabaseReference mPostRef = mDbRef.child("post");
+        mPostRef.addValueEventListener(fetchPostListener);
+        mPostRef.addChildEventListener(changePostListener);
 
         mIdpResponse = IdpResponse.fromResultIntent(getIntent());
         populateProfile();
         populateIdpToken();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @OnClick(R.id.sign_out_btn)
@@ -259,7 +334,7 @@ public class WallActivity extends AppCompatActivity {
 
     @MainThread
     private void showSnackbar(@StringRes int errorMessageRes) {
-        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(rootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.create_post_btn)

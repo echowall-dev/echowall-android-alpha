@@ -281,7 +281,7 @@ public class PostCreateActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 // Handle unsuccessful uploads
-                Snackbar.make(rootView, "Photo storage failed", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, "Photo to storage failed", Snackbar.LENGTH_SHORT).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -290,7 +290,7 @@ public class PostCreateActivity extends AppCompatActivity {
                 String downloadUrl = taskSnapshot.getDownloadUrl().toString();
                 newPost.setPhotoUrl(downloadUrl);
 
-                Snackbar.make(rootView, "Photo storage success", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, "Photo to storage success", Snackbar.LENGTH_SHORT).show();
 
                 if (newPost.getBubbleList().size() > 0) {
                     for (int i = 0; i < newPost.getBubbleList().size(); i++) {
@@ -313,7 +313,7 @@ public class PostCreateActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 // Handle unsuccessful uploads
-                Snackbar.make(rootView, "Audio storage failed", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, "Audio to storage failed", Snackbar.LENGTH_SHORT).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -325,7 +325,7 @@ public class PostCreateActivity extends AppCompatActivity {
                 bubble.setAudioUrl(downloadUrl);
                 newPost.setBubble(i, bubble);
 
-                Snackbar.make(rootView, "Audio storage success", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootView, "Audio to storage success", Snackbar.LENGTH_SHORT).show();
 
                 if (++bubbleCounter == newPost.getBubbleList().size()) {
                     bubbleCounter = 0;
@@ -337,15 +337,18 @@ public class PostCreateActivity extends AppCompatActivity {
 
     private void uploadPostToFirebaseDatabase() {
 //        DatabaseReference mPostRef = mDbRef.child("post").child(newPost.getPostID());
+
+        // TODO: Use regex instead of chained replace()
         String postKey = "post_" + newPost.getCreationDate().replace(" ", "_").replace("-", "").replace(":", "");
+
         DatabaseReference mPostRef = mDbRef.child("post").child(postKey);
         mPostRef.setValue(newPost, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Snackbar.make(rootView, "Post to databse failed", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, "Post to database failed", Snackbar.LENGTH_SHORT).show();
                 } else {
-                    Snackbar.make(rootView, "Post to databse success", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(rootView, "Post to database success", Snackbar.LENGTH_SHORT).show();
 
                     setResult(RESULT_OK);
                     finish();

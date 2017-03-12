@@ -83,6 +83,16 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         return postList.indexOf(post);
     }
 
+    public int indexOfPostbyID(String targetID) {
+        // TODO: Use binary search on postCreationDate instead of linear search on postID
+        for (int i=0; i<postList.size(); i++) {
+            if (postList.get(i).getPostID() == targetID) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public FirebasePost getPost(int i) {
         return postList.get(i);
     }
