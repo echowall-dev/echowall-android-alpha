@@ -3,6 +3,8 @@ package com.echodev.echoalpha.firebase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.UUID;
 
 /**
@@ -45,6 +47,16 @@ public class FirebaseUserClass implements Parcelable {
         this.userEmail = userEmail;
         this.userName = userName;
         this.proPicUrl = "";
+        this.description = "";
+        this.friendNumber = 0;
+        this.followerNumber = 0;
+    }
+
+    public FirebaseUserClass(FirebaseUser firebaseUser) {
+        this.userID = firebaseUser.getUid();
+        this.userEmail = firebaseUser.getEmail();
+        this.userName = firebaseUser.getDisplayName();
+        this.proPicUrl = firebaseUser.getPhotoUrl().toString();
         this.description = "";
         this.friendNumber = 0;
         this.followerNumber = 0;

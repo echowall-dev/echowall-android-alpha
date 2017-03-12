@@ -1,5 +1,8 @@
 package com.echodev.echoalpha.firebase;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
 
@@ -13,7 +16,7 @@ import java.util.UUID;
  * Created by Ho on 5/3/2017.
  */
 
-public class FirebasePost {
+public class FirebasePost implements Parcelable {
 
     // Instance variables
     private String postID, creatorID, creatorName, creatorEmail, photoUrl, photoName, caption, creationDate;
@@ -193,6 +196,19 @@ public class FirebasePost {
         return collaboratorIDList.get(i);
     }
 
+    public int getCollaboratorIDCount() {
+        return collaboratorIDList.size();
+    }
+
+    public int indexOfCollaboratorID(String targetID) {
+        for (int i=0; i<collaboratorIDList.size(); i++) {
+            if (collaboratorIDList.get(i) == targetID) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     // Instance methods - bubbleList
     public void addBubble(FirebaseBubble bubble) {
         bubbleList.add(bubble);
@@ -216,5 +232,58 @@ public class FirebasePost {
 
     public FirebaseBubble getBubble(int i) {
         return bubbleList.get(i);
+    }
+
+    public int getBubbleCount() {
+        return bubbleList.size();
+    }
+
+    // Parcelable implementation
+    protected FirebasePost(Parcel in) {
+        postID = in.readString();
+        creatorID = in.readString();
+        creatorName = in.readString();
+        creatorEmail = in.readString();
+        photoUrl = in.readString();
+        photoName = in.readString();
+        caption = in.readString();
+        creationDate = in.readString();
+        collaboratorIDList = in.createStringArrayList();
+        likeNumber = in.readLong();
+        commentNumber = in.readLong();
+        shareNumber = in.readLong();
+    }
+
+    public static final Creator<FirebasePost> CREATOR = new Creator<FirebasePost>() {
+        @Override
+        public FirebasePost createFromParcel(Parcel in) {
+            return new FirebasePost(in);
+        }
+
+        @Override
+        public FirebasePost[] newArray(int size) {
+            return new FirebasePost[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(postID);
+        dest.writeString(creatorID);
+        dest.writeString(creatorName);
+        dest.writeString(creatorEmail);
+        dest.writeString(photoUrl);
+        dest.writeString(photoName);
+        dest.writeString(caption);
+        dest.writeString(creationDate);
+        dest.writeStringList(collaboratorIDList);
+        dest.writeLong(likeNumber);
+        dest.writeLong(commentNumber);
+        dest.writeLong(shareNumber);
     }
 }

@@ -48,6 +48,7 @@ public class WallActivity extends AppCompatActivity {
     // Request code for creating new post
     public static final int REQUEST_CODE_POST = 110;
     public static final int REQUEST_CODE_POST_CREATE = 111;
+    public static final int REQUEST_CODE_POST_EDIT = 112;
     private int activityRequestCode;
 
     // Instance variables
@@ -386,6 +387,18 @@ public class WallActivity extends AppCompatActivity {
                     String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
                     String filePathInfo = "file location:\n" + appPathInfo;
                     IDTextView.setText(filePathInfo);
+
+                    Snackbar.make(rootView, "Post added", Snackbar.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_CODE_POST_EDIT:
+                if (resultCode == RESULT_OK) {
+                    String appName = this.getResources().getString(R.string.app_name);
+                    String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
+                    String filePathInfo = "file location:\n" + appPathInfo;
+                    IDTextView.setText(filePathInfo);
+
+                    Snackbar.make(rootView, "Post changed", Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             default:

@@ -24,20 +24,34 @@
             android:orientation="vertical">
 
             <!--Post Body: users section-->
-            <TextView
-                android:id="@+id/post_user_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/post_layout_user_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/post_layout_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/edit_post"/>
+            </RelativeLayout>
 
             <!--Post Body: photo section-->
             <RelativeLayout
-                android:id="@+id/post_image_area"
+                android:id="@+id/post_layout_image_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/post_image"
+                    android:id="@+id/post_layout_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"/>
@@ -45,7 +59,7 @@
 
             <!--Post Body: function section-->
             <TextView
-                android:id="@+id/post_like_number"
+                android:id="@+id/post_layout_like_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -53,7 +67,7 @@
 
             <!--Post Body: caption section-->
             <TextView
-                android:id="@+id/post_user_name"
+                android:id="@+id/post_layout_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -61,7 +75,7 @@
 
             <!--Post Body: caption section-->
             <TextView
-                android:id="@+id/post_caption"
+                android:id="@+id/post_layout_caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -69,7 +83,7 @@
 
             <!--Post Body: record section-->
             <TextView
-                android:id="@+id/post_creation_time"
+                android:id="@+id/post_layout_creation_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/activity_horizontal_margin"

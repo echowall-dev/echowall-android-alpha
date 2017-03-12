@@ -292,9 +292,8 @@ public class PostCreateActivity extends AppCompatActivity {
 
                 Snackbar.make(rootView, "Photo to storage success", Snackbar.LENGTH_SHORT).show();
 
-                if (newPost.getBubbleList().size() > 0) {
-                    for (int i = 0; i < newPost.getBubbleList().size(); i++) {
-                        FirebaseBubble bubble = newPost.getBubble(i);
+                if (newPost.getBubbleCount() > 0) {
+                    for (int i=0; i<newPost.getBubbleCount(); i++) {
                         uploadAudioToFirebaseStorage(i);
                     }
                 } else {
@@ -327,7 +326,7 @@ public class PostCreateActivity extends AppCompatActivity {
 
                 Snackbar.make(rootView, "Audio to storage success", Snackbar.LENGTH_SHORT).show();
 
-                if (++bubbleCounter == newPost.getBubbleList().size()) {
+                if (++bubbleCounter == newPost.getBubbleCount()) {
                     bubbleCounter = 0;
                     uploadPostToFirebaseDatabase();
                 }

@@ -1,6 +1,8 @@
 package com.echodev.echoalpha.firebase;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +13,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.echodev.echoalpha.PostEditActivity;
 import com.echodev.echoalpha.R;
 import com.echodev.echoalpha.util.ImageHelper;
-import com.echodev.echoalpha.util.PostClass;
-import com.echodev.echoalpha.util.SpeechBubble;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import static com.echodev.echoalpha.WallActivity.REQUEST_CODE_POST_EDIT;
 
 /**
  * Created by Ho on 5/3/2017.
@@ -106,7 +108,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
 
     @Override
     public void onBindViewHolder(FirebasePostAdapter.ViewHolder holder, int position) {
-        FirebasePost post = postList.get(position);
+        final FirebasePost post = postList.get(position);
 
         // Fetch the data of the post
         long postLikeNumber = post.getLikeNumber();
@@ -137,6 +139,16 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 bubbleWrapper.bindPlayListener();
             }
         }
+
+        holder.postEditView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PostEditActivity.class);
+                intent.putExtra("currentPost", post);
+
+                ((Activity) context).startActivityForResult(intent, REQUEST_CODE_POST_EDIT);
+            }
+        });
     }
 
     @Override
@@ -145,20 +157,21 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfileView, postLikeNumberView, postUserNameView, postCaptionView, postCreationDateView;
+        public TextView postUserProfileView, postEditView, postLikeNumberView, postUserNameView, postCaptionView, postCreationDateView;
         public RelativeLayout postImageArea;
         public ImageView postImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             // Prepare the views of the post
-            postUserProfileView = (TextView) itemView.findViewById(R.id.post_user_profile);
-            postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_image_area);
-            postImageView = (ImageView) itemView.findViewById(R.id.post_image);
-            postLikeNumberView = (TextView) itemView.findViewById(R.id.post_like_number);
-            postUserNameView = (TextView) itemView.findViewById(R.id.post_user_name);
-            postCaptionView = (TextView) itemView.findViewById(R.id.post_caption);
-            postCreationDateView = (TextView) itemView.findViewById(R.id.post_creation_time);
+            postUserProfileView = (TextView) itemView.findViewById(R.id.post_layout_user_profile);
+            postEditView = (TextView) itemView.findViewById(R.id.post_layout_edit);
+            postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
+            postImageView = (ImageView) itemView.findViewById(R.id.post_layout_image);
+            postLikeNumberView = (TextView) itemView.findViewById(R.id.post_layout_like_number);
+            postUserNameView = (TextView) itemView.findViewById(R.id.post_layout_user_name);
+            postCaptionView = (TextView) itemView.findViewById(R.id.post_layout_caption);
+            postCreationDateView = (TextView) itemView.findViewById(R.id.post_layout_creation_time);
         }
     }
 }
