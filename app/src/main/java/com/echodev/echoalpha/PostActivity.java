@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.firebase.FirebaseUserClass;
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.firebase.FirebasePost;
-import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.util.SpeechBubble;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.PostClass;

@@ -101,15 +101,7 @@ public class WallActivity extends AppCompatActivity {
             startMain();
             return;
         } else {
-            firebaseUser = new FirebaseUserClass(
-                    mUser.getUid(),
-                    mUser.getEmail(),
-                    mUser.getDisplayName()
-            );
-
-            if (mUser.getPhotoUrl() != null) {
-                firebaseUser.setProPicUrl(mUser.getPhotoUrl().toString());
-            }
+            firebaseUser = new FirebaseUserClass(mUser);
 
             // Push the user data to Firebase database if it has not been stored
             DatabaseReference mUserRef = mDbRef.child("user").child(firebaseUser.getUserID());
@@ -175,6 +167,7 @@ public class WallActivity extends AppCompatActivity {
 
                 // TODO: Debug return -1 even post exists
 //                int position = firebasePostAdapter.indexOfPost(post);
+//                Log.d(LOG_TAG, "post index: " + position);
 
                 int position = firebasePostAdapter.indexOfPostbyID(post.getPostID());
 
@@ -190,6 +183,8 @@ public class WallActivity extends AppCompatActivity {
                 FirebasePost post = dataSnapshot.getValue(FirebasePost.class);
 
                 int position = firebasePostAdapter.indexOfPostbyID(post.getPostID());
+//                Log.d(LOG_TAG, "post ID: " + post.getPostID());
+//                Log.d(LOG_TAG, "post index: " + position);
 
                 if (position >= 0) {
                     firebasePostAdapter.setPost(position, post);

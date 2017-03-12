@@ -38,7 +38,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/post_edit_btn_next"
             android:text="next" />
-
     </LinearLayout>
 
     <RelativeLayout

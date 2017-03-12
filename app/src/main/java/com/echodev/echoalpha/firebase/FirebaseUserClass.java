@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.UUID;
-
 /**
  * Created by Ho on 5/3/2017.
  */
@@ -56,7 +54,11 @@ public class FirebaseUserClass implements Parcelable {
         this.userID = firebaseUser.getUid();
         this.userEmail = firebaseUser.getEmail();
         this.userName = firebaseUser.getDisplayName();
-        this.proPicUrl = firebaseUser.getPhotoUrl().toString();
+        if (firebaseUser.getPhotoUrl() != null) {
+            this.proPicUrl = firebaseUser.getPhotoUrl().toString();
+        } else {
+            this.proPicUrl = "";
+        }
         this.description = "";
         this.friendNumber = 0;
         this.followerNumber = 0;

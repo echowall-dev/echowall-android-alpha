@@ -6,9 +6,7 @@ import android.os.Parcelable;
 import com.echodev.echoalpha.util.PostClass;
 import com.echodev.echoalpha.util.SpeechBubble;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -196,13 +194,17 @@ public class FirebasePost implements Parcelable {
         return collaboratorIDList.get(i);
     }
 
-    public int getCollaboratorIDCount() {
-        return collaboratorIDList.size();
+    public int getCollaboratorCount() {
+        if (collaboratorIDList != null) {
+            return collaboratorIDList.size();
+        } else {
+            return 0;
+        }
     }
 
     public int indexOfCollaboratorID(String targetID) {
         for (int i=0; i<collaboratorIDList.size(); i++) {
-            if (collaboratorIDList.get(i) == targetID) {
+            if (collaboratorIDList.get(i).equals(targetID)) {
                 return i;
             }
         }
@@ -235,7 +237,11 @@ public class FirebasePost implements Parcelable {
     }
 
     public int getBubbleCount() {
-        return bubbleList.size();
+        if (bubbleList != null) {
+            return bubbleList.size();
+        } else {
+            return 0;
+        }
     }
 
     // Parcelable implementation
@@ -249,6 +255,7 @@ public class FirebasePost implements Parcelable {
         caption = in.readString();
         creationDate = in.readString();
         collaboratorIDList = in.createStringArrayList();
+        bubbleList = in.createTypedArrayList(FirebaseBubble.CREATOR);
         likeNumber = in.readLong();
         commentNumber = in.readLong();
         shareNumber = in.readLong();
@@ -282,6 +289,7 @@ public class FirebasePost implements Parcelable {
         dest.writeString(caption);
         dest.writeString(creationDate);
         dest.writeStringList(collaboratorIDList);
+        dest.writeTypedList(bubbleList);
         dest.writeLong(likeNumber);
         dest.writeLong(commentNumber);
         dest.writeLong(shareNumber);

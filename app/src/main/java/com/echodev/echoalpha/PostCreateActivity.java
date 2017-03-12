@@ -35,6 +35,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -60,6 +61,7 @@ public class PostCreateActivity extends AppCompatActivity {
     private FirebaseUserClass localUser;
     private FirebasePost newPost;
     private FirebaseBubbleWrapper bubbleWrapper;
+    private ArrayList<FirebaseBubbleWrapper> bubbleWrapperList;
 
     private Context localContext;
     private Resources localResources;
@@ -94,12 +96,6 @@ public class PostCreateActivity extends AppCompatActivity {
         localContext = this.getApplicationContext();
         localResources = this.getResources();
 
-        // Fetch data from the previous Activity
-        localUser = (FirebaseUserClass) getIntent().getParcelableExtra("currentUser");
-
-        // Create new Post instance
-        newPost = new FirebasePost(localUser);
-
         // Firebase instances initialization
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -107,6 +103,14 @@ public class PostCreateActivity extends AppCompatActivity {
         mDbRef = mDb.getReference();
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference();
+
+        // Fetch data from the previous Activity
+        localUser = (FirebaseUserClass) getIntent().getParcelableExtra("currentUser");
+
+        // Create new Post instance
+        newPost = new FirebasePost(localUser);
+
+        bubbleWrapperList = new ArrayList<FirebaseBubbleWrapper>();
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
@@ -242,10 +246,12 @@ public class PostCreateActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             bubbleWrapper.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            bubbleWrapper.setAdjustListener(null);
+            bubbleWrapper.setPlayListener(playAudioListener);
+            bubbleWrapperList.add(bubbleWrapper);
             newPost.addBubble(bubbleWrapper.getBubble());
 
             // Clear current speech bubble
-            bubbleWrapper.setAdjustListener(null);
             bubbleWrapper = null;
 
             enterAudioPrepareStage();
@@ -326,7 +332,8 @@ public class PostCreateActivity extends AppCompatActivity {
 
                 Snackbar.make(rootView, "Audio to storage success", Snackbar.LENGTH_SHORT).show();
 
-                if (++bubbleCounter == newPost.getBubbleCount()) {
+                bubbleCounter++;
+                if (bubbleCounter == newPost.getBubbleCount()) {
                     bubbleCounter = 0;
                     uploadPostToFirebaseDatabase();
                 }

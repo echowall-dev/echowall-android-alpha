@@ -88,7 +88,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     public int indexOfPostbyID(String targetID) {
         // TODO: Use binary search on postCreationDate instead of linear search on postID
         for (int i=0; i<postList.size(); i++) {
-            if (postList.get(i).getPostID() == targetID) {
+            if (postList.get(i).getPostID().equals(targetID)) {
                 return i;
             }
         }
@@ -146,7 +146,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 Intent intent = new Intent(context, PostEditActivity.class);
                 intent.putExtra("currentPost", post);
 
-                ((Activity) context).startActivityForResult(intent, REQUEST_CODE_POST_EDIT);
+                ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POST_EDIT);
             }
         });
     }

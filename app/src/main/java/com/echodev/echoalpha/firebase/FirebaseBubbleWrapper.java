@@ -14,8 +14,6 @@ import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
 
-import java.util.Date;
-
 /**
  * Created by Ho on 10/3/2017.
  */

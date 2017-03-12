@@ -33,6 +33,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,9 +55,10 @@ public class PostEditActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
 
     // Instance variables
-    private FirebaseUserClass localUser;
+    private FirebaseUserClass currentUser;
     private FirebasePost currentPost;
     private FirebaseBubbleWrapper bubbleWrapper;
+    private ArrayList<FirebaseBubbleWrapper> bubbleWrapperList;
 
     private Context localContext;
     private Resources localResources;
@@ -99,18 +101,26 @@ public class PostEditActivity extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference();
 
-        localUser = new FirebaseUserClass(mUser);
-        if (localUser.getProPicUrl() == null) {
-            localUser.setProPicUrl("");
-        }
+        currentUser = new FirebaseUserClass(mUser);
 
         // Fetch data from the previous Activity
         currentPost = getIntent().getParcelableExtra("currentPost");
+
+        if (currentPost.getBubbleList() == null) {
+            currentPost.setBubbleList(new ArrayList<FirebaseBubble>());
+        }
+
+        if (currentPost.getCollaboratorIDList() == null) {
+            currentPost.setCollaboratorIDList(new ArrayList<String>());
+        }
+
+        bubbleWrapperList = new ArrayList<FirebaseBubbleWrapper>();
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
         audioBubbleEditing = false;
         postChanged = false;
+
         originalBubbleCount = currentPost.getBubbleCount();
         storageBubbleCounter = 0;
 
@@ -137,6 +147,8 @@ public class PostEditActivity extends AppCompatActivity {
                 bubbleWrapper.bindPlayListener();
             }
         }
+
+        enterAudioPrepareStage();
     }
     // End of post handling
 
@@ -145,9 +157,9 @@ public class PostEditActivity extends AppCompatActivity {
         @Override
         public boolean onLongClick(View v) {
             if (bubbleWrapper == null) {
-                bubbleWrapper = new FirebaseBubbleWrapper(currentPost.getPostID(), localUser.getUserID());
+                bubbleWrapper = new FirebaseBubbleWrapper(currentPost.getPostID(), currentUser.getUserID());
                 bubbleWrapper.setContext(localContext);
-                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(localResources, localUser.getUserID()));
+                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(localResources, currentUser.getUserID()));
             }
 
             boolean startSuccess = AudioHelper.startRecording(bubbleWrapper.getAudioUrl());
@@ -193,10 +205,10 @@ public class PostEditActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.post_create_btn_0:
+                case R.id.post_edit_btn_0:
                     bubbleWrapper.setType("L");
                     break;
-                case R.id.post_create_btn_1:
+                case R.id.post_edit_btn_1:
                     bubbleWrapper.setType("R");
                     break;
                 default:
@@ -217,11 +229,13 @@ public class PostEditActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             bubbleWrapper.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            bubbleWrapper.setAdjustListener(null);
+            bubbleWrapper.setPlayListener(playAudioListener);
+            bubbleWrapperList.add(bubbleWrapper);
             currentPost.addBubble(bubbleWrapper.getBubble());
             postChanged = true;
 
             // Clear current speech bubble
-            bubbleWrapper.setAdjustListener(null);
             bubbleWrapper = null;
 
             enterAudioPrepareStage();
@@ -237,8 +251,8 @@ public class PostEditActivity extends AppCompatActivity {
                 return;
             }
 
-            if (!localUser.getUserID().equals(currentPost.getCreatorID()) && currentPost.indexOfCollaboratorID(localUser.getUserID())==-1) {
-                currentPost.addCollaboratorID(localUser.getUserID());
+            if (!currentUser.getUserID().equals(currentPost.getCreatorID()) && currentPost.indexOfCollaboratorID(currentUser.getUserID())==-1) {
+                currentPost.addCollaboratorID(currentUser.getUserID());
             }
 
             // Upload everything to Firebase
