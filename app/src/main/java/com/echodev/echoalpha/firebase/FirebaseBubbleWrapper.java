@@ -144,6 +144,7 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         this.context = context;
     }
 
+    // Instance methods
     public void addBubbleImage(int positionX, int positionY, ViewGroup viewGroup, Resources resources, Context context) {
         // Prepare the dimensions of the ImageView
         int targetW = resources.getDimensionPixelSize(R.dimen.bubble_width);
