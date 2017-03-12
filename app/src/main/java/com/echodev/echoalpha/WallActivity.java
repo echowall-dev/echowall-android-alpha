@@ -144,22 +144,14 @@ public class WallActivity extends AppCompatActivity {
         mPostRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount() == firebasePostAdapter.getItemCount()) {
-                    return;
-                }
-
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    FirebasePost post = postSnapshot.getValue(FirebasePost.class);
-
-                    int position = firebasePostAdapter.indexOfPost(post);
-                    if (position < 0) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0 && firebasePostAdapter.getItemCount()==0) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        FirebasePost post = postSnapshot.getValue(FirebasePost.class);
                         firebasePostAdapter.addPost(post);
-                        firebasePostAdapter.notifyItemInserted(firebasePostAdapter.getPostList().size() - 1);
-                        postListArea.scrollToPosition(firebasePostAdapter.getPostList().size() - 1);
-                    } else {
-                        // TODO: Edit post
-                        postListArea.scrollToPosition(firebasePostAdapter.getPostList().size() - 1);
+//                        firebasePostAdapter.notifyItemInserted(firebasePostAdapter.getPostList().size() - 1);
                     }
+                    firebasePostAdapter.notifyDataSetChanged();
+                    postListArea.scrollToPosition(firebasePostAdapter.getPostList().size() - 1);
                 }
             }
 

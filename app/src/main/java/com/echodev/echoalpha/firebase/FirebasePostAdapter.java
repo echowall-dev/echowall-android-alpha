@@ -116,7 +116,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 .into(holder.postImageView);
 
         // Add the speech bubbles at target position
-        if (post.getBubbleList() != null && !post.getBubbleList().isEmpty()) {
+        if (post.getBubbleList()!=null && !post.getBubbleList().isEmpty()) {
             for (FirebaseBubble bubble : post.getBubbleList()) {
                 FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
 
