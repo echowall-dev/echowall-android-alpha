@@ -36,6 +36,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -55,10 +58,11 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private IdpResponse mIdpResponse;
-    private FirebaseUserClass firebaseUser;
+    private FirebaseUserClass currentUser;
 
     private FirebaseDatabase mDb;
     private DatabaseReference mDbRef;
+    private DatabaseReference mUserRef;
 
     private FirebaseStorage mStorage;
     private StorageReference mStorageRef;
@@ -101,15 +105,28 @@ public class WallActivity extends AppCompatActivity {
             startMain();
             return;
         } else {
-            firebaseUser = new FirebaseUserClass(mUser);
+            currentUser = new FirebaseUserClass(mUser);
 
             // Push the user data to Firebase database if it has not been stored
-            DatabaseReference mUserRef = mDbRef.child("user").child(firebaseUser.getUserID());
+            mUserRef = mDbRef.child("user").child(currentUser.getUserID());
             mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(!dataSnapshot.exists()) {
-                        mDbRef.child("user").child(firebaseUser.getUserID()).setValue(firebaseUser);
+                        mDbRef.child("user").child(currentUser.getUserID()).setValue(currentUser);
+                    } else {
+                        FirebaseUserClass firebaseUser = dataSnapshot.getValue(FirebaseUserClass.class);
+
+                        if (firebaseUser.getUserName() != null) {
+                            if (!firebaseUser.getUserName().equals(currentUser.getUserName()) || firebaseUser.getUserName().isEmpty()) {
+                                Map<String, Object> userUpdates = new HashMap<>();
+                                userUpdates.put("userName", currentUser.getUserName());
+
+                                mUserRef.updateChildren(userUpdates);
+                            }
+                        } else {
+                            mUserRef.child("userName").setValue(currentUser.getUserName());
+                        }
                     }
                 }
 
@@ -258,8 +275,8 @@ public class WallActivity extends AppCompatActivity {
     private void populateProfile() {
         String contentText = "";
         contentText += "You have signed in as";
-        contentText += "\n" + firebaseUser.getUserName();
-        contentText += "\n" + firebaseUser.getUserEmail();
+        contentText += "\n" + currentUser.getUserName();
+        contentText += "\n" + currentUser.getUserEmail();
 
         IDTextView.setText(contentText);
 
@@ -335,16 +352,9 @@ public class WallActivity extends AppCompatActivity {
 
     @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
-        /*
-        Bundle bundle = new Bundle();
-        bundle.putString("userID", firebaseUser.getUserID());
-        bundle.putString("userEmail", firebaseUser.getUserEmail());
-        bundle.putString("userName", firebaseUser.getUserName());
-        */
-
         Intent intent = new Intent();
 //        intent.putExtras(bundle);
-        intent.putExtra("currentUser", firebaseUser);
+        intent.putExtra("currentUser", currentUser);
 
         if (activityRequestCode == REQUEST_CODE_POST) {
             intent.setClass(this, PostActivity.class);
