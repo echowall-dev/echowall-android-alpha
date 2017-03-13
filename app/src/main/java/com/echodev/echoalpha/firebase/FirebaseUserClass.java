@@ -54,11 +54,16 @@ public class FirebaseUserClass implements Parcelable {
         this.userID = firebaseUser.getUid();
         this.userEmail = firebaseUser.getEmail();
         this.userName = firebaseUser.getDisplayName();
+        if (this.userName == null) {
+            this.userName = "Anonymous";
+        }
+
         if (firebaseUser.getPhotoUrl() != null) {
             this.proPicUrl = firebaseUser.getPhotoUrl().toString();
         } else {
             this.proPicUrl = "";
         }
+
         this.description = "";
         this.friendNumber = 0;
         this.followerNumber = 0;

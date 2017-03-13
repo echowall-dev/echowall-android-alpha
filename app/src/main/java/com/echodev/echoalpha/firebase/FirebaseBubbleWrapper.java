@@ -196,6 +196,10 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         bubbleImageView.setOnClickListener(this);
     }
 
+    public void bindPlayLocalListener() {
+        bubbleImageView.setOnClickListener(playAudioLocalListener);
+    }
+
     public void setPlayListener(View.OnClickListener playListener) {
         bubbleImageView.setOnClickListener(playListener);
     }
@@ -243,4 +247,18 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
     public void onClick(View v) {
         AudioHelper.playAudioOnline(bubble.getAudioUrl());
     }
+
+    View.OnClickListener playAudioOnlineListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AudioHelper.playAudioOnline(bubble.getAudioUrl());
+        }
+    };
+
+    View.OnClickListener playAudioLocalListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AudioHelper.playAudioLocal(bubble.getAudioUrl());
+        }
+    };
 }

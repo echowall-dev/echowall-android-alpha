@@ -147,6 +147,7 @@ public class WallActivity extends AppCompatActivity {
                     }
                     firebasePostAdapter.notifyDataSetChanged();
                     postListArea.scrollToPosition(firebasePostAdapter.getItemCount() - 1);
+                    // TODO: Debug not scrolling to the newest post
                 }
 
 //                if (firebasePostAdapter.getItemCount() > 0) {

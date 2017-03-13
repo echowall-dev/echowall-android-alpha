@@ -62,7 +62,7 @@ public class PostEditActivity extends AppCompatActivity {
 
     private Context localContext;
     private Resources localResources;
-    private boolean appDirExist, audioBubbleEditing, postChanged;
+    private boolean appDirExist, audioReady, bubbleReady, postChanged;
     private int originalBubbleCount, storageBubbleCounter;
 
     // Bind views by ButterKnife
@@ -118,7 +118,6 @@ public class PostEditActivity extends AppCompatActivity {
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
-        audioBubbleEditing = false;
         postChanged = false;
 
         originalBubbleCount = currentPost.getBubbleCount();
@@ -175,6 +174,8 @@ public class PostEditActivity extends AppCompatActivity {
                 boolean stopSuccess = AudioHelper.stopRecording();
 
                 if (stopSuccess) {
+                    audioReady = true;
+
                     bubbleWrapper.setAudioName(Uri.parse(bubbleWrapper.getAudioUrl()).getLastPathSegment());
 
                     btnNext.setText(localResources.getString(R.string.add_bubble));
@@ -195,7 +196,9 @@ public class PostEditActivity extends AppCompatActivity {
     View.OnClickListener playAudioListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AudioHelper.playAudioLocal(bubbleWrapper.getAudioUrl());
+            if (audioReady) {
+                AudioHelper.playAudioLocal(bubbleWrapper.getAudioUrl());
+            }
         }
     };
     // End of audio handling
@@ -204,6 +207,10 @@ public class PostEditActivity extends AppCompatActivity {
     View.OnClickListener addBubbleImageListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (bubbleReady) {
+                return;
+            }
+
             switch (v.getId()) {
                 case R.id.post_edit_btn_0:
                     bubbleWrapper.setType("L");
@@ -222,15 +229,21 @@ public class PostEditActivity extends AppCompatActivity {
 
             bubbleWrapper.addBubbleImage(centerX, centerY, previewArea, localResources, localContext);
             bubbleWrapper.bindAdjustListener();
+
+            bubbleReady = true;
         }
     };
 
     View.OnClickListener finishBubbleListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (!bubbleReady) {
+                return;
+            }
+
             bubbleWrapper.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             bubbleWrapper.setAdjustListener(null);
-            bubbleWrapper.setPlayListener(playAudioListener);
+            bubbleWrapper.bindPlayLocalListener();
             bubbleWrapperList.add(bubbleWrapper);
             currentPost.addBubble(bubbleWrapper.getBubble());
             postChanged = true;
@@ -322,6 +335,8 @@ public class PostEditActivity extends AppCompatActivity {
 
     // State transition
     public void enterAudioPrepareStage() {
+        audioReady = false;
+
         btn0.setText(localResources.getString(R.string.record));
         btn0.setOnClickListener(null);
         btn0.setOnLongClickListener(recordAuioStartListener);
@@ -335,6 +350,8 @@ public class PostEditActivity extends AppCompatActivity {
     }
 
     public void enterBubblePrepareStage() {
+        bubbleReady = false;
+
         btn0.setText(localResources.getString(R.string.add_bubble_left));
         btn0.setOnLongClickListener(null);
         btn0.setOnTouchListener(null);
