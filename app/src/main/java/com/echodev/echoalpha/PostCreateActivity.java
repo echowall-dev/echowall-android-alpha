@@ -58,7 +58,7 @@ public class PostCreateActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
 
     // Instance variables
-    private FirebaseUserClass localUser;
+    private FirebaseUserClass currentUser;
     private FirebasePost newPost;
     private FirebaseBubbleWrapper bubbleWrapper;
     private ArrayList<FirebaseBubbleWrapper> bubbleWrapperList;
@@ -105,10 +105,10 @@ public class PostCreateActivity extends AppCompatActivity {
         mStorageRef = mStorage.getReference();
 
         // Fetch data from the previous Activity
-        localUser = (FirebaseUserClass) getIntent().getParcelableExtra("currentUser");
+        currentUser = (FirebaseUserClass) getIntent().getParcelableExtra("currentUser");
 
         // Create new Post instance
-        newPost = new FirebasePost(localUser);
+        newPost = new FirebasePost(currentUser);
 
         bubbleWrapperList = new ArrayList<FirebaseBubbleWrapper>();
 
@@ -174,9 +174,9 @@ public class PostCreateActivity extends AppCompatActivity {
         @Override
         public boolean onLongClick(View v) {
             if (bubbleWrapper == null) {
-                bubbleWrapper = new FirebaseBubbleWrapper(newPost.getPostID(), localUser.getUserID());
+                bubbleWrapper = new FirebaseBubbleWrapper(newPost.getPostID(), currentUser.getUserID());
                 bubbleWrapper.setContext(localContext);
-                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(localResources, localUser.getUserID()));
+                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(localResources, currentUser.getUserID()));
             }
 
             boolean startSuccess = AudioHelper.startRecording(bubbleWrapper.getAudioUrl());
