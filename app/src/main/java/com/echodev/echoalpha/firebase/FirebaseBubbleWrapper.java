@@ -179,8 +179,8 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 
         // Set the final value for x and y coordinate
         // Convert px to dp for data storage
-        this.setX(ImageHelper.convertPxToDp(positionX, context));
-        this.setY(ImageHelper.convertPxToDp(positionY, context));
+        this.setX((long) ImageHelper.convertPxToDp(positionX, context));
+        this.setY((long) ImageHelper.convertPxToDp(positionY, context));
     }
 
     // Event listener binding methods

@@ -155,6 +155,10 @@ public class PostEditActivity extends AppCompatActivity {
     View.OnLongClickListener recordAuioStartListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
+            if (!appDirExist) {
+                return false;
+            }
+
             if (bubbleWrapper == null) {
                 bubbleWrapper = new FirebaseBubbleWrapper(currentPost.getPostID(), currentUser.getUserID());
                 bubbleWrapper.setContext(localContext);
