@@ -260,7 +260,6 @@ public class WallActivity extends AppCompatActivity {
         contentText += "You have signed in as";
         contentText += "\n" + firebaseUser.getUserName();
         contentText += "\n" + firebaseUser.getUserEmail();
-        contentText += "\n" + firebaseUser.getUserID();
 
         IDTextView.setText(contentText);
 
