@@ -25,4 +25,5 @@
     <string name="finish">Finish post</string>
     <string name="create_post">Create post</string>
     <string name="edit_post">Edit</string>
+    <string name="create_postcard">Postcard</string>
 </resources>

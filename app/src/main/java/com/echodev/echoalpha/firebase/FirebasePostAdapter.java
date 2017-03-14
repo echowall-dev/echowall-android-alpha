@@ -17,8 +17,11 @@ import com.echodev.echoalpha.PostEditActivity;
 import com.echodev.echoalpha.R;
 import com.echodev.echoalpha.util.ImageHelper;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
+import static com.echodev.echoalpha.WallActivity.REQUEST_CODE_POSTCARD_CREATE;
 import static com.echodev.echoalpha.WallActivity.REQUEST_CODE_POST_EDIT;
 
 /**
@@ -143,10 +146,22 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         holder.postEditView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, PostEditActivity.class);
+                Intent intent = new Intent(v.getContext(), PostEditActivity.class);
                 intent.putExtra("currentPost", post);
 
                 ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POST_EDIT);
+            }
+        });
+
+        holder.postPostcardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                Intent intent = new Intent(v.getContext(), PostcardCreateActivity.class);
+                intent.putExtra("currentPost", post);
+
+                ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POSTCARD_CREATE);
+                */
             }
         });
     }
@@ -157,7 +172,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfileView, postEditView, postLikeNumberView, postUserNameView, postCaptionView, postCreationDateView;
+        public TextView postUserProfileView, postEditView, postLikeNumberView, postPostcardView, postUserNameView, postCaptionView, postCreationDateView;
         public RelativeLayout postImageArea;
         public ImageView postImageView;
 
@@ -169,6 +184,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
             postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
             postImageView = (ImageView) itemView.findViewById(R.id.post_layout_image);
             postLikeNumberView = (TextView) itemView.findViewById(R.id.post_layout_like_number);
+            postPostcardView = (TextView) itemView.findViewById(R.id.post_layout_postcard);
             postUserNameView = (TextView) itemView.findViewById(R.id.post_layout_user_name);
             postCaptionView = (TextView) itemView.findViewById(R.id.post_layout_caption);
             postCreationDateView = (TextView) itemView.findViewById(R.id.post_layout_creation_time);

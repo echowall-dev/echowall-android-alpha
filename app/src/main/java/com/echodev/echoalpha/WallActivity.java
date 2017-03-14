@@ -52,6 +52,7 @@ public class WallActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_POST = 110;
     public static final int REQUEST_CODE_POST_CREATE = 111;
     public static final int REQUEST_CODE_POST_EDIT = 112;
+    public static final int REQUEST_CODE_POSTCARD_CREATE = 113;
     private int activityRequestCode;
 
     // Instance variables
