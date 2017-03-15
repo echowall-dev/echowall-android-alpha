@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
     // Bind views by ButterKnife
     @BindView(R.id.activity_main)
-    View mRootView;
+    View rootView;
 
     @BindView(R.id.cover_image)
-    ImageView coverImage;
+    ImageView coverImg;
 
     @BindView(R.id.sign_in_btn)
     Button signInBtn;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(R.drawable.cover_lowres)
                 .asBitmap()
-                .into(coverImage);
+                .into(coverImg);
 
         requestPermission();
 
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
     @MainThread
     private void showSnackbar(@StringRes int errorMessageRes) {
-        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(rootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 
     public static Intent createIntent(Context context) {

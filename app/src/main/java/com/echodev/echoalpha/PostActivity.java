@@ -71,7 +71,7 @@ public class PostActivity extends AppCompatActivity {
     RelativeLayout previewArea;
 
     @BindView(R.id.preview_image)
-    ImageView previewImage;
+    ImageView previewImg;
 
     // Instance variables
     private PostClass newPost;
@@ -90,9 +90,6 @@ public class PostActivity extends AppCompatActivity {
 
     private FirebaseStorage mStorage;
     private StorageReference mStorageRef;
-
-    // Bubble number counter
-    private int bubbleNumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +115,6 @@ public class PostActivity extends AppCompatActivity {
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
-//        audioBubbleEditing = false;
 
         // Prepare app resources for use
         localResources = this.getResources();
@@ -183,7 +179,7 @@ public class PostActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(photoFilePath)
                             .asBitmap()
-                            .into(previewImage);
+                            .into(previewImg);
 
                     // Add the photo to the new Post object
                     newPost.setPhotoPath(photoFilePath);

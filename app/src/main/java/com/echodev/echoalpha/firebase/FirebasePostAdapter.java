@@ -118,18 +118,17 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         long postLikeNumber = post.getLikeNumber();
 
         // Set template info for the post
-//        holder.postUserProfileView.setText(post.getCreatorEmail());
-        holder.postUserProfileView.setText("Post " + position);
-        holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        holder.postUserNameView.setText(post.getCreatorName() + ":");
-        holder.postCaptionView.setText(post.getCaption());
-        holder.postCreationDateView.setText(post.getCreationDate());
+        holder.postUserProfile.setText(post.getCreatorEmail());
+        holder.postLikeNumber.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
+        holder.postUserName.setText(post.getCreatorName() + ":");
+        holder.postCaption.setText(post.getCaption());
+        holder.postCreationDate.setText(post.getCreationDate());
 
         // Add the photo to the post
         Glide.with(context)
                 .load(post.getPhotoUrl())
                 .asBitmap()
-                .into(holder.postImageView);
+                .into(holder.postImg);
 
         // Add the speech bubbles at target position
         if (post.getBubbleList()!=null && !post.getBubbleList().isEmpty()) {
@@ -139,12 +138,12 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 // Convert dp back to px for display
                 int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), context);
                 int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), context);
-                bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImageArea, resources, context);
+                bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImgArea, resources, context);
                 bubbleWrapper.bindPlayListener();
             }
         }
 
-        holder.postEditView.setOnClickListener(new View.OnClickListener() {
+        holder.postEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PostEditActivity.class);
@@ -154,7 +153,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
             }
         });
 
-        holder.postPostcardView.setOnClickListener(new View.OnClickListener() {
+        holder.postPostcard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PostcardActivity.class);
@@ -171,22 +170,22 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfileView, postEditView, postLikeNumberView, postPostcardView, postUserNameView, postCaptionView, postCreationDateView;
-        public RelativeLayout postImageArea;
-        public ImageView postImageView;
+        public TextView postUserProfile, postEdit, postLikeNumber, postPostcard, postUserName, postCaption, postCreationDate;
+        public RelativeLayout postImgArea;
+        public ImageView postImg;
 
         public ViewHolder(View itemView) {
             super(itemView);
             // Prepare the views of the post
-            postUserProfileView = (TextView) itemView.findViewById(R.id.post_layout_user_profile);
-            postEditView = (TextView) itemView.findViewById(R.id.post_layout_edit);
-            postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
-            postImageView = (ImageView) itemView.findViewById(R.id.post_layout_image);
-            postLikeNumberView = (TextView) itemView.findViewById(R.id.post_layout_like_number);
-            postPostcardView = (TextView) itemView.findViewById(R.id.post_layout_postcard);
-            postUserNameView = (TextView) itemView.findViewById(R.id.post_layout_user_name);
-            postCaptionView = (TextView) itemView.findViewById(R.id.post_layout_caption);
-            postCreationDateView = (TextView) itemView.findViewById(R.id.post_layout_creation_time);
+            postUserProfile = (TextView) itemView.findViewById(R.id.post_layout_user_profile);
+            postEdit = (TextView) itemView.findViewById(R.id.post_layout_edit);
+            postImgArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
+            postImg = (ImageView) itemView.findViewById(R.id.post_layout_image);
+            postLikeNumber = (TextView) itemView.findViewById(R.id.post_layout_like_number);
+            postPostcard = (TextView) itemView.findViewById(R.id.post_layout_postcard);
+            postUserName = (TextView) itemView.findViewById(R.id.post_layout_user_name);
+            postCaption = (TextView) itemView.findViewById(R.id.post_layout_caption);
+            postCreationDate = (TextView) itemView.findViewById(R.id.post_layout_creation_time);
         }
     }
 }

@@ -67,7 +67,7 @@ public class PostEditActivity extends AppCompatActivity {
     RelativeLayout previewArea;
 
     @BindView(R.id.post_edit_preview_image)
-    ImageView previewImage;
+    ImageView previewImg;
 
     // Firebase instances
     private FirebaseAuth mAuth;
@@ -138,7 +138,7 @@ public class PostEditActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(currentPost.getPhotoUrl())
                 .asBitmap()
-                .into(previewImage);
+                .into(previewImg);
 
         // Add the original speech bubbles
         if (currentPost.getBubbleList()!=null && !currentPost.getBubbleList().isEmpty()) {

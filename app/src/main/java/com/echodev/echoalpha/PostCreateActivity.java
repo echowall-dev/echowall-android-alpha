@@ -70,7 +70,7 @@ public class PostCreateActivity extends AppCompatActivity {
     RelativeLayout previewArea;
 
     @BindView(R.id.post_create_preview_image)
-    ImageView previewImage;
+    ImageView previewImg;
 
     // Firebase instances
     private FirebaseAuth mAuth;
@@ -153,7 +153,7 @@ public class PostCreateActivity extends AppCompatActivity {
                     Glide.with(this)
                             .load(newPost.getPhotoUrl())
                             .asBitmap()
-                            .into(previewImage);
+                            .into(previewImg);
 
                     // Add the photo name to the new Post instance
                     newPost.setPhotoName(Uri.parse(newPost.getPhotoUrl()).getLastPathSegment());
