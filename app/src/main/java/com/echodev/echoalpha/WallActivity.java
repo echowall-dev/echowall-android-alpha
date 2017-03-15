@@ -55,22 +55,6 @@ public class WallActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_POSTCARD_CREATE = 113;
     private int activityRequestCode;
 
-    // Instance variables
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
-    private IdpResponse mIdpResponse;
-    private FirebaseUserClass currentUser;
-
-    private FirebaseDatabase mDb;
-    private DatabaseReference mDbRef;
-    private DatabaseReference mUserRef;
-
-    private FirebaseStorage mStorage;
-    private StorageReference mStorageRef;
-
-    private PostAdapter postAdapter;
-    private FirebasePostAdapter firebasePostAdapter;
-
     // Bind views by ButterKnife
     @BindView(android.R.id.content)
     View rootView;
@@ -86,6 +70,22 @@ public class WallActivity extends AppCompatActivity {
 
     @BindView(R.id.post_list_area)
     RecyclerView postListArea;
+
+    // Instance variables
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    private IdpResponse mIdpResponse;
+    private FirebaseUserClass currentUser;
+
+    private FirebaseDatabase mDb;
+    private DatabaseReference mDbRef;
+    private DatabaseReference mUserRef;
+
+    private FirebaseStorage mStorage;
+    private StorageReference mStorageRef;
+
+    private PostAdapter postAdapter;
+    private FirebasePostAdapter firebasePostAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

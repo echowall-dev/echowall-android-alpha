@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.quit_btn)
     Button quitBtn;
 
+    // Instance variables
     private Resources localResources;
     private static String appName;
     private IdpResponse mIdpResponse;

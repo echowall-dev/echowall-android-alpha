@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.firebase.FirebaseBubble;
@@ -46,6 +47,28 @@ public class PostEditActivity extends AppCompatActivity {
     // Debug log
     private static final String LOG_TAG = "Echo_Alpha_Post_Edit";
 
+    // Bind views by ButterKnife
+    @BindView(R.id.activity_post_edit)
+    View rootView;
+
+    @BindView(R.id.post_edit_btn_0)
+    Button btn0;
+
+    @BindView(R.id.post_edit_btn_1)
+    Button btn1;
+
+    @BindView(R.id.post_edit_btn_next)
+    Button btnNext;
+
+    @BindView(R.id.post_edit_caption)
+    TextView postCaption;
+
+    @BindView(R.id.post_edit_preview_area)
+    RelativeLayout previewArea;
+
+    @BindView(R.id.post_edit_preview_image)
+    ImageView previewImage;
+
     // Firebase instances
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -64,25 +87,6 @@ public class PostEditActivity extends AppCompatActivity {
     private Resources localResources;
     private boolean appDirExist, audioReady, bubbleReady, postChanged;
     private int originalBubbleCount, storageBubbleCounter;
-
-    // Bind views by ButterKnife
-    @BindView(R.id.activity_post_edit)
-    View rootView;
-
-    @BindView(R.id.post_edit_btn_0)
-    Button btn0;
-
-    @BindView(R.id.post_edit_btn_1)
-    Button btn1;
-
-    @BindView(R.id.post_edit_btn_next)
-    Button btnNext;
-
-    @BindView(R.id.post_edit_preview_area)
-    RelativeLayout previewArea;
-
-    @BindView(R.id.post_edit_preview_image)
-    ImageView previewImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +132,8 @@ public class PostEditActivity extends AppCompatActivity {
 
     // Post handling
     private void preparePost() {
+        postCaption.setText(currentPost.getCaption());
+
         // Load the photo into preview area
         Glide.with(this)
                 .load(currentPost.getPhotoUrl())

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -49,6 +50,28 @@ public class PostCreateActivity extends AppCompatActivity {
     // Request code for taking photo
     public static final int REQUEST_TAKE_PHOTO = 120;
 
+    // Bind views by ButterKnife
+    @BindView(R.id.activity_post_create)
+    View rootView;
+
+    @BindView(R.id.post_create_btn_0)
+    Button btn0;
+
+    @BindView(R.id.post_create_btn_1)
+    Button btn1;
+
+    @BindView(R.id.post_create_btn_next)
+    Button btnNext;
+
+    @BindView(R.id.post_create_caption)
+    EditText postCaption;
+
+    @BindView(R.id.post_create_preview_area)
+    RelativeLayout previewArea;
+
+    @BindView(R.id.post_create_preview_image)
+    ImageView previewImage;
+
     // Firebase instances
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -67,25 +90,6 @@ public class PostCreateActivity extends AppCompatActivity {
     private Resources localResources;
     private boolean appDirExist, audioReady, bubbleReady;
     private int bubbleCounter;
-
-    // Bind views by ButterKnife
-    @BindView(R.id.activity_post_create)
-    View rootView;
-
-    @BindView(R.id.post_create_btn_0)
-    Button btn0;
-
-    @BindView(R.id.post_create_btn_1)
-    Button btn1;
-
-    @BindView(R.id.post_create_btn_next)
-    Button btnNext;
-
-    @BindView(R.id.post_create_preview_area)
-    RelativeLayout previewArea;
-
-    @BindView(R.id.post_create_preview_image)
-    ImageView previewImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,7 +284,7 @@ public class PostCreateActivity extends AppCompatActivity {
     View.OnClickListener finishPostListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            newPost.setCaption("What a beautiful day!");
+            newPost.setCaption(postCaption.getText().toString());
             newPost.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
             // Upload everything to Firebase
