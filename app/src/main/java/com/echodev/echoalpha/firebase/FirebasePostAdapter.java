@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.PostEditActivity;
+import com.echodev.echoalpha.PostcardActivity;
 import com.echodev.echoalpha.R;
 import com.echodev.echoalpha.util.ImageHelper;
 
@@ -146,7 +147,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         holder.postEditView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), PostEditActivity.class);
+                Intent intent = new Intent(context, PostEditActivity.class);
                 intent.putExtra("currentPost", post);
 
                 ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POST_EDIT);
@@ -156,12 +157,10 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         holder.postPostcardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
-                Intent intent = new Intent(v.getContext(), PostcardCreateActivity.class);
+                Intent intent = new Intent(context, PostcardActivity.class);
                 intent.putExtra("currentPost", post);
 
                 ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POSTCARD_CREATE);
-                */
             }
         });
     }

@@ -40,6 +40,9 @@
         <activity
             android:name=".PostEditActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".PostcardActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
