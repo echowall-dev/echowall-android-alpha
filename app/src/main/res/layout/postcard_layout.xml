@@ -14,7 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/postcard_message_edit"
-        android:inputType="text"
+        android:maxWidth="200dp"
+        android:maxHeight="180dp"
+        android:inputType="textMultiLine"
         android:hint="Say anything"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp" />
