@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,6 @@ import com.echodev.echoalpha.PostEditActivity;
 import com.echodev.echoalpha.PostcardActivity;
 import com.echodev.echoalpha.R;
 import com.echodev.echoalpha.util.ImageHelper;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
