@@ -81,7 +81,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         // Set template info for the post
         holder.postUserProfileView.setText(post.getUserEmail());
         holder.postLikeNumberView.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        holder.postUserNameView.setText(post.getUserName());
         holder.postCaptionView.setText(post.getCaption());
         holder.postCreationDateView.setText(post.getCreationDateString());
 
@@ -104,7 +103,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfileView, postEditView, postLikeNumberView, postUserNameView, postCaptionView, postCreationDateView;
+        public TextView postUserProfileView, postEditView, postLikeNumberView, postCaptionView, postCreationDateView;
         public RelativeLayout postImageArea;
         public ImageView postImageView;
 
@@ -116,7 +115,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
             postImageView = (ImageView) itemView.findViewById(R.id.post_layout_image);
             postLikeNumberView = (TextView) itemView.findViewById(R.id.post_layout_like_number);
-            postUserNameView = (TextView) itemView.findViewById(R.id.post_layout_user_name);
             postCaptionView = (TextView) itemView.findViewById(R.id.post_layout_caption);
             postCreationDateView = (TextView) itemView.findViewById(R.id.post_layout_creation_time);
         }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,15 +115,21 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     public void onBindViewHolder(FirebasePostAdapter.ViewHolder holder, int position) {
         final FirebasePost post = postList.get(position);
 
-        // Fetch the data of the post
-        long postLikeNumber = post.getLikeNumber();
-
         // Set template info for the post
-        holder.postUserProfile.setText(post.getCreatorEmail());
-        holder.postLikeNumber.setText(postLikeNumber + ((postLikeNumber == 0) ? " Like" : " Likes"));
-        holder.postUserName.setText(post.getCreatorName() + ":");
+        holder.postUserProfile.setText(post.getCreatorName());
+        holder.postLikeNumber.setText(Long.toString(post.getLikeNumber()));
         holder.postCaption.setText(post.getCaption());
         holder.postCreationDate.setText(post.getCreationDate());
+
+        Glide.with(context)
+                .load(R.drawable.like_heart)
+                .asBitmap()
+                .into(holder.postLikeHeart);
+
+        Glide.with(context)
+                .load(R.drawable.postcard_btn)
+                .asBitmap()
+                .into(holder.postPostcard);
 
         // Add the photo to the post
         Glide.with(context)
@@ -170,9 +177,9 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfile, postEdit, postLikeNumber, postPostcard, postUserName, postCaption, postCreationDate;
+        public TextView postUserProfile, postEdit, postLikeNumber, postCaption, postCreationDate;
         public RelativeLayout postImgArea;
-        public ImageView postImg;
+        public ImageView postImg, postLikeHeart, postPostcard;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -181,9 +188,9 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
             postEdit = (TextView) itemView.findViewById(R.id.post_layout_edit);
             postImgArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
             postImg = (ImageView) itemView.findViewById(R.id.post_layout_image);
+            postLikeHeart = (ImageView) itemView.findViewById(R.id.post_layout_like_heart);
             postLikeNumber = (TextView) itemView.findViewById(R.id.post_layout_like_number);
-            postPostcard = (TextView) itemView.findViewById(R.id.post_layout_postcard);
-            postUserName = (TextView) itemView.findViewById(R.id.post_layout_user_name);
+            postPostcard = (ImageView) itemView.findViewById(R.id.post_layout_postcard);
             postCaption = (TextView) itemView.findViewById(R.id.post_layout_caption);
             postCreationDate = (TextView) itemView.findViewById(R.id.post_layout_creation_time);
         }

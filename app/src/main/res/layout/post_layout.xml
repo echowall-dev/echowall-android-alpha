@@ -23,14 +23,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--Post Body: users section-->
+            <!--Post Body: user profile section-->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/function_bar_margin"
+                android:paddingBottom="@dimen/function_bar_margin" >
                 <TextView
                     android:id="@+id/post_layout_user_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:layout_alignParentStart="true" />
@@ -60,37 +63,38 @@
             <!--Post Body: function section-->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/function_bar_margin"
+                android:paddingBottom="@dimen/function_bar_margin" >
+                <ImageView
+                    android:id="@+id/post_layout_like_heart"
+                    android:layout_width="@dimen/function_btn_size"
+                    android:layout_height="@dimen/function_btn_size"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin" />
+
                 <TextView
                     android:id="@+id/post_layout_like_number"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin" />
+                    android:layout_height="@dimen/function_btn_size"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="55dp" />
 
-                <TextView
+                <ImageView
                     android:id="@+id/post_layout_postcard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:layout_alignParentEnd="true"
-                    android:text="@string/create_postcard" />
+                    android:layout_width="@dimen/function_btn_size"
+                    android:layout_height="@dimen/function_btn_size"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
-
-            <!--Post Body: caption section-->
-            <TextView
-                android:id="@+id/post_layout_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin" />
 
             <!--Post Body: caption section-->
             <TextView
                 android:id="@+id/post_layout_caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/function_bar_margin"
+                android:paddingBottom="@dimen/function_bar_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin" />
 
@@ -99,6 +103,7 @@
                 android:id="@+id/post_layout_creation_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#329B80"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin" />
 

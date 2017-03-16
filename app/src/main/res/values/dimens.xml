@@ -13,6 +13,9 @@
     <dimen name="bubble_width">50dp</dimen>
     <dimen name="bubble_size">50dp</dimen>
 
+    <dimen name="function_btn_size">25dp</dimen>
+    <dimen name="function_bar_margin">5dp</dimen>
+
     <dimen name="qr_code_size">40dp</dimen>
 
     <dimen name="post_vertical_margin">4dp</dimen>
