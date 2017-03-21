@@ -137,7 +137,11 @@ public class PostCreateActivity extends AppCompatActivity {
     }
 
     private void galleryAddPic() {
-        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(newPost.getPhotoUrl());
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File photoFile = new File(newPost.getPhotoUrl());
+        Uri contentUri = Uri.fromFile(photoFile);
+        mediaScanIntent.setData(contentUri);
+
         this.sendBroadcast(mediaScanIntent);
     }
 
@@ -377,6 +381,7 @@ public class PostCreateActivity extends AppCompatActivity {
                 } else {
                     Snackbar.make(rootView, "Post to database success", Snackbar.LENGTH_SHORT).show();
 
+                    // When upload in done
                     setResult(RESULT_OK);
                     finish();
                 }

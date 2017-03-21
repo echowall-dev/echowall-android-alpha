@@ -163,7 +163,11 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void galleryAddPic() {
-        Intent mediaScanIntent = ImageHelper.galleryAddPicIntent(photoFilePath);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File photoFile = new File(photoFilePath);
+        Uri contentUri = Uri.fromFile(photoFile);
+        mediaScanIntent.setData(contentUri);
+
         this.sendBroadcast(mediaScanIntent);
     }
 

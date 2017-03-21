@@ -39,15 +39,6 @@ public class ImageHelper {
         return imagePath;
     }
 
-    public static Intent galleryAddPicIntent(String imgPath) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File photoFile = new File(imgPath);
-        Uri contentUri = Uri.fromFile(photoFile);
-        mediaScanIntent.setData(contentUri);
-
-        return mediaScanIntent;
-    }
-
     /**
      * Covert dp to px
      * @param dp
