@@ -24,11 +24,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/post_create_btn_0"
                 android:text="btn0" />
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/post_create_btn_1"
@@ -36,6 +38,7 @@
         </LinearLayout>
 
         <Button
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/post_create_btn_next"

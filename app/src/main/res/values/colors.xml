@@ -10,4 +10,7 @@
     <color name="colorcolorSecondaryDark">#f2404f</color>
 
     <color name="colorAlpha">#ff554d</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Echowall_alpha</string>
+    <string name="app_name">Echowall</string>
     <string name="greeting">Hello</string>
     <string name="cover_title">Capture your memorable moments</string>
     <string name="sign_in">Sign in</string>

@@ -58,7 +58,7 @@ public class PostcardActivity extends AppCompatActivity {
                 .into(postcardImg);
 
         Glide.with(this)
-                .load(R.drawable.postcard_template)
+                .load(R.drawable.postcard_template_empty)
                 .asBitmap()
                 .into(postcardMsgTemplate);
 

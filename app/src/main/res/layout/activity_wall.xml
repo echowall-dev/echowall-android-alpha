@@ -9,6 +9,7 @@
     android:gravity="center_horizontal"
     tools:context="com.echodev.echoalpha.WallActivity">
 
+    <!--
     <TextView
         android:id="@+id/identity_text"
         android:layout_width="wrap_content"
@@ -16,6 +17,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:gravity="center" />
+    -->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -23,12 +25,14 @@
         android:orientation="horizontal">
 
         <Button
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:id="@+id/sign_out_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_out" />
 
         <Button
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:id="@+id/create_post_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

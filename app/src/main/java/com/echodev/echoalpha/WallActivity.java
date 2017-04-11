@@ -59,8 +59,10 @@ public class WallActivity extends AppCompatActivity {
     @BindView(android.R.id.content)
     View rootView;
 
+    /*
     @BindView(R.id.identity_text)
     TextView IDTextView;
+    */
 
     @BindView(R.id.sign_out_btn)
     Button signOutBtn;
@@ -274,12 +276,14 @@ public class WallActivity extends AppCompatActivity {
 
     @MainThread
     private void populateProfile() {
+        /*
         String contentText = "";
         contentText += "You have signed in as";
         contentText += "\n" + currentUser.getUserName();
         contentText += "\n" + currentUser.getUserEmail();
 
         IDTextView.setText(contentText);
+        */
 
         /*
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -374,11 +378,13 @@ public class WallActivity extends AppCompatActivity {
                     PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
                     newPost.setWidth(postListArea.getWidth());
 
+                    /*
                     // Show files path info on the page
                     String appName = this.getResources().getString(R.string.app_name);
                     String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
                     String filePathInfo = "file location:\n" + appPathInfo;
                     IDTextView.setText(filePathInfo);
+                    */
 
                     // Add the new post into the dataset of the RecyclerView Adapter
                     postAdapter.addPost(newPost);
@@ -388,21 +394,25 @@ public class WallActivity extends AppCompatActivity {
                 break;
             case REQUEST_CODE_POST_CREATE:
                 if (resultCode == RESULT_OK) {
+                    /*
                     // Show files path info on the page
                     String appName = this.getResources().getString(R.string.app_name);
                     String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
                     String filePathInfo = "file location:\n" + appPathInfo;
                     IDTextView.setText(filePathInfo);
+                    */
 
                     Snackbar.make(rootView, "Post added", Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             case REQUEST_CODE_POST_EDIT:
                 if (resultCode == RESULT_OK) {
+                    /*
                     String appName = this.getResources().getString(R.string.app_name);
                     String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
                     String filePathInfo = "file location:\n" + appPathInfo;
                     IDTextView.setText(filePathInfo);
+                    */
 
                     Snackbar.make(rootView, "Post changed", Snackbar.LENGTH_SHORT).show();
                 }
