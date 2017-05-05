@@ -1,9 +1,9 @@
 package com.echodev.echoalpha.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import com.echodev.echoalpha.R;
@@ -37,6 +37,42 @@ public class ImageHelper {
         imagePath += "/" + appName + "/picture/" + userID + "_" + timeStamp + imageFormat;
 
         return imagePath;
+    }
+
+    public static Bitmap imageCompress(String photoPath) {
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+        float photoScale;
+
+        int targetW;
+        int targetH;
+
+        // Calculate the target dimensions
+        if (photoW > photoH) {
+            photoScale = (float) photoW / photoH;
+            targetW = 1080;
+            targetH = Math.round(targetW / photoScale);
+        } else {
+            photoScale = (float) photoH / photoW;
+            targetH = 1080;
+            targetW = Math.round(targetH / photoScale);
+        }
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(photoPath, bmOptions);
+
+        return bitmap;
     }
 
     /**
