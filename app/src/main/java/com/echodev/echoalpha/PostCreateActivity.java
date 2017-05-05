@@ -3,7 +3,9 @@ package com.echodev.echoalpha;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -41,6 +43,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import id.zelory.compressor.Compressor;
 
 public class PostCreateActivity extends AppCompatActivity {
 
@@ -136,9 +139,9 @@ public class PostCreateActivity extends AppCompatActivity {
         }
     }
 
-    private void galleryAddPic() {
+    private void galleryAddPic(String photoPath) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File photoFile = new File(newPost.getPhotoUrl());
+        File photoFile = new File(photoPath);
         Uri contentUri = Uri.fromFile(photoFile);
         mediaScanIntent.setData(contentUri);
 
@@ -150,17 +153,30 @@ public class PostCreateActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
+                    // Add the photo name to the new Post instance
+                    String photoName = Uri.parse(newPost.getPhotoUrl()).getLastPathSegment();
+                    newPost.setPhotoName(photoName);
+
+                    File originalImage = new File(newPost.getPhotoUrl());
+                    String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    storagePath += "/" + "Echowall" + "/picture/";
+
+                    File compressedImage = new Compressor.Builder(this)
+                            .setMaxWidth(1920f)
+                            .setQuality(90)
+                            .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                            .setDestinationDirectoryPath(storagePath)
+                            .build()
+                            .compressToFile(originalImage);
+
                     // Add the photo to the phone's gallery
-                    galleryAddPic();
+                    galleryAddPic(newPost.getPhotoUrl());
 
                     // Load the photo into preview area
                     Glide.with(this)
                             .load(newPost.getPhotoUrl())
                             .asBitmap()
                             .into(previewImg);
-
-                    // Add the photo name to the new Post instance
-                    newPost.setPhotoName(Uri.parse(newPost.getPhotoUrl()).getLastPathSegment());
 
                     enterAudioPrepareStage();
                 } else {
