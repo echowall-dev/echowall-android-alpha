@@ -116,7 +116,11 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         holder.postUserProfile.setText(post.getCreatorName());
         holder.postLikeNumber.setText(Long.toString(post.getLikeNumber()));
         holder.postCaption.setText(post.getCaption());
-        holder.postCreationDate.setText(post.getCreationDate());
+
+        int secondIndex = post.getCreationDate().lastIndexOf(":");
+        String secondStr = post.getCreationDate().substring(secondIndex);
+        String displayDate = post.getCreationDate().replace(secondStr, "");
+        holder.postCreationDate.setText(displayDate);
 
         Glide.with(context)
                 .load(R.drawable.like_heart)
