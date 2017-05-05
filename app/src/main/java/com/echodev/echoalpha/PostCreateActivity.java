@@ -3,9 +3,7 @@ package com.echodev.echoalpha;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -43,7 +41,6 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import id.zelory.compressor.Compressor;
 
 public class PostCreateActivity extends AppCompatActivity {
 
@@ -153,28 +150,21 @@ public class PostCreateActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
+                    String photoPath = newPost.getPhotoUrl();
+
                     // Add the photo name to the new Post instance
-                    String photoName = Uri.parse(newPost.getPhotoUrl()).getLastPathSegment();
+                    String photoName = Uri.parse(photoPath).getLastPathSegment();
                     newPost.setPhotoName(photoName);
 
-                    File originalImage = new File(newPost.getPhotoUrl());
-                    String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                    storagePath += "/" + "Echowall" + "/picture/";
-
-                    File compressedImage = new Compressor.Builder(this)
-                            .setMaxWidth(1920f)
-                            .setQuality(90)
-                            .setCompressFormat(Bitmap.CompressFormat.JPEG)
-                            .setDestinationDirectoryPath(storagePath)
-                            .build()
-                            .compressToFile(originalImage);
+                    // Compress the photo
+                    String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
 
                     // Add the photo to the phone's gallery
-                    galleryAddPic(newPost.getPhotoUrl());
+                    galleryAddPic(photoPath);
 
                     // Load the photo into preview area
                     Glide.with(this)
-                            .load(newPost.getPhotoUrl())
+                            .load(photoPath)
                             .asBitmap()
                             .into(previewImg);
 

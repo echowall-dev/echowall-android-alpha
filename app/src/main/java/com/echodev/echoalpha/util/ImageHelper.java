@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 
 import com.echodev.echoalpha.R;
@@ -12,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import id.zelory.compressor.Compressor;
 
 /**
  * Created by Ho on 6/2/2017.
@@ -39,40 +42,53 @@ public class ImageHelper {
         return imagePath;
     }
 
-    public static Bitmap imageCompress(String photoPath) {
+    public static String imageCompress(String photoPath, Context context) {
+        File originalImage = new File(photoPath);
+        String photoName = Uri.parse(photoPath).getLastPathSegment();
+        String storagePath = photoPath.replace(photoName, "");
+        float maxLength = 1920;
+
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(photoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
+        int photoWidth = bmOptions.outWidth;
+        int photoHeight = bmOptions.outHeight;
         float photoScale;
-
-        int targetW;
-        int targetH;
+        float targetWidth;
+        float targetHeight;
 
         // Calculate the target dimensions
-        if (photoW > photoH) {
-            photoScale = (float) photoW / photoH;
-            targetW = 1080;
-            targetH = Math.round(targetW / photoScale);
+        if (photoWidth > maxLength || photoHeight > maxLength) {
+            if (photoWidth > photoHeight) {
+                photoScale = (float) photoWidth / photoHeight;
+                targetWidth = maxLength;
+                targetHeight = Math.round(targetWidth / photoScale);
+            } else {
+                photoScale = (float) photoHeight / photoWidth;
+                targetHeight = maxLength;
+                targetWidth = Math.round(targetHeight / photoScale);
+            }
         } else {
-            photoScale = (float) photoH / photoW;
-            targetH = 1080;
-            targetW = Math.round(targetH / photoScale);
+            targetWidth = photoWidth;
+            targetHeight = photoHeight;
         }
 
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        File compressedImage = new Compressor.Builder(context)
+                .setMaxWidth(targetWidth)
+                .setMaxHeight(targetHeight)
+                .setQuality(80)
+                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                .setDestinationDirectoryPath(storagePath)
+                .build()
+                .compressToFile(originalImage);
 
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
+        // Remove the original photo and rename the compressed photo to .jpg
+        originalImage.delete();
+        String compressedImagePath = compressedImage.getAbsolutePath().replace(".jpeg", ".jpg");
+        compressedImage.renameTo(new File(compressedImagePath));
 
-        Bitmap bitmap = BitmapFactory.decodeFile(photoPath, bmOptions);
-
-        return bitmap;
+        return compressedImagePath;
     }
 
     /**
