@@ -112,6 +112,15 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     public void onBindViewHolder(FirebasePostAdapter.ViewHolder holder, int position) {
         final FirebasePost post = postList.get(position);
 
+        // Remove previous speech bubbles in case the view is recycled
+        // The ImageView at [0] is the post photo so start removing from [1]
+        for (int i=1; i<holder.postImgArea.getChildCount(); i++) {
+            View childImgView = holder.postImgArea.getChildAt(i);
+            if (childImgView.getWidth() <= resources.getDimensionPixelSize(R.dimen.bubble_width)) {
+                holder.postImgArea.removeView(childImgView);
+            }
+        }
+
         // Set template info for the post
         holder.postUserProfile.setText(post.getCreatorName());
         holder.postLikeNumber.setText(Long.toString(post.getLikeNumber()));
@@ -170,6 +179,18 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POSTCARD_CREATE);
             }
         });
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        // Remove the speech bubbles when the view is recycled
+        // The ImageView at [0] is the post photo so start removing from [1]
+        for (int i=1; i<holder.postImgArea.getChildCount(); i++) {
+            View childImgView = holder.postImgArea.getChildAt(i);
+            if (childImgView.getWidth() <= resources.getDimensionPixelSize(R.dimen.bubble_width)) {
+                holder.postImgArea.removeView(childImgView);
+            }
+        }
     }
 
     @Override
