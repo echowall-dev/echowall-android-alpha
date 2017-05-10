@@ -2,6 +2,8 @@ package com.echodev.echoalpha.firebase;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +16,34 @@ import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by Ho on 10/3/2017.
  */
 
 public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClickListener {
 
+    // Playback states of the MediaPlayer
+    public static final int STATE_PLAY = 100;
+    public static final int STATE_PAUSE = 101;
+
+    // Types of the speech bubble
+    public static final String TYPE_N = "N";
+    public static final String TYPE_S = "S";
+    public static final String TYPE_E = "E";
+    public static final String TYPE_W = "W";
+    public static final String TYPE_NE = "NE";
+    public static final String TYPE_NW = "NW";
+    public static final String TYPE_SE = "SE";
+    public static final String TYPE_SW = "SW";
+
     private FirebaseBubble bubble;
     private int dX, dY, targetX, targetY;
     private ImageView bubbleImageView;
     private Context context;
+    private MediaPlayer audioPlayer;
 
     // Constructors
     public FirebaseBubbleWrapper() {
@@ -159,28 +179,79 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         bubbleImageView.setLayoutParams(layoutParams);
         viewGroup.addView(bubbleImageView);
 
+        // Initialize the MediaPlayer for playing the audio
+        initAudioPlayer();
+
         // Fill the ImageView with the corresponding speech bubble image
-        switch (this.getType()) {
-            case "L":
-                Glide.with(context)
-                        .load(R.drawable.speech_bubble_l)
-                        .fitCenter()
-                        .into(bubbleImageView);
-                break;
-            case "R":
-                Glide.with(context)
-                        .load(R.drawable.speech_bubble_r)
-                        .fitCenter()
-                        .into(bubbleImageView);
-                break;
-            default:
-                break;
-        }
+        loadBubbleImage();
 
         // Set the final value for x and y coordinate
         // Convert px to dp for data storage
         this.setX((long) ImageHelper.convertPxToDp(positionX, context));
         this.setY((long) ImageHelper.convertPxToDp(positionY, context));
+    }
+
+    public void loadBubbleImage() {
+        if (bubbleImageView == null) {
+            return;
+        }
+
+        int state = audioPlayer.isPlaying()? STATE_PAUSE : STATE_PLAY;
+
+        if (state==STATE_PLAY && getType().equals(TYPE_N)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_n_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PLAY && getType().equals(TYPE_S)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_s_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PLAY && getType().equals(TYPE_E)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_e_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PLAY && getType().equals(TYPE_W)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_w_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_N)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_n_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_S)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_s_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_E)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_e_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_W)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_w_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        }
+    }
+
+    public void initAudioPlayer() {
+        audioPlayer = new MediaPlayer();
+        audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            audioPlayer.setDataSource(bubble.getAudioUrl());
+            audioPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        audioPlayer.setOnCompletionListener(audioCompletionListener);
     }
 
     // Event listener binding methods
@@ -258,7 +329,25 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
     View.OnClickListener playAudioLocalListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AudioHelper.playAudioLocal(bubble.getAudioUrl());
+//            if (audioPlayer == null) {
+//                initAudioPlayer();
+//            }
+
+            if (audioPlayer.isPlaying()) {
+                audioPlayer.pause();
+                loadBubbleImage();
+            } else {
+//                AudioHelper.playAudioLocal(bubble.getAudioUrl());
+                audioPlayer.start();
+                loadBubbleImage();
+            }
+        }
+    };
+
+    MediaPlayer.OnCompletionListener audioCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            loadBubbleImage();
         }
     };
 }
