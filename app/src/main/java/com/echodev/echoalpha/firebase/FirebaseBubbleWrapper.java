@@ -347,6 +347,7 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
     MediaPlayer.OnCompletionListener audioCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
+//            mp.release();
             loadBubbleImage();
         }
     };

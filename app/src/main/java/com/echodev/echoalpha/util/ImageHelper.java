@@ -54,18 +54,16 @@ public class ImageHelper {
         BitmapFactory.decodeFile(photoPath, bmOptions);
         int photoWidth = bmOptions.outWidth;
         int photoHeight = bmOptions.outHeight;
-        float photoScale;
-        float targetWidth;
-        float targetHeight;
+        float photoScale = (float) photoWidth / photoHeight;
+        float targetWidth, targetHeight;
 
         // Calculate the target dimensions
         if (photoWidth > maxLength || photoHeight > maxLength) {
             if (photoWidth > photoHeight) {
-                photoScale = (float) photoWidth / photoHeight;
                 targetWidth = maxLength;
                 targetHeight = Math.round(targetWidth / photoScale);
             } else {
-                photoScale = (float) photoHeight / photoWidth;
+                photoScale = 1 / photoScale;
                 targetHeight = maxLength;
                 targetWidth = Math.round(targetHeight / photoScale);
             }
