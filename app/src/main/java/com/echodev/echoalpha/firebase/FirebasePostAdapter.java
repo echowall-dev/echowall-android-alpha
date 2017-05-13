@@ -154,6 +154,9 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
             for (FirebaseBubble bubble : post.getBubbleList()) {
                 FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
 
+                // Initialize the MediaPlayer for playing the audio
+                bubbleWrapper.initAudioPlayer();
+
                 // Convert dp back to px for display
                 int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), context);
                 int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), context);

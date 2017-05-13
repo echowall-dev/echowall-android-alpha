@@ -179,9 +179,6 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         bubbleImageView.setLayoutParams(layoutParams);
         viewGroup.addView(bubbleImageView);
 
-        // Initialize the MediaPlayer for playing the audio
-        initAudioPlayer();
-
         // Fill the ImageView with the corresponding speech bubble image
         loadBubbleImage();
 
@@ -196,7 +193,7 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
             return;
         }
 
-        int state = audioPlayer.isPlaying()? STATE_PAUSE : STATE_PLAY;
+        int state = (audioPlayer == null || !audioPlayer.isPlaying())? STATE_PLAY : STATE_PAUSE;
 
         if (state==STATE_PLAY && getType().equals(TYPE_N)) {
             Glide.with(context)
@@ -316,7 +313,19 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 
     @Override
     public void onClick(View v) {
-        AudioHelper.playAudioOnline(bubble.getAudioUrl());
+//        AudioHelper.playAudioOnline(bubble.getAudioUrl());
+
+//        if (audioPlayer == null) {
+//            initAudioPlayer();
+//        }
+
+        if (audioPlayer.isPlaying()) {
+            audioPlayer.pause();
+            loadBubbleImage();
+        } else {
+            audioPlayer.start();
+            loadBubbleImage();
+        }
     }
 
     View.OnClickListener playAudioOnlineListener = new View.OnClickListener() {
@@ -329,18 +338,7 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
     View.OnClickListener playAudioLocalListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-//            if (audioPlayer == null) {
-//                initAudioPlayer();
-//            }
-
-            if (audioPlayer.isPlaying()) {
-                audioPlayer.pause();
-                loadBubbleImage();
-            } else {
-//                AudioHelper.playAudioLocal(bubble.getAudioUrl());
-                audioPlayer.start();
-                loadBubbleImage();
-            }
+            AudioHelper.playAudioLocal(bubble.getAudioUrl());
         }
     };
 
