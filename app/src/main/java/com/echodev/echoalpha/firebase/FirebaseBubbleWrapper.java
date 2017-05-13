@@ -215,6 +215,26 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
                     .load(R.drawable.bubble_w_play)
                     .fitCenter()
                     .into(bubbleImageView);
+        } else if (state==STATE_PLAY && getType().equals(TYPE_NE)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_ne_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PLAY && getType().equals(TYPE_NW)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_nw_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PLAY && getType().equals(TYPE_SE)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_se_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PLAY && getType().equals(TYPE_SW)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_sw_play)
+                    .fitCenter()
+                    .into(bubbleImageView);
         } else if (state==STATE_PAUSE && getType().equals(TYPE_N)) {
             Glide.with(context)
                     .load(R.drawable.bubble_n_pause)
@@ -233,6 +253,26 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         } else if (state==STATE_PAUSE && getType().equals(TYPE_W)) {
             Glide.with(context)
                     .load(R.drawable.bubble_w_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_NE)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_ne_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_NW)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_nw_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_SE)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_se_pause)
+                    .fitCenter()
+                    .into(bubbleImageView);
+        } else if (state==STATE_PAUSE && getType().equals(TYPE_SW)) {
+            Glide.with(context)
+                    .load(R.drawable.bubble_sw_pause)
                     .fitCenter()
                     .into(bubbleImageView);
         }

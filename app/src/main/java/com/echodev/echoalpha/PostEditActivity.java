@@ -223,10 +223,10 @@ public class PostEditActivity extends AppCompatActivity {
 
             switch (v.getId()) {
                 case R.id.post_edit_btn_0:
-                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_W);
+                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SW);
                     break;
                 case R.id.post_edit_btn_1:
-                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_E);
+                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SE);
                     break;
                 default:
                     break;

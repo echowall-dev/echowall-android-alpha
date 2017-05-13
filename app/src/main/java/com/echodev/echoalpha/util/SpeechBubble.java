@@ -233,13 +233,13 @@ public class SpeechBubble implements View.OnClickListener, View.OnTouchListener,
         switch (this.type) {
             case SPEECH_BUBBLE_TYPE_LEFT:
                 Glide.with(context)
-                        .load(R.drawable.speech_bubble_l)
+                        .load(R.drawable.bubble_sw_play)
                         .fitCenter()
                         .into(bubbleImageView);
                 break;
             case SPEECH_BUBBLE_TYPE_RIGHT:
                 Glide.with(context)
-                        .load(R.drawable.speech_bubble_r)
+                        .load(R.drawable.bubble_se_play)
                         .fitCenter()
                         .into(bubbleImageView);
                 break;
