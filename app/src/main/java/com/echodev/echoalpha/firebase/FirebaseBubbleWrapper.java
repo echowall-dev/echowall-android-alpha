@@ -193,7 +193,12 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
             return;
         }
 
-        int state = (audioPlayer == null || !audioPlayer.isPlaying())? STATE_PLAY : STATE_PAUSE;
+        int state;
+        if (audioPlayer == null) {
+            state = STATE_PLAY;
+        } else {
+            state = audioPlayer.isPlaying()? STATE_PAUSE : STATE_PLAY;
+        }
 
         if (state==STATE_PLAY && getType().equals(TYPE_N)) {
             Glide.with(context)
@@ -283,10 +288,11 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         audioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             audioPlayer.setDataSource(bubble.getAudioUrl());
-            audioPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // For streams, use prepareAsync() instead of prepare() as it's non-blocking
+        audioPlayer.prepareAsync();
 
         audioPlayer.setOnCompletionListener(audioCompletionListener);
     }
@@ -353,8 +359,6 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 
     @Override
     public void onClick(View v) {
-//        AudioHelper.playAudioOnline(bubble.getAudioUrl());
-
 //        if (audioPlayer == null) {
 //            initAudioPlayer();
 //        }
@@ -386,6 +390,7 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         @Override
         public void onCompletion(MediaPlayer mp) {
 //            mp.release();
+//            audioPlayer = null;
             loadBubbleImage();
         }
     };
