@@ -353,7 +353,10 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
             default:
                 return false;
         }
+
+        // Re-render the parent RelativeLayout
         ((ViewGroup) view.getParent()).invalidate();
+
         return true;
     }
 
@@ -364,11 +367,11 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 //        }
 
         if (audioPlayer.isPlaying()) {
+            loadBubbleImage();
             audioPlayer.pause();
-            loadBubbleImage();
         } else {
-            audioPlayer.start();
             loadBubbleImage();
+            audioPlayer.start();
         }
     }
 
