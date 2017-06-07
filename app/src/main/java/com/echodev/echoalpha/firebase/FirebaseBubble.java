@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.echodev.echoalpha.util.SpeechBubble;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -18,6 +16,7 @@ public class FirebaseBubble implements Parcelable {
     // Instance variables
     private String bubbleID, postID, creatorID, audioUrl, audioName, type, creationDate, platform;
     private long x, y, playNumber;
+    private double xRatio, yRatio;
 
     // Constructors
     public FirebaseBubble() {
@@ -93,6 +92,14 @@ public class FirebaseBubble implements Parcelable {
         return y;
     }
 
+    public double getXRatio() {
+        return xRatio;
+    }
+
+    public double getYRatio() {
+        return yRatio;
+    }
+
     public long getPlayNumber() {
         return playNumber;
     }
@@ -138,6 +145,14 @@ public class FirebaseBubble implements Parcelable {
         this.y = y;
     }
 
+    public void setXRatio(double xRatio) {
+        this.xRatio = xRatio;
+    }
+
+    public void setYRatio(double yRatio) {
+        this.yRatio = yRatio;
+    }
+
     public void setPlayNumber(long playNumber) {
         this.playNumber = playNumber;
     }
@@ -155,6 +170,8 @@ public class FirebaseBubble implements Parcelable {
         x = in.readLong();
         y = in.readLong();
         playNumber = in.readLong();
+        xRatio = in.readDouble();
+        yRatio = in.readDouble();
     }
 
     public static final Creator<FirebaseBubble> CREATOR = new Creator<FirebaseBubble>() {
@@ -187,5 +204,7 @@ public class FirebaseBubble implements Parcelable {
         dest.writeLong(x);
         dest.writeLong(y);
         dest.writeLong(playNumber);
+        dest.writeDouble(xRatio);
+        dest.writeDouble(yRatio);
     }
 }

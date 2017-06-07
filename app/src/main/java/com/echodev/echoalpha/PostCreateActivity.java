@@ -159,6 +159,9 @@ public class PostCreateActivity extends AppCompatActivity {
                     // Compress the photo
                     String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
 
+                    // Set the photo aspect ratio to the new post
+                    newPost.setPhotoAspectRatio(ImageHelper.getImageAspectRatio(compressedPhotoPath));
+
                     // Add the photo to the phone's gallery
                     galleryAddPic(photoPath);
 
@@ -261,8 +264,11 @@ public class PostCreateActivity extends AppCompatActivity {
             int targetH = localResources.getDimensionPixelSize(R.dimen.bubble_height);
             int centerX = (int) ((previewArea.getWidth() - targetW) * 0.5);
             int centerY = (int) ((previewArea.getHeight() - targetH) * 0.5);
+            double xRatio = centerX / previewArea.getWidth();
+            double yRatio = centerY / previewArea.getHeight();
 
-            bubbleWrapper.addBubbleImage(centerX, centerY, previewArea, localResources, localContext);
+//            bubbleWrapper.addBubbleImage(centerX, centerY, previewArea, localResources, localContext);
+            bubbleWrapper.addBubbleImageByRatio(xRatio, yRatio, previewArea.getWidth(), previewArea.getHeight(), previewArea, localResources, localContext);
             bubbleWrapper.bindAdjustListener();
 
             bubbleReady = true;

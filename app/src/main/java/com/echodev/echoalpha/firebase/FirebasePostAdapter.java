@@ -159,7 +159,16 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 // Convert dp back to px for display
                 int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), context);
                 int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), context);
-                bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImgArea, resources, context);
+
+                double xRation = bubble.getXRatio();
+                double yRation = bubble.getYRatio();
+
+                int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+                int parentHeight = (int) Math.round(screenWidth / post.getPhotoAspectRatio());
+
+//                bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImgArea, resources, context);
+                bubbleWrapper.addBubbleImageByRatio(xRation, yRation, screenWidth, parentHeight, holder.postImgArea, resources, context);
+
                 bubbleWrapper.bindPlayListener();
             }
         }

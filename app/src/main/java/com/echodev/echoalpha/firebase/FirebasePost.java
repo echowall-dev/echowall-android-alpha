@@ -18,6 +18,7 @@ public class FirebasePost implements Parcelable {
 
     // Instance variables
     private String postID, creatorID, creatorName, creatorEmail, photoUrl, photoName, caption, creationDate;
+    private double photoAspectRatio;
     private List<String> collaboratorIDList;
     private List<FirebaseBubble> bubbleList;
     private long likeNumber, commentNumber, shareNumber;
@@ -96,6 +97,10 @@ public class FirebasePost implements Parcelable {
         return creationDate;
     }
 
+    public double getPhotoAspectRatio() {
+        return photoAspectRatio;
+    }
+
     public List<String> getCollaboratorIDList() {
         return collaboratorIDList;
     }
@@ -147,6 +152,11 @@ public class FirebasePost implements Parcelable {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public void setPhotoAspectRatio(double photoAspectRatio) {
+        // Round the value up to 2 decimal places
+        this.photoAspectRatio = (double) Math.round(photoAspectRatio * 100) / 100;
     }
 
     public void setCollaboratorIDList(List<String> collaboratorIDList) {

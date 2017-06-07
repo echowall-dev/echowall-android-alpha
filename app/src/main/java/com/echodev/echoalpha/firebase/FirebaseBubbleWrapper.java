@@ -16,7 +16,6 @@ import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.ImageHelper;
 import com.echodev.echoalpha.util.SpeechBubble;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -103,6 +102,14 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         return bubble.getY();
     }
 
+    public double getXRatio() {
+        return bubble.getXRatio();
+    }
+
+    public double getYRatio() {
+        return bubble.getYRatio();
+    }
+
     public long getPlayNumber() {
         return bubble.getPlayNumber();
     }
@@ -152,6 +159,14 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         bubble.setY(y);
     }
 
+    public void setXRatio(double xRatio) {
+        bubble.setXRatio(xRatio);
+    }
+
+    public void setYRatio(double yRatio) {
+        bubble.setYRatio(yRatio);
+    }
+
     public void setPlayNumber(long playNumber) {
         bubble.setPlayNumber(playNumber);
     }
@@ -180,8 +195,34 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 
         // Set the final value for x and y coordinate
         // Convert px to dp for data storage
-        this.setX((long) ImageHelper.convertPxToDp(positionX, context));
-        this.setY((long) ImageHelper.convertPxToDp(positionY, context));
+        setX((long) ImageHelper.convertPxToDp(positionX, context));
+        setY((long) ImageHelper.convertPxToDp(positionY, context));
+    }
+
+    public void addBubbleImageByRatio(double xRatio, double yRatio, int parentWidth, int parentHeight, ViewGroup viewGroup, Resources resources, Context context) {
+        // Prepare the dimensions of the ImageView
+        int targetW = resources.getDimensionPixelSize(R.dimen.bubble_width);
+        int targetH = resources.getDimensionPixelSize(R.dimen.bubble_height);
+
+        // Create a new ImageView to the the ViewGroup
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetW, targetH);
+
+        int positionX = (int) Math.round(xRatio * parentWidth);
+        int positionY = (int) Math.round(yRatio * parentHeight);
+
+        layoutParams.leftMargin = positionX;
+        layoutParams.topMargin = positionY;
+
+        bubbleImageView = new ImageView(context);
+        bubbleImageView.setLayoutParams(layoutParams);
+        viewGroup.addView(bubbleImageView);
+
+        // Fill the ImageView with the corresponding speech bubble image
+        loadBubbleImage();
+
+        // Set the final value for x and y coordinate
+        // Store the ration of the coordinates to the dimensions of the parent RelativeLayout
+        setCoordinateRatio(positionX, positionY, parentWidth, parentHeight);
     }
 
     public void loadBubbleImage() {
@@ -194,87 +235,48 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
             audioIsPlaying = audioPlayer.isPlaying();
         }
 
-        if (audioIsPlaying && getType().equals(TYPE_N)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_n)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (audioIsPlaying && getType().equals(TYPE_S)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_s)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (audioIsPlaying && getType().equals(TYPE_E)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_e)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (audioIsPlaying && getType().equals(TYPE_W)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_w)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (audioIsPlaying && getType().equals(TYPE_NE)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_ne)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (audioIsPlaying && getType().equals(TYPE_NW)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_nw)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (audioIsPlaying && getType().equals(TYPE_SE)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_se)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (audioIsPlaying && getType().equals(TYPE_SW)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_play_sw)
-                    .fitCenter()
-                    .into(bubbleImageView);
-        } else if (!audioIsPlaying && getType().equals(TYPE_N)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_n)
-                    .fitCenter()
-                    .into(bubbleImageView);
+        // Default image for speech bubble
+        int bubbleImagePath = R.drawable.bubble_play_sw;
+
+        // Load corresponding image for speech bubble
+        if (!audioIsPlaying && getType().equals(TYPE_N)) {
+            bubbleImagePath = R.drawable.bubble_play_n;
         } else if (!audioIsPlaying && getType().equals(TYPE_S)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_s)
-                    .fitCenter()
-                    .into(bubbleImageView);
+            bubbleImagePath = R.drawable.bubble_play_s;
         } else if (!audioIsPlaying && getType().equals(TYPE_E)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_e)
-                    .fitCenter()
-                    .into(bubbleImageView);
+            bubbleImagePath = R.drawable.bubble_play_e;
         } else if (!audioIsPlaying && getType().equals(TYPE_W)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_w)
-                    .fitCenter()
-                    .into(bubbleImageView);
+            bubbleImagePath = R.drawable.bubble_play_w;
         } else if (!audioIsPlaying && getType().equals(TYPE_NE)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_ne)
-                    .fitCenter()
-                    .into(bubbleImageView);
+            bubbleImagePath = R.drawable.bubble_play_ne;
         } else if (!audioIsPlaying && getType().equals(TYPE_NW)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_nw)
-                    .fitCenter()
-                    .into(bubbleImageView);
+            bubbleImagePath = R.drawable.bubble_play_nw;
         } else if (!audioIsPlaying && getType().equals(TYPE_SE)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_se)
-                    .fitCenter()
-                    .into(bubbleImageView);
+            bubbleImagePath = R.drawable.bubble_play_se;
         } else if (!audioIsPlaying && getType().equals(TYPE_SW)) {
-            Glide.with(context)
-                    .load(R.drawable.bubble_pause_sw)
-                    .fitCenter()
-                    .into(bubbleImageView);
+            bubbleImagePath = R.drawable.bubble_play_sw;
+        } else if (audioIsPlaying && getType().equals(TYPE_N)) {
+            bubbleImagePath = R.drawable.bubble_pause_n;
+        } else if (audioIsPlaying && getType().equals(TYPE_S)) {
+            bubbleImagePath = R.drawable.bubble_pause_s;
+        } else if (audioIsPlaying && getType().equals(TYPE_E)) {
+            bubbleImagePath = R.drawable.bubble_pause_e;
+        } else if (audioIsPlaying && getType().equals(TYPE_W)) {
+            bubbleImagePath = R.drawable.bubble_pause_w;
+        } else if (audioIsPlaying && getType().equals(TYPE_NE)) {
+            bubbleImagePath = R.drawable.bubble_pause_ne;
+        } else if (audioIsPlaying && getType().equals(TYPE_NW)) {
+            bubbleImagePath = R.drawable.bubble_pause_nw;
+        } else if (audioIsPlaying && getType().equals(TYPE_SE)) {
+            bubbleImagePath = R.drawable.bubble_pause_se;
+        } else if (audioIsPlaying && getType().equals(TYPE_SW)) {
+            bubbleImagePath = R.drawable.bubble_pause_sw;
         }
+
+        Glide.with(context)
+                .load(bubbleImagePath)
+                .fitCenter()
+                .into(bubbleImageView);
     }
 
     public void initAudioPlayer() {
@@ -289,6 +291,16 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         audioPlayer.prepareAsync();
 
         audioPlayer.setOnCompletionListener(audioCompletionListener);
+    }
+
+    public void setCoordinateRatio(int childX, int childY, int parentWidth, int parentHeight) {
+        // Calculate the ration of the coordinates to the dimensions of the parent RelativeLayout
+        double widthRatio = (double) childX / parentWidth;
+        double heightRatio = (double) childY / parentHeight;
+
+        // Round the values up to 2 decimal places and store them
+        setXRatio((double) Math.round(widthRatio * 100) / 100);
+        setYRatio((double) Math.round(heightRatio * 100) / 100);
     }
 
     // Event listener binding methods
@@ -338,8 +350,12 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
             case MotionEvent.ACTION_UP:
                 // Set the final value for x and y coordinate
                 // Convert px to dp for data storage
-                this.setX((long) ImageHelper.convertPxToDp(targetX, context));
-                this.setY((long) ImageHelper.convertPxToDp(targetY, context));
+                setX((long) ImageHelper.convertPxToDp(targetX, context));
+                setY((long) ImageHelper.convertPxToDp(targetY, context));
+
+                // Store the ration of the coordinates to the dimensions of the parent RelativeLayout
+                setCoordinateRatio(targetX, targetY, ((ViewGroup) view.getParent()).getWidth(), ((ViewGroup) view.getParent()).getHeight());
+
                 break;
             case MotionEvent.ACTION_POINTER_UP:
             case MotionEvent.ACTION_POINTER_DOWN:

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -144,11 +145,25 @@ public class PostEditActivity extends AppCompatActivity {
         if (currentPost.getBubbleList()!=null && !currentPost.getBubbleList().isEmpty()) {
             for (FirebaseBubble bubble : currentPost.getBubbleList()) {
                 FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
+                bubbleWrapper.setContext(localContext);
 
                 // Convert dp back to px for display
                 int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), localContext);
                 int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), localContext);
-                bubbleWrapper.addBubbleImage(positionX, positionY, previewArea, localResources, localContext);
+
+                // Get the coordinate ratio of the bubble
+                double xRation = bubble.getXRatio();
+                double yRation = bubble.getYRatio();
+
+                // Get the parent container width and height
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenWidth = displayMetrics.widthPixels;
+                int parentHeight = (int) Math.round(screenWidth / currentPost.getPhotoAspectRatio());
+
+//                bubbleWrapper.addBubbleImage(positionX, positionY, previewArea, localResources, localContext);
+                bubbleWrapper.addBubbleImageByRatio(xRation, yRation, screenWidth, parentHeight, previewArea, localResources, localContext);
+
                 bubbleWrapper.bindPlayListener();
             }
         }

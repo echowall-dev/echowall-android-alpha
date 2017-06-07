@@ -89,6 +89,19 @@ public class ImageHelper {
         return compressedImagePath;
     }
 
+    public static double getImageAspectRatio(String photoPath) {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(photoPath, bmOptions);
+        int photoWidth = bmOptions.outWidth;
+        int photoHeight = bmOptions.outHeight;
+        double photoAspectRatio = (double) photoWidth / photoHeight;
+
+        // Round the value up to 2 decimal places
+        photoAspectRatio = (double) Math.round(photoAspectRatio * 100) / 100;
+        return photoAspectRatio;
+    }
+
     /**
      * Covert dp to px
      * @param dp
