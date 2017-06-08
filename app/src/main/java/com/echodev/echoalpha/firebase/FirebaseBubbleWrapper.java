@@ -94,11 +94,11 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         return bubble.getPlatform();
     }
 
-    public long getX() {
+    public int getX() {
         return bubble.getX();
     }
 
-    public long getY() {
+    public int getY() {
         return bubble.getY();
     }
 
@@ -151,11 +151,11 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
         bubble.setPlatform(platform);
     }
 
-    public void setX(long x) {
+    public void setX(int x) {
         bubble.setX(x);
     }
 
-    public void setY(long y) {
+    public void setY(int y) {
         bubble.setY(y);
     }
 
@@ -195,8 +195,8 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 
         // Set the final value for x and y coordinate
         // Convert px to dp for data storage
-        setX((long) ImageHelper.convertPxToDp(positionX, context));
-        setY((long) ImageHelper.convertPxToDp(positionY, context));
+        setX(ImageHelper.convertPxToDp(positionX, context));
+        setY(ImageHelper.convertPxToDp(positionY, context));
     }
 
     public void addBubbleImageByRatio(double xRatio, double yRatio, int parentWidth, int parentHeight, ViewGroup viewGroup, Resources resources, Context context) {
@@ -350,8 +350,8 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
             case MotionEvent.ACTION_UP:
                 // Set the final value for x and y coordinate
                 // Convert px to dp for data storage
-                setX((long) ImageHelper.convertPxToDp(targetX, context));
-                setY((long) ImageHelper.convertPxToDp(targetY, context));
+                setX(ImageHelper.convertPxToDp(targetX, context));
+                setY(ImageHelper.convertPxToDp(targetY, context));
 
                 // Store the ration of the coordinates to the dimensions of the parent RelativeLayout
                 setCoordinateRatio(targetX, targetY, ((ViewGroup) view.getParent()).getWidth(), ((ViewGroup) view.getParent()).getHeight());

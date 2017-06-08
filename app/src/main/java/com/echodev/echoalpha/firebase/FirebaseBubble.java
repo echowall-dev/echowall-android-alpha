@@ -15,8 +15,9 @@ public class FirebaseBubble implements Parcelable {
 
     // Instance variables
     private String bubbleID, postID, creatorID, audioUrl, audioName, type, creationDate, platform;
-    private long x, y, playNumber;
+    private int x, y;
     private double xRatio, yRatio;
+    private long playNumber;
 
     // Constructors
     public FirebaseBubble() {
@@ -46,8 +47,8 @@ public class FirebaseBubble implements Parcelable {
         this.type = (speechBubble.getType() == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) ? "L" : "R";
         this.creationDate = speechBubble.getCreationDateString();
         this.platform = "Android";
-        this.x = (long) speechBubble.getX();
-        this.y = (long) speechBubble.getY();
+        this.x = speechBubble.getX();
+        this.y = speechBubble.getY();
         this.playNumber = speechBubble.getPlayNumber();
     }
 
@@ -84,11 +85,11 @@ public class FirebaseBubble implements Parcelable {
         return platform;
     }
 
-    public long getX() {
+    public int getX() {
         return x;
     }
 
-    public long getY() {
+    public int getY() {
         return y;
     }
 
@@ -137,11 +138,11 @@ public class FirebaseBubble implements Parcelable {
         this.platform = platform;
     }
 
-    public void setX(long x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public void setY(long y) {
+    public void setY(int y) {
         this.y = y;
     }
 
@@ -167,11 +168,11 @@ public class FirebaseBubble implements Parcelable {
         type = in.readString();
         creationDate = in.readString();
         platform = in.readString();
-        x = in.readLong();
-        y = in.readLong();
-        playNumber = in.readLong();
+        x = in.readInt();
+        y = in.readInt();
         xRatio = in.readDouble();
         yRatio = in.readDouble();
+        playNumber = in.readLong();
     }
 
     public static final Creator<FirebaseBubble> CREATOR = new Creator<FirebaseBubble>() {
@@ -201,10 +202,10 @@ public class FirebaseBubble implements Parcelable {
         dest.writeString(type);
         dest.writeString(creationDate);
         dest.writeString(platform);
-        dest.writeLong(x);
-        dest.writeLong(y);
-        dest.writeLong(playNumber);
+        dest.writeInt(x);
+        dest.writeInt(y);
         dest.writeDouble(xRatio);
         dest.writeDouble(yRatio);
+        dest.writeLong(playNumber);
     }
 }
