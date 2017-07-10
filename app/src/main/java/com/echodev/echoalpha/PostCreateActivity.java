@@ -160,7 +160,7 @@ public class PostCreateActivity extends AppCompatActivity {
                     String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
 
                     // Set the photo aspect ratio to the new post
-                    newPost.setPhotoAspectRatio(ImageHelper.getImageAspectRatio(compressedPhotoPath));
+                    newPost.setPhotoAspectRatio(ImageHelper.getImageAspectRatio(photoPath));
 
                     // Add the photo to the phone's gallery
                     galleryAddPic(photoPath);

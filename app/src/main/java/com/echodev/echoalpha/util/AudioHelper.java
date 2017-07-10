@@ -28,8 +28,10 @@ public class AudioHelper {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+//        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mRecorder.setOutputFile(audioPath);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+//        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         try {
             mRecorder.prepare();
         } catch (IOException e) {
@@ -90,6 +92,7 @@ public class AudioHelper {
     public static String createAudioFile(Resources resources, String userID) {
         String appName = resources.getString(R.string.app_name);
         String audioFormat = resources.getString(R.string.audio_format);
+//        String audioFormat = ".m4a";
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();

@@ -22,6 +22,9 @@ import id.zelory.compressor.Compressor;
 
 public class ImageHelper {
 
+    public static float imageMaxPixel = 1080;
+    public static int imageQuality = 80;
+
     public static File createImageFile(File storageDir) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -46,7 +49,7 @@ public class ImageHelper {
         File originalImage = new File(photoPath);
         String photoName = Uri.parse(photoPath).getLastPathSegment();
         String storagePath = photoPath.replace(photoName, "");
-        float maxLength = 1920;
+        float maxLength = imageMaxPixel;
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -75,7 +78,7 @@ public class ImageHelper {
         File compressedImage = new Compressor.Builder(context)
                 .setMaxWidth(targetWidth)
                 .setMaxHeight(targetHeight)
-                .setQuality(80)
+                .setQuality(imageQuality)
                 .setCompressFormat(Bitmap.CompressFormat.JPEG)
                 .setDestinationDirectoryPath(storagePath)
                 .build()

@@ -155,8 +155,7 @@ public class FirebasePost implements Parcelable {
     }
 
     public void setPhotoAspectRatio(double photoAspectRatio) {
-        // Round the value up to 2 decimal places
-        this.photoAspectRatio = (double) Math.round(photoAspectRatio * 100) / 100;
+        this.photoAspectRatio = photoAspectRatio;
     }
 
     public void setCollaboratorIDList(List<String> collaboratorIDList) {

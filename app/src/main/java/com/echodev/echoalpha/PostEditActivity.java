@@ -152,8 +152,8 @@ public class PostEditActivity extends AppCompatActivity {
                 int positionY = ImageHelper.convertDpToPx((int) bubble.getY(), localContext);
 
                 // Get the coordinate ratio of the bubble
-                double xRation = bubble.getXRatio();
-                double yRation = bubble.getYRatio();
+                double xRatio = bubble.getXRatio();
+                double yRatio = bubble.getYRatio();
 
                 // Get the parent container width and height
                 DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -161,8 +161,11 @@ public class PostEditActivity extends AppCompatActivity {
                 int screenWidth = displayMetrics.widthPixels;
                 int parentHeight = (int) Math.round(screenWidth / currentPost.getPhotoAspectRatio());
 
-//                bubbleWrapper.addBubbleImage(positionX, positionY, previewArea, localResources, localContext);
-                bubbleWrapper.addBubbleImageByRatio(xRation, yRation, screenWidth, parentHeight, previewArea, localResources, localContext);
+                positionX = (int) Math.round(xRatio * screenWidth);
+                positionY = (int) Math.round(yRatio * parentHeight);
+
+                bubbleWrapper.addBubbleImage(positionX, positionY, previewArea, localResources, localContext);
+//                bubbleWrapper.addBubbleImageByRatio(xRatio, yRatio, screenWidth, parentHeight, previewArea, localResources, localContext);
 
                 bubbleWrapper.bindPlayListener();
             }
