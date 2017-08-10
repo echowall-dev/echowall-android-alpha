@@ -13,10 +13,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Ho on 6/2/2017.
- */
-
 public class AudioHelper {
 
     private static MediaRecorder mRecorder;

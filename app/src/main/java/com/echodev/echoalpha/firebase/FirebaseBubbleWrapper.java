@@ -18,10 +18,6 @@ import com.echodev.echoalpha.util.SpeechBubble;
 
 import java.io.IOException;
 
-/**
- * Created by Ho on 10/3/2017.
- */
-
 public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClickListener {
 
     // Types of the speech bubble

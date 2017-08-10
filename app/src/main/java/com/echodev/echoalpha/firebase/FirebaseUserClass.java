@@ -5,10 +5,6 @@ import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 
-/**
- * Created by Ho on 5/3/2017.
- */
-
 public class FirebaseUserClass implements Parcelable {
 
     // Instance variables

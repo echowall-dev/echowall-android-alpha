@@ -23,10 +23,6 @@ import java.util.ArrayList;
 import static com.echodev.echoalpha.WallActivity.REQUEST_CODE_POSTCARD_CREATE;
 import static com.echodev.echoalpha.WallActivity.REQUEST_CODE_POST_EDIT;
 
-/**
- * Created by Ho on 5/3/2017.
- */
-
 public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapter.ViewHolder> {
 
     private Resources resources;

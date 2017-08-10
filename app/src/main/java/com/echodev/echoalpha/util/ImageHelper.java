@@ -16,10 +16,6 @@ import java.util.Date;
 
 import id.zelory.compressor.Compressor;
 
-/**
- * Created by Ho on 6/2/2017.
- */
-
 public class ImageHelper {
 
     public static float imageMaxPixel = 1080;

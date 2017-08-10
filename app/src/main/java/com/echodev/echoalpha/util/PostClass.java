@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * Created by Ho on 7/2/2017.
- */
-
 public class PostClass implements Parcelable {
 
     // Post states for finite-state machine

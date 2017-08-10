@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by Ho on 5/3/2017.
- */
-
 public class FirebasePost implements Parcelable {
 
     // Instance variables

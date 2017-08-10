@@ -19,10 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * Created by Ho on 19/2/2017.
- */
-
 public class SpeechBubble implements View.OnClickListener, View.OnTouchListener, Parcelable {
 
     // Class variables

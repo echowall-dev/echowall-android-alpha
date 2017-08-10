@@ -2,7 +2,6 @@ package com.echodev.echoalpha.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +14,6 @@ import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
 
 import java.util.ArrayList;
-
-/**
- * Created by Ho on 26/2/2017.
- */
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 

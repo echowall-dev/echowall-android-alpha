@@ -2,7 +2,6 @@ package com.echodev.echoalpha;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -12,11 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.echodev.echoalpha.firebase.FirebasePost;
 import com.echodev.echoalpha.firebase.FirebasePostAdapter;
@@ -43,7 +39,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class WallActivity extends AppCompatActivity {
 

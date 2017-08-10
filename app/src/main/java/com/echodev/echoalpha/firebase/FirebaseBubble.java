@@ -7,10 +7,6 @@ import com.echodev.echoalpha.util.SpeechBubble;
 
 import java.util.UUID;
 
-/**
- * Created by Ho on 5/3/2017.
- */
-
 public class FirebaseBubble implements Parcelable {
 
     // Instance variables
