@@ -377,11 +377,11 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 //        }
 
         if (audioPlayer.isPlaying()) {
-            loadBubbleImage();
             audioPlayer.pause();
-        } else {
             loadBubbleImage();
+        } else {
             audioPlayer.start();
+            loadBubbleImage();
         }
     }
 

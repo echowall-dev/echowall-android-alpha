@@ -119,7 +119,7 @@ public class PostEditActivity extends AppCompatActivity {
             currentPost.setCollaboratorIDList(new ArrayList<String>());
         }
 
-        bubbleWrapperList = new ArrayList<FirebaseBubbleWrapper>();
+        bubbleWrapperList = new ArrayList<>();
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
@@ -146,6 +146,7 @@ public class PostEditActivity extends AppCompatActivity {
             for (FirebaseBubble bubble : currentPost.getBubbleList()) {
                 FirebaseBubbleWrapper bubbleWrapper = new FirebaseBubbleWrapper(bubble);
                 bubbleWrapper.setContext(localContext);
+                bubbleWrapper.initAudioPlayer();
 
                 // Convert dp back to px for display
                 int positionX = ImageHelper.convertDpToPx((int) bubble.getX(), localContext);
@@ -161,8 +162,8 @@ public class PostEditActivity extends AppCompatActivity {
                 int screenWidth = displayMetrics.widthPixels;
                 int parentHeight = (int) Math.round(screenWidth / currentPost.getPhotoAspectRatio());
 
-                positionX = (int) Math.round(xRatio * screenWidth);
-                positionY = (int) Math.round(yRatio * parentHeight);
+//                positionX = (int) Math.round(xRatio * screenWidth);
+//                positionY = (int) Math.round(yRatio * parentHeight);
 
                 bubbleWrapper.addBubbleImage(positionX, positionY, previewArea, localResources, localContext);
 //                bubbleWrapper.addBubbleImageByRatio(xRatio, yRatio, screenWidth, parentHeight, previewArea, localResources, localContext);

@@ -109,7 +109,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     @Override
-    public void onBindViewHolder(FirebasePostAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final FirebasePostAdapter.ViewHolder holder, int position) {
         final FirebasePost post = postList.get(position);
 
         // Remove previous speech bubbles in case the view is recycled
@@ -123,9 +123,15 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
             }
         }
 
+        /*
+        if (post.isPostPrepared()) {
+            return;
+        }
+        */
+
         // Set template info for the post
-        holder.postUserProfile.setText(post.getCreatorName());
-        holder.postLikeNumber.setText(Long.toString(post.getLikeNumber()));
+        holder.postUserName.setText(post.getCreatorName());
+        holder.postLikeCount.setText(Long.toString(post.getLikeNumber()));
         holder.postCaption.setText(post.getCaption());
 
         int secondIndex = post.getCreationDate().lastIndexOf(":");
@@ -134,14 +140,24 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         holder.postCreationDate.setText(displayDate);
 
         Glide.with(context)
-                .load(R.drawable.like_heart)
+                .load(R.drawable.ic_account_circle_grey_48px)
+                .asBitmap()
+                .into(holder.postUserPicture);
+
+        Glide.with(context)
+                .load(R.drawable.ic_mail_outline_grey_48px)
+                .asBitmap()
+                .into(holder.postPostcard);
+
+        Glide.with(context)
+                .load(R.drawable.ic_favorite_border_red_48px)
                 .asBitmap()
                 .into(holder.postLikeHeart);
 
         Glide.with(context)
-                .load(R.drawable.postcard_btn)
+                .load(R.drawable.ic_album_blue_48px)
                 .asBitmap()
-                .into(holder.postPostcard);
+                .into(holder.postEdit);
 
         // Add the photo to the post
         Glide.with(context)
@@ -166,12 +182,24 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
                 int parentHeight = (int) Math.round(screenWidth / post.getPhotoAspectRatio());
 
-//                bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImgArea, resources, context);
-                bubbleWrapper.addBubbleImageByRatio(xRation, yRation, screenWidth, parentHeight, holder.postImgArea, resources, context);
+                bubbleWrapper.addBubbleImage(positionX, positionY, holder.postImgArea, resources, context);
+//                bubbleWrapper.addBubbleImageByRatio(xRation, yRation, screenWidth, parentHeight, holder.postImgArea, resources, context);
 
                 bubbleWrapper.bindPlayListener();
             }
         }
+
+        holder.postLikeHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(context)
+                        .load(R.drawable.ic_favorite_red_48px)
+                        .asBitmap()
+                        .into(holder.postLikeHeart);
+
+                holder.postLikeCount.setText(Long.toString(post.getLikeNumber() + 1));
+            }
+        });
 
         holder.postEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +220,13 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POSTCARD_CREATE);
             }
         });
+
+        /*
+        post.setPostPrepared(true);
+
+        // Set the corresponding post in the list to prepared
+        postList.set(position, post);
+        */
     }
 
     @Override
@@ -214,20 +249,21 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfile, postEdit, postLikeNumber, postCaption, postCreationDate;
+        public TextView postUserName, postLikeCount, postCaption, postCreationDate;
         public RelativeLayout postImgArea;
-        public ImageView postImg, postLikeHeart, postPostcard;
+        public ImageView postUserPicture, postImg, postLikeHeart, postEdit, postPostcard;
 
         public ViewHolder(View itemView) {
             super(itemView);
             // Prepare the views of the post
-            postUserProfile = (TextView) itemView.findViewById(R.id.post_layout_user_profile);
-            postEdit = (TextView) itemView.findViewById(R.id.post_layout_edit);
+            postUserPicture = (ImageView) itemView.findViewById(R.id.post_layout_user_picture);
+            postUserName = (TextView) itemView.findViewById(R.id.post_layout_user_name);
+            postPostcard = (ImageView) itemView.findViewById(R.id.post_layout_postcard);
             postImgArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
             postImg = (ImageView) itemView.findViewById(R.id.post_layout_image);
             postLikeHeart = (ImageView) itemView.findViewById(R.id.post_layout_like_heart);
-            postLikeNumber = (TextView) itemView.findViewById(R.id.post_layout_like_number);
-            postPostcard = (ImageView) itemView.findViewById(R.id.post_layout_postcard);
+            postLikeCount = (TextView) itemView.findViewById(R.id.post_layout_like_count);
+            postEdit = (ImageView) itemView.findViewById(R.id.post_layout_edit);
             postCaption = (TextView) itemView.findViewById(R.id.post_layout_caption);
             postCreationDate = (TextView) itemView.findViewById(R.id.post_layout_creation_time);
         }

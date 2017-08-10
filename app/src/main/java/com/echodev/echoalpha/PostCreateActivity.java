@@ -109,12 +109,12 @@ public class PostCreateActivity extends AppCompatActivity {
         mStorageRef = mStorage.getReference();
 
         // Fetch data from the previous Activity
-        currentUser = (FirebaseUserClass) getIntent().getParcelableExtra("currentUser");
+        currentUser = getIntent().getParcelableExtra("currentUser");
 
         // Create new Post instance
         newPost = new FirebasePost(currentUser);
 
-        bubbleWrapperList = new ArrayList<FirebaseBubbleWrapper>();
+        bubbleWrapperList = new ArrayList<>();
 
         // Check if app folder already exists
         appDirExist = MainActivity.createAppDir();
@@ -267,8 +267,8 @@ public class PostCreateActivity extends AppCompatActivity {
             double xRatio = centerX / previewArea.getWidth();
             double yRatio = centerY / previewArea.getHeight();
 
-//            bubbleWrapper.addBubbleImage(centerX, centerY, previewArea, localResources, localContext);
-            bubbleWrapper.addBubbleImageByRatio(xRatio, yRatio, previewArea.getWidth(), previewArea.getHeight(), previewArea, localResources, localContext);
+            bubbleWrapper.addBubbleImage(centerX, centerY, previewArea, localResources, localContext);
+//            bubbleWrapper.addBubbleImageByRatio(xRatio, yRatio, previewArea.getWidth(), previewArea.getHeight(), previewArea, localResources, localContext);
             bubbleWrapper.bindAdjustListener();
 
             bubbleReady = true;

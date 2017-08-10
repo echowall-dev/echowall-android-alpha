@@ -13,4 +13,6 @@
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+
+    <color name="echoTheme">#fc3654</color>
 </resources>

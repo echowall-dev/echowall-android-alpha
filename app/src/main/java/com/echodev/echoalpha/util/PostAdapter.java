@@ -103,18 +103,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView postUserProfileView, postEditView, postLikeNumberView, postCaptionView, postCreationDateView;
+        public TextView postUserProfileView, postLikeNumberView, postCaptionView, postCreationDateView;
         public RelativeLayout postImageArea;
-        public ImageView postImageView;
+        public ImageView postImageView, postEditView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             // Prepare the views of the post
-            postUserProfileView = (TextView) itemView.findViewById(R.id.post_layout_user_profile);
-            postEditView = (TextView) itemView.findViewById(R.id.post_layout_edit);
+            postUserProfileView = (TextView) itemView.findViewById(R.id.post_layout_user_name);
+            postEditView = (ImageView) itemView.findViewById(R.id.post_layout_edit);
             postImageArea = (RelativeLayout) itemView.findViewById(R.id.post_layout_image_area);
             postImageView = (ImageView) itemView.findViewById(R.id.post_layout_image);
-            postLikeNumberView = (TextView) itemView.findViewById(R.id.post_layout_like_number);
+            postLikeNumberView = (TextView) itemView.findViewById(R.id.post_layout_like_count);
             postCaptionView = (TextView) itemView.findViewById(R.id.post_layout_caption);
             postCreationDateView = (TextView) itemView.findViewById(R.id.post_layout_creation_time);
         }

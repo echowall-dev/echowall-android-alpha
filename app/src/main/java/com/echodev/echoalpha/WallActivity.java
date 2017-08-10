@@ -6,12 +6,14 @@ import android.os.Environment;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -64,12 +66,6 @@ public class WallActivity extends AppCompatActivity {
     TextView IDTextView;
     */
 
-    @BindView(R.id.sign_out_btn)
-    Button signOutBtn;
-
-    @BindView(R.id.create_post_btn)
-    Button createPostBtn;
-
     @BindView(R.id.post_list_area)
     RecyclerView postListArea;
 
@@ -88,6 +84,27 @@ public class WallActivity extends AppCompatActivity {
 
     private PostAdapter postAdapter;
     private FirebasePostAdapter firebasePostAdapter;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    startMain();
+                    return true;
+                case R.id.navigation_create:
+                    startCreatePost();
+                    return true;
+                case R.id.navigation_logout:
+                    signOut();
+                    return true;
+            }
+            return false;
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +126,9 @@ public class WallActivity extends AppCompatActivity {
             return;
         } else {
             currentUser = new FirebaseUserClass(mUser);
+
+            BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
             // Push the user data to Firebase database if it has not been stored
             mUserRef = mDbRef.child("user").child(currentUser.getUserID());
@@ -258,7 +278,6 @@ public class WallActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    @OnClick(R.id.sign_out_btn)
     public void signOut() {
         AuthUI.getInstance()
                 .signOut(this)
@@ -355,7 +374,6 @@ public class WallActivity extends AppCompatActivity {
         Snackbar.make(rootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 
-    @OnClick(R.id.create_post_btn)
     public void startCreatePost() {
         Intent intent = new Intent();
 //        intent.putExtras(bundle);
