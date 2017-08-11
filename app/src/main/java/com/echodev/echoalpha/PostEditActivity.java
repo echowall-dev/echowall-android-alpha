@@ -52,6 +52,7 @@ public class PostEditActivity extends AppCompatActivity {
     @BindView(R.id.activity_post_edit)
     View rootView;
 
+    /*
     @BindView(R.id.post_edit_btn_0)
     Button btn0;
 
@@ -60,6 +61,31 @@ public class PostEditActivity extends AppCompatActivity {
 
     @BindView(R.id.post_edit_btn_next)
     Button btnNext;
+    */
+
+    @BindView(R.id.post_edit_cancel_post)
+    ImageView cancelPost;
+
+    @BindView(R.id.post_edit_finish_post)
+    ImageView finishPost;
+
+    @BindView(R.id.post_edit_discard_audio)
+    ImageView discardAudio;
+
+    @BindView(R.id.post_edit_finish_audio)
+    ImageView finishAudio;
+
+    @BindView(R.id.post_edit_preview_audio)
+    ImageView previewAudio;
+
+    @BindView(R.id.post_edit_rotate_anticlockwise)
+    ImageView rotateAnticlockwise;
+
+    @BindView(R.id.post_edit_rotate_clockwise)
+    ImageView rotateClockwise;
+
+    @BindView(R.id.post_edit_record_audio)
+    ImageView recordAudio;
 
     @BindView(R.id.post_edit_caption)
     TextView postCaption;
@@ -141,6 +167,39 @@ public class PostEditActivity extends AppCompatActivity {
                 .asBitmap()
                 .into(previewImg);
 
+        // Load button icons
+        Glide.with(this)
+                .load(R.drawable.icons8_close_window_48)
+                .into(cancelPost);
+
+        Glide.with(this)
+                .load(R.drawable.icons8_checked_checkbox_48)
+                .into(finishPost);
+
+        Glide.with(this)
+                .load(R.drawable.icons8_cancel_64)
+                .into(discardAudio);
+
+        Glide.with(this)
+                .load(R.drawable.icons8_checked_48)
+                .into(finishAudio);
+
+        Glide.with(this)
+                .load(R.drawable.icons8_circled_play_48)
+                .into(previewAudio);
+
+        Glide.with(this)
+                .load(R.drawable.icons8_rotate_anticlockwise_48)
+                .into(rotateAnticlockwise);
+
+        Glide.with(this)
+                .load(R.drawable.icons8_rotate_clockwise_48)
+                .into(rotateClockwise);
+
+        Glide.with(this)
+                .load(R.drawable.ic_album_blue_48px)
+                .into(recordAudio);
+
         // Add the original speech bubbles
         if (currentPost.getBubbleList()!=null && !currentPost.getBubbleList().isEmpty()) {
             for (FirebaseBubble bubble : currentPost.getBubbleList()) {
@@ -207,6 +266,7 @@ public class PostEditActivity extends AppCompatActivity {
 
                     bubbleWrapper.setAudioName(Uri.parse(bubbleWrapper.getAudioUrl()).getLastPathSegment());
 
+                    /*
                     btnNext.setText(localResources.getString(R.string.add_bubble));
                     btnNext.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -214,6 +274,10 @@ public class PostEditActivity extends AppCompatActivity {
                             enterBubblePrepareStage();
                         }
                     });
+                    */
+
+                    addBubbleImage();
+                    enterBubblePrepareStage();
                 }
             }
 
@@ -240,6 +304,7 @@ public class PostEditActivity extends AppCompatActivity {
                 return;
             }
 
+            /*
             switch (v.getId()) {
                 case R.id.post_edit_btn_0:
                     bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SW);
@@ -250,6 +315,7 @@ public class PostEditActivity extends AppCompatActivity {
                 default:
                     break;
             }
+            */
 
             int targetW = localResources.getDimensionPixelSize(R.dimen.bubble_width);
             int targetH = localResources.getDimensionPixelSize(R.dimen.bubble_height);
@@ -263,12 +329,33 @@ public class PostEditActivity extends AppCompatActivity {
         }
     };
 
+    // TODO: for new UI
+    private void addBubbleImage() {
+        if (bubbleReady) {
+            return;
+        }
+
+        bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SW);
+        int targetW = localResources.getDimensionPixelSize(R.dimen.bubble_width);
+        int targetH = localResources.getDimensionPixelSize(R.dimen.bubble_height);
+        int centerX = (int) ((previewArea.getWidth() - targetW) * 0.5);
+        int centerY = (int) ((previewArea.getHeight() - targetH) * 0.5);
+
+        bubbleWrapper.addBubbleImage(centerX, centerY, previewArea, localResources, localContext);
+        bubbleWrapper.bindAdjustListener();
+
+        // TODO: not sure what this is for
+        bubbleReady = true;
+    }
+
     View.OnClickListener finishBubbleListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            /*
             if (!bubbleReady) {
                 return;
             }
+            */
 
             bubbleWrapper.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             bubbleWrapper.setAdjustListener(null);
@@ -281,6 +368,54 @@ public class PostEditActivity extends AppCompatActivity {
             bubbleWrapper = null;
 
             enterAudioPrepareStage();
+        }
+    };
+
+    View.OnClickListener rotateBubbleAnticlockwiseListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_N)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_NW);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_NW)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_W);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_W)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SW);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_SW)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_S);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_S)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SE);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_SE)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_E);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_E)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_NE);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_NE)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_N);
+            }
+            bubbleWrapper.loadBubbleImage();
+        }
+    };
+
+    View.OnClickListener rotateBubbleClockwiseListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_N)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_NE);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_NE)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_E);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_E)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SE);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_SE)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_S);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_S)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SW);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_SW)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_W);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_W)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_NW);
+            } else if (bubbleWrapper.getType().equals(FirebaseBubbleWrapper.TYPE_NW)) {
+                bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_N);
+            }
+            bubbleWrapper.loadBubbleImage();
         }
     };
     // End of speech bubble handling
@@ -366,6 +501,18 @@ public class PostEditActivity extends AppCompatActivity {
     public void enterAudioPrepareStage() {
         audioReady = false;
 
+        discardAudio.setVisibility(View.INVISIBLE);
+        finishAudio.setVisibility(View.INVISIBLE);
+        previewAudio.setVisibility(View.INVISIBLE);
+        rotateAnticlockwise.setVisibility(View.INVISIBLE);
+        rotateClockwise.setVisibility(View.INVISIBLE);
+
+        recordAudio.setOnLongClickListener(recordAuioStartListener);
+        recordAudio.setOnTouchListener(recordAudioStopListener);
+
+        finishPost.setOnClickListener(finishPostListener);
+
+        /*
         btn0.setText(localResources.getString(R.string.record));
         btn0.setOnClickListener(null);
         btn0.setOnLongClickListener(recordAuioStartListener);
@@ -376,11 +523,26 @@ public class PostEditActivity extends AppCompatActivity {
 
         btnNext.setText(localResources.getString(R.string.finish));
         btnNext.setOnClickListener(finishPostListener);
+        */
     }
 
     public void enterBubblePrepareStage() {
         bubbleReady = false;
 
+        discardAudio.setVisibility(View.VISIBLE);
+        finishAudio.setVisibility(View.VISIBLE);
+        previewAudio.setVisibility(View.VISIBLE);
+        rotateAnticlockwise.setVisibility(View.VISIBLE);
+        rotateClockwise.setVisibility(View.VISIBLE);
+
+        finishAudio.setOnClickListener(finishBubbleListener);
+        previewAudio.setOnClickListener(playAudioListener);
+        rotateAnticlockwise.setOnClickListener(rotateBubbleAnticlockwiseListener);
+        rotateClockwise.setOnClickListener(rotateBubbleClockwiseListener);
+
+        finishPost.setOnClickListener(null);
+
+        /*
         btn0.setText(localResources.getString(R.string.add_bubble_left));
         btn0.setOnLongClickListener(null);
         btn0.setOnTouchListener(null);
@@ -391,5 +553,6 @@ public class PostEditActivity extends AppCompatActivity {
 
         btnNext.setText(localResources.getString(R.string.finish_bubble));
         btnNext.setOnClickListener(finishBubbleListener);
+        */
     }
 }

@@ -9,6 +9,95 @@
     android:gravity="center_horizontal"
     tools:context="com.echodev.echoalpha.PostEditActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+        <ImageView
+            android:id="@+id/post_edit_cancel_post"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="7dp"
+            android:layout_alignParentStart="true" />
+        <ImageView
+            android:id="@+id/post_edit_finish_post"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="7dp"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/post_edit_preview_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/post_edit_preview_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+        <ImageView
+            android:id="@+id/post_edit_discard_audio"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="7dp"
+            android:layout_alignParentStart="true" />
+        <ImageView
+            android:id="@+id/post_edit_finish_audio"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="7dp"
+            android:layout_toEndOf="@+id/post_edit_discard_audio" />
+        <ImageView
+            android:id="@+id/post_edit_preview_audio"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+        <ImageView
+            android:id="@+id/post_edit_rotate_anticlockwise"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="7dp"
+            android:layout_toStartOf="@+id/post_edit_rotate_clockwise" />
+        <ImageView
+            android:id="@+id/post_edit_rotate_clockwise"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="7dp"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/post_edit_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:maxWidth="300dp"
+        android:inputType="text"
+        android:hint="@string/post_create_caption_hint" />
+
+    <ImageView
+        android:id="@+id/post_edit_record_audio"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="hold to record" />
+
+    <!--
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,15 +139,6 @@
             android:id="@+id/post_edit_caption" />
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/post_edit_preview_area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/post_edit_preview_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+    -->
 
 </LinearLayout>

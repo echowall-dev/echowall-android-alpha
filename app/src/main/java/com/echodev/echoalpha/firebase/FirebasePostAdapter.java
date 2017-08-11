@@ -128,7 +128,11 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
         // Set template info for the post
         holder.postUserName.setText(post.getCreatorName());
         holder.postLikeCount.setText(Long.toString(post.getLikeNumber()));
-        holder.postCaption.setText(post.getCaption());
+        if (post.getCaption() == null || post.getCaption().equals("")) {
+            holder.postCaption.setVisibility(View.GONE);
+        } else {
+            holder.postCaption.setText(post.getCaption());
+        }
 
         int secondIndex = post.getCreationDate().lastIndexOf(":");
         String secondStr = post.getCreationDate().substring(secondIndex);
