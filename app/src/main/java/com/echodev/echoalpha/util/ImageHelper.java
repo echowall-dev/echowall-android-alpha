@@ -120,4 +120,13 @@ public class ImageHelper {
     public static int convertPxToDp(int px, Context context) {
         return Math.round(px / context.getResources().getDisplayMetrics().density);
     }
+
+    public static double convertPxToRatio(int parentPx, int childPx) {
+        double rawRatio = (double) childPx / parentPx;
+        return (double) Math.round(rawRatio * 100) / 100;
+    }
+
+    public static int convertRatioToPx(int parentPx, double childRatio) {
+        return (int) Math.round(parentPx * childRatio);
+    }
 }
