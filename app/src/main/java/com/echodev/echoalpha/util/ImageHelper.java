@@ -18,13 +18,16 @@ import id.zelory.compressor.Compressor;
 
 public class ImageHelper {
 
-    public static float imageMaxPixel = 1080;
-    public static int imageQuality = 80;
+    public static int imageMaxPixel = 1080;
+    public static int imageQuality = 75;
 
     public static File createImageFile(File storageDir) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = timeStamp;
+
+        // File.createTempFile() automatically adds a random number at the end of the file name for making it unique
+        // Use new File() instead if don't want that random number or have custom unique naming scheme
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         return image;
@@ -45,7 +48,6 @@ public class ImageHelper {
         File originalImage = new File(photoPath);
         String photoName = Uri.parse(photoPath).getLastPathSegment();
         String storagePath = photoPath.replace(photoName, "");
-        float maxLength = imageMaxPixel;
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -54,16 +56,16 @@ public class ImageHelper {
         int photoWidth = bmOptions.outWidth;
         int photoHeight = bmOptions.outHeight;
         float photoScale = (float) photoWidth / photoHeight;
-        float targetWidth, targetHeight;
+        int targetWidth, targetHeight;
 
         // Calculate the target dimensions
-        if (photoWidth > maxLength || photoHeight > maxLength) {
+        if (photoWidth > imageMaxPixel || photoHeight > imageMaxPixel) {
             if (photoWidth > photoHeight) {
-                targetWidth = maxLength;
+                targetWidth = imageMaxPixel;
                 targetHeight = Math.round(targetWidth / photoScale);
             } else {
                 photoScale = 1 / photoScale;
-                targetHeight = maxLength;
+                targetHeight = imageMaxPixel;
                 targetWidth = Math.round(targetHeight / photoScale);
             }
         } else {
@@ -71,14 +73,17 @@ public class ImageHelper {
             targetHeight = photoHeight;
         }
 
-        File compressedImage = new Compressor.Builder(context)
-                .setMaxWidth(targetWidth)
-                .setMaxHeight(targetHeight)
-                .setQuality(imageQuality)
-                .setCompressFormat(Bitmap.CompressFormat.JPEG)
-                .setDestinationDirectoryPath(storagePath)
-                .build()
-                .compressToFile(originalImage);
+        // The default format and quality of Compressor are JPEG and 80 respectively
+        File compressedImage = null;
+        try {
+            compressedImage = new Compressor(context)
+                    .setMaxWidth(targetWidth)
+                    .setMaxHeight(targetHeight)
+                    .setDestinationDirectoryPath(storagePath)
+                    .compressToFile(originalImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Remove the original photo and rename the compressed photo to .jpg
         originalImage.delete();

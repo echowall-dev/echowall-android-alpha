@@ -194,7 +194,6 @@ public class PostCreateActivity extends AppCompatActivity {
                     // Load the photo into preview area
                     Glide.with(this)
                             .load(photoPath)
-                            .asBitmap()
                             .into(previewImage);
 
                     // Load button icons

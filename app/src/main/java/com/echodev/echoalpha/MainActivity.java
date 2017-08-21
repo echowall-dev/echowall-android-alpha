@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         // Load the cover image
         Glide.with(this)
                 .load(R.drawable.cover_lowres)
-                .asBitmap()
                 .into(coverImg);
 
         requestPermission();

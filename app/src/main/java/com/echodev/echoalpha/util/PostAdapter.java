@@ -82,7 +82,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         // Add the photo to the post
         Glide.with(context)
                 .load(post.getPhotoPath())
-                .asBitmap()
                 .into(holder.postImageView);
 
         // Add the speech bubbles at target position

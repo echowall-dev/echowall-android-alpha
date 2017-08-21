@@ -164,7 +164,6 @@ public class PostEditActivity extends AppCompatActivity {
         // Load the photo into preview area
         Glide.with(this)
                 .load(currentPost.getPhotoUrl())
-                .asBitmap()
                 .into(previewImg);
 
         // Load button icons

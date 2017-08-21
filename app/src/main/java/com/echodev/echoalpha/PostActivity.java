@@ -182,7 +182,6 @@ public class PostActivity extends AppCompatActivity {
                     // Load the photo into preview area
                     Glide.with(this)
                             .load(photoFilePath)
-                            .asBitmap()
                             .into(previewImg);
 
                     // Add the photo to the new Post object

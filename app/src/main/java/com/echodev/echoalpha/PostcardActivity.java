@@ -54,17 +54,14 @@ public class PostcardActivity extends AppCompatActivity {
         // Load the images
         Glide.with(this)
                 .load(currentPost.getPhotoUrl())
-                .asBitmap()
                 .into(postcardImg);
 
         Glide.with(this)
                 .load(R.drawable.postcard_template_empty)
-                .asBitmap()
                 .into(postcardMsgTemplate);
 
         Glide.with(this)
                 .load(R.drawable.qr_code_sample)
-                .asBitmap()
                 .into(postcardQRCode);
     }
 

@@ -141,28 +141,23 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
 
         Glide.with(context)
                 .load(R.drawable.ic_account_circle_grey_48px)
-                .asBitmap()
                 .into(holder.postUserPicture);
 
         Glide.with(context)
                 .load(R.drawable.ic_mail_outline_grey_48px)
-                .asBitmap()
                 .into(holder.postPostcard);
 
         Glide.with(context)
                 .load(R.drawable.ic_favorite_border_red_48px)
-                .asBitmap()
                 .into(holder.postLikeHeart);
 
         Glide.with(context)
                 .load(R.drawable.ic_album_blue_48px)
-                .asBitmap()
                 .into(holder.postEdit);
 
         // Add the photo to the post
         Glide.with(context)
                 .load(post.getPhotoUrl())
-                .asBitmap()
                 .into(holder.postImg);
 
         // Add the speech bubbles at target position
@@ -194,7 +189,6 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
             public void onClick(View v) {
                 Glide.with(context)
                         .load(R.drawable.ic_favorite_red_48px)
-                        .asBitmap()
                         .into(holder.postLikeHeart);
 
                 holder.postLikeCount.setText(Long.toString(post.getLikeNumber() + 1));
