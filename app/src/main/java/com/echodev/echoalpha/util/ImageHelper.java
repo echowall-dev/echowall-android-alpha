@@ -85,12 +85,7 @@ public class ImageHelper {
             e.printStackTrace();
         }
 
-        // Remove the original photo and rename the compressed photo to .jpg
-        originalImage.delete();
-        String compressedImagePath = compressedImage.getAbsolutePath().replace(".jpeg", ".jpg");
-        compressedImage.renameTo(new File(compressedImagePath));
-
-        return compressedImagePath;
+        return compressedImage.getAbsolutePath();
     }
 
     public static double getImageAspectRatio(String photoPath) {
