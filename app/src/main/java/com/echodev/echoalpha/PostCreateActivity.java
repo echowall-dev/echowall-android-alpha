@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.echodev.echoalpha.Resizer.Resizer;
 import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.firebase.FirebaseBubbleWrapper;
 import com.echodev.echoalpha.firebase.FirebasePost;
@@ -35,6 +36,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -183,7 +185,17 @@ public class PostCreateActivity extends AppCompatActivity {
                     newPost.setPhotoName(photoName);
 
                     // Compress the photo
-                    String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
+//                    String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
+                    File originalImage = new File(photoPath);
+                    File compressedImage = null;
+                    try {
+                        compressedImage = new Resizer(localContext)
+                                .setTargetLength(1080)
+                                .setDestinationDirectoryPath(originalImage.getParent())
+                                .resizeToFile(originalImage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     // Set the photo aspect ratio to the new post
                     newPost.setPhotoAspectRatio(ImageHelper.getImageAspectRatio(photoPath));
