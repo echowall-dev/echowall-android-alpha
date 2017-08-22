@@ -56,9 +56,10 @@ public class ImageHelper {
         int photoWidth = bmOptions.outWidth;
         int photoHeight = bmOptions.outHeight;
         float photoScale = (float) photoWidth / photoHeight;
-        int targetWidth, targetHeight;
 
         // Calculate the target dimensions
+        int targetWidth = photoWidth;
+        int targetHeight = photoHeight;
         if (photoWidth > imageMaxPixel || photoHeight > imageMaxPixel) {
             if (photoWidth > photoHeight) {
                 targetWidth = imageMaxPixel;
@@ -68,9 +69,6 @@ public class ImageHelper {
                 targetHeight = imageMaxPixel;
                 targetWidth = Math.round(targetHeight / photoScale);
             }
-        } else {
-            targetWidth = photoWidth;
-            targetHeight = photoHeight;
         }
 
         // The default format and quality of Compressor are JPEG and 80 respectively
