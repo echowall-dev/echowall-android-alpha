@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.echodev.echoalpha.Resizer.Resizer;
 import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.firebase.FirebaseBubbleWrapper;
 import com.echodev.echoalpha.firebase.FirebasePost;
@@ -184,8 +185,14 @@ public class PostCreateActivity extends AppCompatActivity {
                     newPost.setPhotoName(photoName);
 
                     // Compress the photo
+//                    String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
+                    File originalImage = new File(photoPath);
+                    File compressedImage = null;
                     try {
-                        String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
+                        compressedImage = new Resizer(localContext)
+                                .setTargetLength(1080)
+                                .setDestinationDirectoryPath(originalImage.getParent())
+                                .resizeToFile(originalImage);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
