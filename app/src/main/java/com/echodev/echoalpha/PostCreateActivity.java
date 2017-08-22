@@ -189,10 +189,7 @@ public class PostCreateActivity extends AppCompatActivity {
                     File originalImage = new File(photoPath);
                     File compressedImage = null;
                     try {
-                        compressedImage = new Resizer(localContext)
-                                .setTargetLength(1080)
-                                .setDestinationDirectoryPath(originalImage.getParent())
-                                .resizeToFile(originalImage);
+                        compressedImage = ImageHelper.imageResize(originalImage, localContext);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

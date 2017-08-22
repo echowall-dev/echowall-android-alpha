@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import com.echodev.echoalpha.R;
+import com.echodev.echoalpha.Resizer.Resizer;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,6 +81,17 @@ public class ImageHelper {
 
 //        return compressedImage.getAbsolutePath();
         return originalImage.getAbsolutePath();
+    }
+
+    public static File imageResize(File imageFile, Context context) throws IOException {
+        String storagePath = imageFile.getParentFile().getParent();
+
+        File resizedImage = new Resizer(context)
+                .setTargetLength(imageMaxPixel)
+                .setDestinationDirectoryPath(storagePath)
+                .resizeToFile(imageFile);
+
+        return resizedImage;
     }
 
     public static double getImageAspectRatio(String photoPath) {
