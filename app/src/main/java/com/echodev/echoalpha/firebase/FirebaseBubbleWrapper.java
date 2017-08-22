@@ -271,7 +271,6 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 
         Glide.with(context)
                 .load(bubbleImagePath)
-                .fitCenter()
                 .into(bubbleImageView);
     }
 

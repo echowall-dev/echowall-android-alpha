@@ -39,15 +39,15 @@ public class ImageHelper {
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        imagePath += "/" + appName + "/picture/" + userID + "_" + timeStamp + imageFormat;
+        imagePath += File.separator + appName + "/picture/" + userID + "_" + timeStamp + imageFormat;
 
         return imagePath;
     }
 
-    public static String imageCompress(String photoPath, Context context) {
+    public static String imageCompress(String photoPath, Context context) throws IOException {
         File originalImage = new File(photoPath);
-        String photoName = Uri.parse(photoPath).getLastPathSegment();
-        String storagePath = photoPath.replace(photoName, "");
+        String photoName = originalImage.getName();
+        String storagePath = originalImage.getParentFile().getParent();
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -74,18 +74,14 @@ public class ImageHelper {
         }
 
         // The default format and quality of Compressor are JPEG and 80 respectively
-        File compressedImage = null;
-        try {
-            compressedImage = new Compressor(context)
-                    .setMaxWidth(targetWidth)
-                    .setMaxHeight(targetHeight)
-                    .setDestinationDirectoryPath(storagePath)
-                    .compressToFile(originalImage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File compressedImage = new Compressor(context)
+                .setMaxWidth(1080)
+                .setMaxHeight(810)
+                .setDestinationDirectoryPath(storagePath)
+                .compressToFile(originalImage);
 
-        return compressedImage.getAbsolutePath();
+//        return compressedImage.getAbsolutePath();
+        return originalImage.getAbsolutePath();
     }
 
     public static double getImageAspectRatio(String photoPath) {

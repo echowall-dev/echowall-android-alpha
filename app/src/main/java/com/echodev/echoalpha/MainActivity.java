@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
     public static boolean createAppDir() {
         boolean createSuccess = true;
 
-        File appDirPicture = new File(Environment.getExternalStorageDirectory() + "/" + appName + "/picture");
-        File appDirAudio = new File(Environment.getExternalStorageDirectory() + "/" + appName + "/audio");
+        File appDirPicture = new File(Environment.getExternalStorageDirectory() + File.separator + appName + "/picture");
+        File appDirAudio = new File(Environment.getExternalStorageDirectory() + File.separator + appName + "/audio");
 
         // Use mkdirs() here instead of mkdir() for creating parent directories.
         if (!appDirPicture.exists()) {

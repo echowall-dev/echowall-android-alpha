@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -183,7 +184,11 @@ public class PostCreateActivity extends AppCompatActivity {
                     newPost.setPhotoName(photoName);
 
                     // Compress the photo
-                    String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
+                    try {
+                        String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     // Set the photo aspect ratio to the new post
                     newPost.setPhotoAspectRatio(ImageHelper.getImageAspectRatio(photoPath));
