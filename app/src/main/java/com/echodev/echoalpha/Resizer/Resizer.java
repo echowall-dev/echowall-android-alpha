@@ -21,7 +21,7 @@ public class Resizer {
     private String destinationDirectoryPath;
 
     public Resizer(Context context) {
-        targetLength = 640;
+        targetLength = 1080;
         quality = 80;
         compressFormat = Bitmap.CompressFormat.JPEG;
         destinationDirectoryPath = context.getCacheDir().getPath() + File.separator + "images";
@@ -70,24 +70,28 @@ public class Resizer {
     }
 
     public Bitmap resizeToBitmap(File imageFile) throws IOException {
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bmOptions);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
 
         // Get the dimensions of the original bitmap
-        int originalWidth = bmOptions.outWidth;
-        int originalHeight = bmOptions.outHeight;
+        int originalWidth = options.outWidth;
+        int originalHeight = options.outHeight;
         float aspectRatio = (float) originalWidth / originalHeight;
 
         // Calculate the target dimensions
-        int targetWidth, targetHeight;
+        int targetWidth = originalWidth;
+        int targetHeight = originalHeight;
 
-        if (originalWidth > originalHeight) {
-            targetWidth = targetLength;
-            targetHeight = Math.round(targetWidth / aspectRatio);
-        } else {
-            aspectRatio = 1 / aspectRatio;
-            targetHeight = targetLength;
-            targetWidth = Math.round(targetHeight / aspectRatio);
+        if (originalWidth > targetLength || originalHeight > targetLength) {
+            if (originalWidth > originalHeight) {
+                targetWidth = targetLength;
+                targetHeight = Math.round(targetWidth / aspectRatio);
+            } else {
+                aspectRatio = 1 / aspectRatio;
+                targetHeight = targetLength;
+                targetWidth = Math.round(targetHeight / aspectRatio);
+            }
         }
 
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
