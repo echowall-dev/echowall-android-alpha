@@ -3,9 +3,6 @@ package com.echodev.echoalpha.firebase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.echodev.echoalpha.util.PostClass;
-import com.echodev.echoalpha.util.SpeechBubble;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,26 +35,6 @@ public class FirebasePost implements Parcelable {
         this.likeNumber = 0;
         this.commentNumber = 0;
         this.shareNumber = 0;
-    }
-
-    public FirebasePost(PostClass post) {
-        this.postID = post.getPostIDString();
-        this.creatorID = post.getUserID();
-        this.creatorName = post.getUserName();
-        this.creatorEmail = post.getUserEmail();
-        this.photoUrl = post.getPhotoUriString();
-        this.photoName = post.getPhotoUri().getLastPathSegment().replace("picture/", "");
-        this.caption = post.getCaption();
-        this.creationDate = post.getCreationDateString();
-        this.collaboratorIDList = new ArrayList<String>();
-        this.bubbleList = new ArrayList<FirebaseBubble>();
-        this.likeNumber = post.getLikeNumber();
-        this.commentNumber = post.getLikeNumber();
-        this.shareNumber = post.getShareNumber();
-
-        for (SpeechBubble speechBubble : post.getSpeechBubbleList()) {
-            bubbleList.add(new FirebaseBubble(speechBubble));
-        }
     }
 
     // Getters

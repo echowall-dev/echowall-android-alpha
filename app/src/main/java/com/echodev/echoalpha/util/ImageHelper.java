@@ -74,13 +74,12 @@ public class ImageHelper {
 
         // The default format and quality of Compressor are JPEG and 80 respectively
         File compressedImage = new Compressor(context)
-                .setMaxWidth(1080)
-                .setMaxHeight(810)
+                .setMaxWidth(targetWidth)
+                .setMaxHeight(targetHeight)
                 .setDestinationDirectoryPath(storagePath)
                 .compressToFile(originalImage);
 
-//        return compressedImage.getAbsolutePath();
-        return originalImage.getAbsolutePath();
+        return compressedImage.getAbsolutePath();
     }
 
     public static File imageResize(File imageFile, Context context) throws IOException {

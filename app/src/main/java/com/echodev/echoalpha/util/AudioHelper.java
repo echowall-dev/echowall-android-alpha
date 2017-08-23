@@ -23,11 +23,13 @@ public class AudioHelper {
 
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-//        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+//        mRecorder.setAudioChannels(2);
+        mRecorder.setAudioSamplingRate(44100);
+        mRecorder.setAudioEncodingBitRate(64000);
         mRecorder.setOutputFile(audioPath);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-//        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
         try {
             mRecorder.prepare();
         } catch (IOException e) {

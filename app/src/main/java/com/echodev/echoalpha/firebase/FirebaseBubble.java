@@ -3,8 +3,6 @@ package com.echodev.echoalpha.firebase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.echodev.echoalpha.util.SpeechBubble;
-
 import java.util.UUID;
 
 public class FirebaseBubble implements Parcelable {
@@ -32,20 +30,6 @@ public class FirebaseBubble implements Parcelable {
         this.x = 0;
         this.y = 0;
         this.playNumber = 0;
-    }
-
-    public FirebaseBubble(SpeechBubble speechBubble) {
-        this.bubbleID = speechBubble.getBubbleIDString();
-        this.postID = speechBubble.getPostID();
-        this.creatorID = speechBubble.getUserID();
-        this.audioUrl = speechBubble.getAudioUriString();
-        this.audioName = speechBubble.getAudioUri().getLastPathSegment().replace("audio/", "");
-        this.type = (speechBubble.getType() == SpeechBubble.SPEECH_BUBBLE_TYPE_LEFT) ? "L" : "R";
-        this.creationDate = speechBubble.getCreationDateString();
-        this.platform = "Android";
-        this.x = speechBubble.getX();
-        this.y = speechBubble.getY();
-        this.playNumber = speechBubble.getPlayNumber();
     }
 
     // Getters

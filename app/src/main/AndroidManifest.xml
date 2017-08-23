@@ -32,9 +32,6 @@
             android:name=".WallActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".PostActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".PostCreateActivity"
             android:screenOrientation="portrait" />
         <activity

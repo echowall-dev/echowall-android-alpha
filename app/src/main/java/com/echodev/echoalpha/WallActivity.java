@@ -17,8 +17,6 @@ import android.view.View;
 import com.echodev.echoalpha.firebase.FirebasePost;
 import com.echodev.echoalpha.firebase.FirebasePostAdapter;
 import com.echodev.echoalpha.firebase.FirebaseUserClass;
-import com.echodev.echoalpha.util.PostAdapter;
-import com.echodev.echoalpha.util.PostClass;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,11 +44,9 @@ public class WallActivity extends AppCompatActivity {
     private static final String LOG_TAG = "Echo_Alpha_Wall";
 
     // Request code for creating new post
-    public static final int REQUEST_CODE_POST = 110;
     public static final int REQUEST_CODE_POST_CREATE = 111;
     public static final int REQUEST_CODE_POST_EDIT = 112;
     public static final int REQUEST_CODE_POSTCARD_CREATE = 113;
-    private int activityRequestCode;
 
     // Bind views by ButterKnife
     @BindView(android.R.id.content)
@@ -77,7 +73,6 @@ public class WallActivity extends AppCompatActivity {
     private FirebaseStorage mStorage;
     private StorageReference mStorageRef;
 
-    private PostAdapter postAdapter;
     private FirebasePostAdapter firebasePostAdapter;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -106,8 +101,6 @@ public class WallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall);
         ButterKnife.bind(this);
-
-        activityRequestCode = REQUEST_CODE_POST_CREATE;
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -162,13 +155,8 @@ public class WallActivity extends AppCompatActivity {
         postListArea.setLayoutManager(linearLayoutManager);
 
         // specify an adapter
-        if (activityRequestCode == REQUEST_CODE_POST) {
-            postAdapter = new PostAdapter(this.getResources(), this.getApplicationContext());
-            postListArea.setAdapter(postAdapter);
-        } else {
-            firebasePostAdapter = new FirebasePostAdapter(this.getResources(), this.getApplicationContext());
-            postListArea.setAdapter(firebasePostAdapter);
-        }
+        firebasePostAdapter = new FirebasePostAdapter(this.getResources(), this.getApplicationContext());
+        postListArea.setAdapter(firebasePostAdapter);
 
         ValueEventListener fetchPostListener = new ValueEventListener() {
             @Override
@@ -373,38 +361,14 @@ public class WallActivity extends AppCompatActivity {
         Intent intent = new Intent();
 //        intent.putExtras(bundle);
         intent.putExtra("currentUser", currentUser);
+        intent.setClass(this, PostCreateActivity.class);
 
-        if (activityRequestCode == REQUEST_CODE_POST) {
-            intent.setClass(this, PostActivity.class);
-        } else if (activityRequestCode == REQUEST_CODE_POST_CREATE) {
-            intent.setClass(this, PostCreateActivity.class);
-        }
-
-        startActivityForResult(intent, activityRequestCode);
+        startActivityForResult(intent, REQUEST_CODE_POST_CREATE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_POST:
-                if (resultCode == RESULT_OK) {
-                    PostClass newPost = (PostClass) data.getParcelableExtra("newPost");
-                    newPost.setWidth(postListArea.getWidth());
-
-                    /*
-                    // Show files path info on the page
-                    String appName = this.getResources().getString(R.string.app_name);
-                    String appPathInfo = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/";
-                    String filePathInfo = "file location:\n" + appPathInfo;
-                    IDTextView.setText(filePathInfo);
-                    */
-
-                    // Add the new post into the dataset of the RecyclerView Adapter
-                    postAdapter.addPost(newPost);
-                    postAdapter.notifyItemInserted(postAdapter.getPostList().size() - 1);
-                    postListArea.scrollToPosition(postAdapter.getPostList().size() - 1);
-                }
-                break;
             case REQUEST_CODE_POST_CREATE:
                 if (resultCode == RESULT_OK) {
                     /*

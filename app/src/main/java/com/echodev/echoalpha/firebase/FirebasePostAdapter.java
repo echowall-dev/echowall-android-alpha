@@ -16,12 +16,10 @@ import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.PostEditActivity;
 import com.echodev.echoalpha.PostcardActivity;
 import com.echodev.echoalpha.R;
+import com.echodev.echoalpha.WallActivity;
 import com.echodev.echoalpha.util.ImageHelper;
 
 import java.util.ArrayList;
-
-import static com.echodev.echoalpha.WallActivity.REQUEST_CODE_POSTCARD_CREATE;
-import static com.echodev.echoalpha.WallActivity.REQUEST_CODE_POST_EDIT;
 
 public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapter.ViewHolder> {
 
@@ -201,7 +199,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 Intent intent = new Intent(context, PostEditActivity.class);
                 intent.putExtra("currentPost", post);
 
-                ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POST_EDIT);
+                ((Activity) v.getContext()).startActivityForResult(intent, WallActivity.REQUEST_CODE_POST_EDIT);
             }
         });
 
@@ -211,7 +209,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 Intent intent = new Intent(context, PostcardActivity.class);
                 intent.putExtra("currentPost", post);
 
-                ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_POSTCARD_CREATE);
+                ((Activity) v.getContext()).startActivityForResult(intent, WallActivity.REQUEST_CODE_POSTCARD_CREATE);
             }
         });
 

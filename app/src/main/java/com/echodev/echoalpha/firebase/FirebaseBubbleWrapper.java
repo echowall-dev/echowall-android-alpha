@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.echodev.echoalpha.R;
 import com.echodev.echoalpha.util.AudioHelper;
 import com.echodev.echoalpha.util.ImageHelper;
-import com.echodev.echoalpha.util.SpeechBubble;
 
 import java.io.IOException;
 
@@ -43,10 +42,6 @@ public class FirebaseBubbleWrapper implements View.OnTouchListener, View.OnClick
 
     public FirebaseBubbleWrapper(String postID, String creatorID) {
         this.bubble = new FirebaseBubble(postID, creatorID);
-    }
-
-    public FirebaseBubbleWrapper(SpeechBubble speechBubble) {
-        this.bubble = new FirebaseBubble(speechBubble);
     }
 
     public FirebaseBubbleWrapper(FirebaseBubble bubble) {
