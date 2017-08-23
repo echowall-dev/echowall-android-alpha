@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/navigation_create"
-        android:icon="@drawable/ic_add_circle_echo_48px"
+        android:icon="@drawable/ic_add_circle_red_48px"
         android:title="Create" />
 
     <item

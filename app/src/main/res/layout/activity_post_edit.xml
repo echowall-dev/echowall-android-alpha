@@ -14,16 +14,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp">
-        <ImageView
-            android:id="@+id/post_edit_cancel_post"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+        <TextView
+            android:id="@+id/post_edit_btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cancel"
+            android:textSize="15dp"
             android:layout_marginStart="7dp"
             android:layout_alignParentStart="true" />
-        <ImageView
-            android:id="@+id/post_edit_finish_post"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+        <TextView
+            android:id="@+id/post_edit_btn_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="finish"
+            android:textSize="15dp"
             android:layout_marginEnd="7dp"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
@@ -89,56 +93,12 @@
         android:id="@+id/post_edit_record_audio"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="hold to record" />
-
-    <!--
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/post_edit_btn_0"
-                android:text="btn0" />
-            <Button
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/post_edit_btn_1"
-                android:text="btn1" />
-        </LinearLayout>
-
-        <Button
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/post_edit_btn_next"
-            android:text="next" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/post_edit_caption" />
-
-    </LinearLayout>
-    -->
 
 </LinearLayout>

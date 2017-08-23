@@ -2,9 +2,7 @@ package com.echodev.echoalpha.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Environment;
 
 import com.echodev.echoalpha.R;
@@ -14,8 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import id.zelory.compressor.Compressor;
 
 public class ImageHelper {
 
@@ -45,43 +41,6 @@ public class ImageHelper {
         return imagePath;
     }
 
-    public static String imageCompress(String photoPath, Context context) throws IOException {
-        File originalImage = new File(photoPath);
-        String photoName = originalImage.getName();
-        String storagePath = originalImage.getParentFile().getParent();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(photoPath, bmOptions);
-        int photoWidth = bmOptions.outWidth;
-        int photoHeight = bmOptions.outHeight;
-        float photoScale = (float) photoWidth / photoHeight;
-
-        // Calculate the target dimensions
-        int targetWidth = photoWidth;
-        int targetHeight = photoHeight;
-        if (photoWidth > imageMaxPixel || photoHeight > imageMaxPixel) {
-            if (photoWidth > photoHeight) {
-                targetWidth = imageMaxPixel;
-                targetHeight = Math.round(targetWidth / photoScale);
-            } else {
-                photoScale = 1 / photoScale;
-                targetHeight = imageMaxPixel;
-                targetWidth = Math.round(targetHeight / photoScale);
-            }
-        }
-
-        // The default format and quality of Compressor are JPEG and 80 respectively
-        File compressedImage = new Compressor(context)
-                .setMaxWidth(targetWidth)
-                .setMaxHeight(targetHeight)
-                .setDestinationDirectoryPath(storagePath)
-                .compressToFile(originalImage);
-
-        return compressedImage.getAbsolutePath();
-    }
-
     public static File imageResize(File imageFile, Context context) throws IOException {
         String storagePath = imageFile.getParentFile().getParent();
 
@@ -97,6 +56,7 @@ public class ImageHelper {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(photoPath, bmOptions);
+
         int photoWidth = bmOptions.outWidth;
         int photoHeight = bmOptions.outHeight;
         double photoAspectRatio = (double) photoWidth / photoHeight;

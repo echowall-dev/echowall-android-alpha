@@ -11,13 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.echodev.echoalpha.Resizer.Resizer;
 import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.firebase.FirebaseBubbleWrapper;
 import com.echodev.echoalpha.firebase.FirebasePost;
@@ -67,11 +66,11 @@ public class PostCreateActivity extends AppCompatActivity {
     Button btnNext;
     */
 
-    @BindView(R.id.post_create_cancel_post)
-    ImageView cancelPost;
+    @BindView(R.id.post_create_btn_cancel)
+    TextView cancelPost;
 
-    @BindView(R.id.post_create_finish_post)
-    ImageView finishPost;
+    @BindView(R.id.post_create_btn_finish)
+    TextView finishPost;
 
     @BindView(R.id.post_create_discard_audio)
     ImageView discardAudio;
@@ -187,9 +186,10 @@ public class PostCreateActivity extends AppCompatActivity {
                     // Compress the photo
 //                    String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
                     File originalImage = new File(photoPath);
-                    File compressedImage = null;
+                    File compressedImage;
                     try {
                         compressedImage = ImageHelper.imageResize(originalImage, localContext);
+                        newPost.setPhotoUrl(compressedImage.getAbsolutePath());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -207,35 +207,27 @@ public class PostCreateActivity extends AppCompatActivity {
 
                     // Load button icons
                     Glide.with(this)
-                            .load(R.drawable.icons8_close_window_48)
-                            .into(cancelPost);
-
-                    Glide.with(this)
-                            .load(R.drawable.icons8_checked_checkbox_48)
-                            .into(finishPost);
-
-                    Glide.with(this)
-                            .load(R.drawable.icons8_cancel_64)
+                            .load(R.drawable.ic_cancel_grey_48px)
                             .into(discardAudio);
 
                     Glide.with(this)
-                            .load(R.drawable.icons8_checked_48)
+                            .load(R.drawable.ic_check_circle_grey_48px)
                             .into(finishAudio);
 
                     Glide.with(this)
-                            .load(R.drawable.icons8_circled_play_48)
+                            .load(R.drawable.ic_play_circle_filled_grey_48px)
                             .into(previewAudio);
 
                     Glide.with(this)
-                            .load(R.drawable.icons8_rotate_anticlockwise_48)
+                            .load(R.drawable.ic_refresh_reflect_grey_48px)
                             .into(rotateAnticlockwise);
 
                     Glide.with(this)
-                            .load(R.drawable.icons8_rotate_clockwise_48)
+                            .load(R.drawable.ic_refresh_grey_48px)
                             .into(rotateClockwise);
 
                     Glide.with(this)
-                            .load(R.drawable.ic_album_blue_48px)
+                            .load(R.drawable.ic_mic_blue_48px)
                             .into(recordAudio);
 
                     enterAudioPrepareStage();
@@ -559,19 +551,6 @@ public class PostCreateActivity extends AppCompatActivity {
         recordAudio.setOnTouchListener(recordAudioStopListener);
 
         finishPost.setOnClickListener(finishPostListener);
-
-        /*
-        btn0.setText(localResources.getString(R.string.record));
-        btn0.setOnClickListener(null);
-        btn0.setOnLongClickListener(recordAuioStartListener);
-        btn0.setOnTouchListener(recordAudioStopListener);
-
-        btn1.setText(localResources.getString(R.string.play));
-        btn1.setOnClickListener(playAudioListener);
-
-        btnNext.setText(localResources.getString(R.string.finish));
-        btnNext.setOnClickListener(finishPostListener);
-        */
     }
 
     public void enterBubblePrepareStage() {
@@ -589,18 +568,5 @@ public class PostCreateActivity extends AppCompatActivity {
         rotateClockwise.setOnClickListener(rotateBubbleClockwiseListener);
 
         finishPost.setOnClickListener(null);
-
-        /*
-        btn0.setText(localResources.getString(R.string.add_bubble_left));
-        btn0.setOnLongClickListener(null);
-        btn0.setOnTouchListener(null);
-        btn0.setOnClickListener(addBubbleImageListener);
-
-        btn1.setText(localResources.getString(R.string.add_bubble_right));
-        btn1.setOnClickListener(addBubbleImageListener);
-
-        btnNext.setText(localResources.getString(R.string.finish_bubble));
-        btnNext.setOnClickListener(finishBubbleListener);
-        */
     }
 }

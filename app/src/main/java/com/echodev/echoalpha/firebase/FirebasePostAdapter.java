@@ -150,7 +150,7 @@ public class FirebasePostAdapter extends RecyclerView.Adapter<FirebasePostAdapte
                 .into(holder.postLikeHeart);
 
         Glide.with(context)
-                .load(R.drawable.ic_album_blue_48px)
+                .load(R.drawable.ic_mic_grey_48px)
                 .into(holder.postEdit);
 
         // Add the photo to the post

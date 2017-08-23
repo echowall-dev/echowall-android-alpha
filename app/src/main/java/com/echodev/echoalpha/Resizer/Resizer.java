@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import io.reactivex.Flowable;
+//import io.reactivex.Flowable;
 
 /**
  * Created by K.K. Ho on 22/8/2017.
@@ -97,6 +97,7 @@ public class Resizer {
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
     }
 
+    /*
     public Flowable<File> resizeToFileAsFlowable(final File imageFile) {
         return Flowable.defer(new Callable<Flowable<File>>() {
             @Override
@@ -122,4 +123,5 @@ public class Resizer {
             }
         });
     }
+    */
 }
