@@ -51,8 +51,8 @@ public class AudioHelper {
             mRecorder.reset();
             mRecorder.release();
             mRecorder = null;
-            isRecording = false;
 
+            isRecording = false;
             stopSuccess = true;
         }
 
