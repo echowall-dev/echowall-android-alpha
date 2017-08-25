@@ -19,7 +19,7 @@ public class AudioHelper {
     private static boolean isRecording = false;
 
     public static boolean startRecording(String audioPath) {
-        boolean startSuccess;
+        boolean startSuccess = false;
 
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -32,14 +32,13 @@ public class AudioHelper {
 
         try {
             mRecorder.prepare();
+            startSuccess = true;
         } catch (IOException e) {
-            startSuccess = false;
             e.printStackTrace();
         }
         mRecorder.start();
 
         isRecording = true;
-        startSuccess = true;
 
         return startSuccess;
     }
@@ -52,8 +51,8 @@ public class AudioHelper {
             mRecorder.reset();
             mRecorder.release();
             mRecorder = null;
-            isRecording = false;
 
+            isRecording = false;
             stopSuccess = true;
         }
 
