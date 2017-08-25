@@ -19,7 +19,7 @@ public class AudioHelper {
     private static boolean isRecording = false;
 
     public static boolean startRecording(String audioPath) {
-        boolean startSuccess;
+        boolean startSuccess = false;
 
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -32,14 +32,13 @@ public class AudioHelper {
 
         try {
             mRecorder.prepare();
+            startSuccess = true;
         } catch (IOException e) {
-            startSuccess = false;
             e.printStackTrace();
         }
         mRecorder.start();
 
         isRecording = true;
-        startSuccess = true;
 
         return startSuccess;
     }
@@ -87,15 +86,12 @@ public class AudioHelper {
         mPlayer.start();
     }
 
-    public static String createAudioFile(Resources resources, String userID) {
-        String appName = resources.getString(R.string.app_name);
-        String audioFormat = resources.getString(R.string.audio_format);
-//        String audioFormat = ".m4a";
-
+    public static File createAudioFile(String userUuid) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String audioFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        audioFilePath += "/" + appName + "/audio/" + userID + "_" + timeStamp + audioFormat;
+        String audioName = userUuid+ "_" + timeStamp + ".m4a";
+        String audioPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        audioPath += File.separator + "Echowall" + File.separator + "audios" + File.separator + audioName;
 
-        return audioFilePath;
+        return new File(audioPath);
     }
 }

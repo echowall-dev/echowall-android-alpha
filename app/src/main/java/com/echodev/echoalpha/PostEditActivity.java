@@ -236,7 +236,7 @@ public class PostEditActivity extends AppCompatActivity {
             if (bubbleWrapper == null) {
                 bubbleWrapper = new FirebaseBubbleWrapper(currentPost.getPostID(), currentUser.getUserID());
                 bubbleWrapper.setContext(localContext);
-                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(localResources, currentUser.getUserID()));
+                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(currentUser.getUuid()).getAbsolutePath());
             }
 
             boolean startSuccess = AudioHelper.startRecording(bubbleWrapper.getAudioUrl());

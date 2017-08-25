@@ -10,7 +10,7 @@ import java.util.UUID;
 public class FirebasePost implements Parcelable {
 
     // Instance variables
-    private String postID, creatorID, creatorName, creatorEmail, photoUrl, photoName, caption, creationDate;
+    private String postID, creatorID, creatorName, creatorEmail, creatorUuid, photoUrl, photoName, caption, creationDate;
     private double photoAspectRatio;
     private List<String> collaboratorIDList;
     private List<FirebaseBubble> bubbleList;
@@ -26,6 +26,7 @@ public class FirebasePost implements Parcelable {
         this.creatorID = user.getUserID();
         this.creatorName = user.getUserName();
         this.creatorEmail = user.getUserEmail();
+        this.creatorUuid = user.getUuid();
         this.photoUrl = "";
         this.photoName = "";
         this.caption = "";
@@ -52,6 +53,10 @@ public class FirebasePost implements Parcelable {
 
     public String getCreatorEmail() {
         return creatorEmail;
+    }
+
+    public String getCreatorUuid() {
+        return creatorUuid;
     }
 
     public String getPhotoUrl() {
@@ -109,6 +114,10 @@ public class FirebasePost implements Parcelable {
 
     public void setCreatorEmail(String creatorEmail) {
         this.creatorEmail = creatorEmail;
+    }
+
+    public void setCreatorUuid(String creatorUuid) {
+        this.creatorUuid = creatorUuid;
     }
 
     public void setPhotoUrl(String photoUrl) {

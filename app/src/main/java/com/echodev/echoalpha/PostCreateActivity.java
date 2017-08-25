@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -156,8 +157,11 @@ public class PostCreateActivity extends AppCompatActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            newPost.setPhotoUrl(ImageHelper.createImageFile(localResources, newPost.getCreatorID()));
-            Uri photoUri = Uri.fromFile(new File(newPost.getPhotoUrl()));
+            File photoFile = ImageHelper.createImageFile(newPost.getCreatorUuid());
+//            Uri photoUri = Uri.fromFile(photoFile);
+            Uri photoUri = FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".fileprovider", photoFile);
+
+            newPost.setPhotoUrl(photoFile.getAbsolutePath());
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
@@ -255,7 +259,7 @@ public class PostCreateActivity extends AppCompatActivity {
             if (bubbleWrapper == null) {
                 bubbleWrapper = new FirebaseBubbleWrapper(newPost.getPostID(), currentUser.getUserID());
                 bubbleWrapper.setContext(localContext);
-                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(localResources, currentUser.getUserID()));
+                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(currentUser.getUuid()).getAbsolutePath());
             }
 
             boolean startSuccess = AudioHelper.startRecording(bubbleWrapper.getAudioUrl());

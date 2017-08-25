@@ -18,31 +18,18 @@ public class ImageHelper {
     public static int imageMaxPixel = 1080;
     public static int imageQuality = 75;
 
-    public static File createImageFile(File storageDir) throws IOException {
-        // Create an image file name
+    public static File createImageFile(String userUuid) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = timeStamp;
-
-        // File.createTempFile() automatically adds a random number at the end of the file name for making it unique
-        // Use new File() instead if don't want that random number or have custom unique naming scheme
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-
-        return image;
-    }
-
-    public static String createImageFile(Resources resources, String userID) {
-        String appName = resources.getString(R.string.app_name);
-        String imageFormat = resources.getString(R.string.image_format);
-
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = userUuid+ "_" + timeStamp + ".jpg";
         String imagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        imagePath += File.separator + appName + "/picture/" + userID + "_" + timeStamp + imageFormat;
+        imagePath += File.separator + "Echowall" + File.separator + "pictures" + File.separator + imageName;
 
-        return imagePath;
+        return new File(imagePath);
     }
 
     public static File imageResize(File imageFile, Context context) throws IOException {
-        String storagePath = imageFile.getParentFile().getParent();
+        String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        storagePath += File.separator + "Echowall" + File.separator + "cache";
 
         File resizedImage = new Resizer(context)
                 .setTargetLength(imageMaxPixel)

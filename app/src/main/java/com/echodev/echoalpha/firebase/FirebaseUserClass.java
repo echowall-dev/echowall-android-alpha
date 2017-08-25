@@ -5,10 +5,12 @@ import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.UUID;
+
 public class FirebaseUserClass implements Parcelable {
 
     // Instance variables
-    private String userID, userEmail, userName, proPicUrl, description;
+    private String userID, userEmail, userName, uuid, proPicUrl, description;
     private long friendNumber, followerNumber;
 
     // Constructors
@@ -18,6 +20,7 @@ public class FirebaseUserClass implements Parcelable {
 
     public FirebaseUserClass(String userID) {
         this.userID = userID;
+        this.uuid = UUID.randomUUID().toString();
         this.userEmail = "";
         this.userName = "";
         this.proPicUrl = "";
@@ -29,6 +32,7 @@ public class FirebaseUserClass implements Parcelable {
     public FirebaseUserClass(String userID, String userEmail) {
         this.userID = userID;
         this.userEmail = userEmail;
+        this.uuid = UUID.randomUUID().toString();
         this.userName = "";
         this.proPicUrl = "";
         this.description = "";
@@ -40,6 +44,7 @@ public class FirebaseUserClass implements Parcelable {
         this.userID = userID;
         this.userEmail = userEmail;
         this.userName = userName;
+        this.uuid = UUID.randomUUID().toString();
         this.proPicUrl = "";
         this.description = "";
         this.friendNumber = 0;
@@ -60,6 +65,7 @@ public class FirebaseUserClass implements Parcelable {
             this.proPicUrl = "";
         }
 
+        this.uuid = UUID.randomUUID().toString();
         this.description = "";
         this.friendNumber = 0;
         this.followerNumber = 0;
@@ -76,6 +82,10 @@ public class FirebaseUserClass implements Parcelable {
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public String getProPicUrl() {
@@ -107,6 +117,10 @@ public class FirebaseUserClass implements Parcelable {
         this.userName = userName;
     }
 
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     public void setProPicUrl(String proPicUrl) {
         this.proPicUrl = proPicUrl;
     }
@@ -126,6 +140,7 @@ public class FirebaseUserClass implements Parcelable {
     // Parcelable implementation
     protected FirebaseUserClass(Parcel in) {
         userID = in.readString();
+        uuid = in.readString();
         userEmail = in.readString();
         userName = in.readString();
         proPicUrl = in.readString();
@@ -154,6 +169,7 @@ public class FirebaseUserClass implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(userID);
+        dest.writeString(uuid);
         dest.writeString(userEmail);
         dest.writeString(userName);
         dest.writeString(proPicUrl);
