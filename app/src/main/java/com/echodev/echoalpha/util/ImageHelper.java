@@ -16,7 +16,7 @@ import java.util.Date;
 public class ImageHelper {
 
     public static int imageMaxPixel = 1080;
-    public static int imageQuality = 75;
+    public static int imageQuality = 80;
 
     public static File createImageFile(String userUuid) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -33,6 +33,7 @@ public class ImageHelper {
 
         File resizedImage = new Resizer(context)
                 .setTargetLength(imageMaxPixel)
+                .setQuality(imageQuality)
                 .setDestinationDirectoryPath(storagePath)
                 .resizeToFile(imageFile);
 

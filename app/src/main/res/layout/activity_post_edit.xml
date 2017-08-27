@@ -18,7 +18,7 @@
             android:id="@+id/post_edit_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="cancel"
+            android:text="@string/cancel"
             android:textSize="15sp"
             android:layout_marginStart="7dp"
             android:layout_alignParentStart="true" />
@@ -26,7 +26,7 @@
             android:id="@+id/post_edit_btn_finish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="finish"
+            android:text="@string/finish"
             android:textSize="15sp"
             android:layout_marginEnd="7dp"
             android:layout_alignParentEnd="true" />
@@ -96,6 +96,7 @@
         android:layout_marginTop="15dp" />
 
     <TextView
+        android:id="@+id/post_create_record_audio_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
