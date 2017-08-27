@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.echodev.echoalpha.Resizer.Resizer;
 import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.firebase.FirebaseBubbleWrapper;
 import com.echodev.echoalpha.firebase.FirebasePost;
@@ -90,6 +92,9 @@ public class PostCreateActivity extends AppCompatActivity {
 
     @BindView(R.id.post_create_record_audio)
     ImageView recordAudio;
+
+    @BindView(R.id.post_create_record_audio_hint)
+    TextView recordAudioHint;
 
     @BindView(R.id.post_create_caption)
     EditText postCaption;
@@ -182,14 +187,13 @@ public class PostCreateActivity extends AppCompatActivity {
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
                     String photoPath = newPost.getPhotoUrl();
+                    File originalImage = new File(photoPath);
 
                     // Add the photo name to the new Post instance
-                    String photoName = Uri.parse(photoPath).getLastPathSegment();
+                    String photoName = originalImage.getName();
                     newPost.setPhotoName(photoName);
 
                     // Compress the photo
-//                    String compressedPhotoPath = ImageHelper.imageCompress(photoPath, localContext);
-                    File originalImage = new File(photoPath);
                     File compressedImage;
                     try {
                         compressedImage = ImageHelper.imageResize(originalImage, localContext);
@@ -249,7 +253,7 @@ public class PostCreateActivity extends AppCompatActivity {
     // End of photo handling
 
     // Audio handling
-    View.OnLongClickListener recordAuioStartListener = new View.OnLongClickListener() {
+    View.OnLongClickListener recordAudioStartListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
             if (!appDirExist) {
@@ -257,9 +261,11 @@ public class PostCreateActivity extends AppCompatActivity {
             }
 
             if (bubbleWrapper == null) {
+                File audioFile = AudioHelper.createAudioFile(currentUser.getUuid());
                 bubbleWrapper = new FirebaseBubbleWrapper(newPost.getPostID(), currentUser.getUserID());
                 bubbleWrapper.setContext(localContext);
-                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(currentUser.getUuid()).getAbsolutePath());
+                bubbleWrapper.setAudioUrl(audioFile.getAbsolutePath());
+                bubbleWrapper.setAudioName(audioFile.getName());
             }
 
             boolean startSuccess = AudioHelper.startRecording(bubbleWrapper.getAudioUrl());
@@ -276,8 +282,6 @@ public class PostCreateActivity extends AppCompatActivity {
 
                 if (stopSuccess) {
                     audioReady = true;
-
-                    bubbleWrapper.setAudioName(Uri.parse(bubbleWrapper.getAudioUrl()).getLastPathSegment());
 
                     /*
                     btnNext.setText(localResources.getString(R.string.add_bubble));
@@ -551,7 +555,7 @@ public class PostCreateActivity extends AppCompatActivity {
         rotateAnticlockwise.setVisibility(View.INVISIBLE);
         rotateClockwise.setVisibility(View.INVISIBLE);
 
-        recordAudio.setOnLongClickListener(recordAuioStartListener);
+        recordAudio.setOnLongClickListener(recordAudioStartListener);
         recordAudio.setOnTouchListener(recordAudioStopListener);
 
         finishPost.setOnClickListener(finishPostListener);

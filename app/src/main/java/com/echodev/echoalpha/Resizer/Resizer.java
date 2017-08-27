@@ -21,8 +21,8 @@ public class Resizer {
     private String destinationDirectoryPath;
 
     public Resizer(Context context) {
-        targetLength = 1080;
-        quality = 80;
+        targetLength = 720;
+        quality = 70;
         compressFormat = Bitmap.CompressFormat.JPEG;
         destinationDirectoryPath = context.getCacheDir().getPath() + File.separator + "images";
     }
@@ -71,7 +71,7 @@ public class Resizer {
 
     public Bitmap resizeToBitmap(File imageFile) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
+        options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
 
         // Get the dimensions of the original bitmap

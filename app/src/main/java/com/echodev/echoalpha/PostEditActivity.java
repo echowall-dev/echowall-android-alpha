@@ -86,6 +86,9 @@ public class PostEditActivity extends AppCompatActivity {
     @BindView(R.id.post_edit_record_audio)
     ImageView recordAudio;
 
+    @BindView(R.id.post_create_record_audio_hint)
+    TextView recordAudioHint;
+
     @BindView(R.id.post_edit_caption)
     TextView postCaption;
 
@@ -226,7 +229,7 @@ public class PostEditActivity extends AppCompatActivity {
     // End of post handling
 
     // Audio handling
-    View.OnLongClickListener recordAuioStartListener = new View.OnLongClickListener() {
+    View.OnLongClickListener recordAudioStartListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
             if (!appDirExist) {
@@ -234,9 +237,11 @@ public class PostEditActivity extends AppCompatActivity {
             }
 
             if (bubbleWrapper == null) {
+                File audioFile = AudioHelper.createAudioFile(currentUser.getUuid());
                 bubbleWrapper = new FirebaseBubbleWrapper(currentPost.getPostID(), currentUser.getUserID());
                 bubbleWrapper.setContext(localContext);
-                bubbleWrapper.setAudioUrl(AudioHelper.createAudioFile(currentUser.getUuid()).getAbsolutePath());
+                bubbleWrapper.setAudioUrl(audioFile.getAbsolutePath());
+                bubbleWrapper.setAudioName(audioFile.getName());
             }
 
             boolean startSuccess = AudioHelper.startRecording(bubbleWrapper.getAudioUrl());
@@ -253,8 +258,6 @@ public class PostEditActivity extends AppCompatActivity {
 
                 if (stopSuccess) {
                     audioReady = true;
-
-                    bubbleWrapper.setAudioName(Uri.parse(bubbleWrapper.getAudioUrl()).getLastPathSegment());
 
                     /*
                     btnNext.setText(localResources.getString(R.string.add_bubble));
@@ -497,7 +500,7 @@ public class PostEditActivity extends AppCompatActivity {
         rotateAnticlockwise.setVisibility(View.INVISIBLE);
         rotateClockwise.setVisibility(View.INVISIBLE);
 
-        recordAudio.setOnLongClickListener(recordAuioStartListener);
+        recordAudio.setOnLongClickListener(recordAudioStartListener);
         recordAudio.setOnTouchListener(recordAudioStopListener);
 
         finishPost.setOnClickListener(finishPostListener);
