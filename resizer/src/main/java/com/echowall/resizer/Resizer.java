@@ -17,8 +17,8 @@ public class Resizer {
     private String destinationDirectoryPath;
 
     public Resizer(Context context) {
-        targetLength = 1080;
-        quality = 80;
+        targetLength = 720;
+        quality = 70;
         compressFormat = Bitmap.CompressFormat.JPEG;
         destinationDirectoryPath = context.getCacheDir().getPath() + File.separator + "images";
     }

@@ -1,12 +1,10 @@
 package com.echodev.echoalpha.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-import com.echodev.echoalpha.R;
-import com.echodev.echoalpha.Resizer.Resizer;
+import com.echowall.resizer.Resizer;
 
 import java.io.File;
 import java.io.IOException;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.echodev.echoalpha.Resizer.Resizer;
 import com.echodev.echoalpha.firebase.FirebaseBubble;
 import com.echodev.echoalpha.firebase.FirebaseBubbleWrapper;
 import com.echodev.echoalpha.firebase.FirebasePost;
@@ -57,17 +55,6 @@ public class PostCreateActivity extends AppCompatActivity {
     // Bind views by ButterKnife
     @BindView(R.id.activity_post_create)
     View rootView;
-
-    /*
-    @BindView(R.id.post_create_btn_0)
-    Button btn0;
-
-    @BindView(R.id.post_create_btn_1)
-    Button btn1;
-
-    @BindView(R.id.post_create_btn_next)
-    Button btnNext;
-    */
 
     @BindView(R.id.post_create_btn_cancel)
     TextView cancelPost;
@@ -190,8 +177,7 @@ public class PostCreateActivity extends AppCompatActivity {
                     File originalImage = new File(photoPath);
 
                     // Add the photo name to the new Post instance
-                    String photoName = originalImage.getName();
-                    newPost.setPhotoName(photoName);
+                    newPost.setPhotoName(originalImage.getName());
 
                     // Compress the photo
                     File compressedImage;
@@ -282,17 +268,6 @@ public class PostCreateActivity extends AppCompatActivity {
 
                 if (stopSuccess) {
                     audioReady = true;
-
-                    /*
-                    btnNext.setText(localResources.getString(R.string.add_bubble));
-                    btnNext.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            enterBubblePrepareStage();
-                        }
-                    });
-                    */
-
                     addBubbleImage();
                     enterBubblePrepareStage();
                 }
@@ -320,19 +295,6 @@ public class PostCreateActivity extends AppCompatActivity {
             if (bubbleReady) {
                 return;
             }
-
-            /*
-            switch (v.getId()) {
-                case R.id.post_create_btn_0:
-                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SW);
-                    break;
-                case R.id.post_create_btn_1:
-                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SE);
-                    break;
-                default:
-                    break;
-            }
-            */
 
             int targetW = localResources.getDimensionPixelSize(R.dimen.bubble_width);
             int targetH = localResources.getDimensionPixelSize(R.dimen.bubble_height);

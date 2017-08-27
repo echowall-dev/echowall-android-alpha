@@ -49,6 +49,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 
     testCompile 'junit:junit:4.12'
+    compile project(path: ':resizer')
 }
 
 apply plugin: 'com.google.gms.google-services'

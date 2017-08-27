@@ -51,17 +51,6 @@ public class PostEditActivity extends AppCompatActivity {
     @BindView(R.id.activity_post_edit)
     View rootView;
 
-    /*
-    @BindView(R.id.post_edit_btn_0)
-    Button btn0;
-
-    @BindView(R.id.post_edit_btn_1)
-    Button btn1;
-
-    @BindView(R.id.post_edit_btn_next)
-    Button btnNext;
-    */
-
     @BindView(R.id.post_edit_btn_cancel)
     TextView cancelPost;
 
@@ -258,17 +247,6 @@ public class PostEditActivity extends AppCompatActivity {
 
                 if (stopSuccess) {
                     audioReady = true;
-
-                    /*
-                    btnNext.setText(localResources.getString(R.string.add_bubble));
-                    btnNext.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            enterBubblePrepareStage();
-                        }
-                    });
-                    */
-
                     addBubbleImage();
                     enterBubblePrepareStage();
                 }
@@ -296,19 +274,6 @@ public class PostEditActivity extends AppCompatActivity {
             if (bubbleReady) {
                 return;
             }
-
-            /*
-            switch (v.getId()) {
-                case R.id.post_edit_btn_0:
-                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SW);
-                    break;
-                case R.id.post_edit_btn_1:
-                    bubbleWrapper.setType(FirebaseBubbleWrapper.TYPE_SE);
-                    break;
-                default:
-                    break;
-            }
-            */
 
             int targetW = localResources.getDimensionPixelSize(R.dimen.bubble_width);
             int targetH = localResources.getDimensionPixelSize(R.dimen.bubble_height);
