@@ -3,13 +3,14 @@ package com.echowall.resizer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-//import io.reactivex.Flowable;
+import io.reactivex.Flowable;
 
 public class Resizer {
     private int targetLength, quality;
@@ -17,10 +18,10 @@ public class Resizer {
     private String destinationDirectoryPath;
 
     public Resizer(Context context) {
-        targetLength = 720;
-        quality = 70;
+        targetLength = 1080;
+        quality = 80;
         compressFormat = Bitmap.CompressFormat.JPEG;
-        destinationDirectoryPath = context.getCacheDir().getPath() + File.separator + "images";
+        destinationDirectoryPath = context.getExternalCacheDir().getAbsolutePath() + File.separator + Environment.DIRECTORY_PICTURES;
     }
 
     public Resizer setTargetLength(int targetLength) {
@@ -93,7 +94,6 @@ public class Resizer {
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
     }
 
-    /*
     public Flowable<File> resizeToFileAsFlowable(final File imageFile) {
         return Flowable.defer(new Callable<Flowable<File>>() {
             @Override
@@ -119,5 +119,4 @@ public class Resizer {
             }
         });
     }
-    */
 }
