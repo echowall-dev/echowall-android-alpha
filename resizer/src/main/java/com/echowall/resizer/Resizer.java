@@ -21,7 +21,7 @@ public class Resizer {
         targetLength = 1080;
         quality = 80;
         compressFormat = Bitmap.CompressFormat.JPEG;
-        destinationDirectoryPath = context.getExternalCacheDir().getAbsolutePath() + File.separator + Environment.DIRECTORY_PICTURES;
+        destinationDirectoryPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     public Resizer setTargetLength(int targetLength) {
@@ -50,8 +50,21 @@ public class Resizer {
             file.mkdirs();
         }
 
-        String destinationFilePath = destinationDirectoryPath + File.separator + imageFile.getName();
+        // Prepare the new file name and path
+        String sourceFileName = imageFile.getName();
+        String targetFileName;
+        String targetFileExtension = compressFormat.name().toLowerCase().replace("jpeg", "jpg");
 
+        int extensionIndex = sourceFileName.lastIndexOf('.');
+        if (extensionIndex == -1) {
+            targetFileName = sourceFileName + targetFileExtension;
+        } else {
+            targetFileName = sourceFileName.substring(0, extensionIndex) + targetFileExtension;
+        }
+
+        String destinationFilePath = destinationDirectoryPath + File.separator + targetFileName;
+
+        // Write the resized image to the new file
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(destinationFilePath);
