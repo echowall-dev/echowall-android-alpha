@@ -32,8 +32,9 @@ public class ImageHelper {
         File resizedImage = new Resizer(context)
                 .setTargetLength(imageMaxPixel)
                 .setQuality(imageQuality)
-                .setDestinationDirectoryPath(storagePath)
-                .resizeToFile(imageFile);
+                .setOutputFormat("JPEG")
+                .setDestinationDirPath(storagePath)
+                .getResizedFile(imageFile);
 
         return resizedImage;
     }

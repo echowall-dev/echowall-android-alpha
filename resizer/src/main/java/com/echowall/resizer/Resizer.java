@@ -14,14 +14,14 @@ import io.reactivex.Flowable;
 
 public class Resizer {
     private int targetLength, quality;
-    private Bitmap.CompressFormat compressFormat;
-    private String destinationDirectoryPath;
+    private Bitmap.CompressFormat outputFormat;
+    private String destinationDirPath;
 
     public Resizer(Context context) {
         targetLength = 1080;
         quality = 80;
-        compressFormat = Bitmap.CompressFormat.JPEG;
-        destinationDirectoryPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        outputFormat = Bitmap.CompressFormat.JPEG;
+        destinationDirPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     public Resizer setTargetLength(int targetLength) {
@@ -29,8 +29,14 @@ public class Resizer {
         return this;
     }
 
-    public Resizer setCompressFormat(Bitmap.CompressFormat compressFormat) {
-        this.compressFormat = compressFormat;
+    public Resizer setOutputFormat(String outputFormat) {
+        if (outputFormat.compareTo("JPEG") == 0) {
+            this.outputFormat = Bitmap.CompressFormat.JPEG;
+        } else if (outputFormat.compareTo("PNG") == 0) {
+            this.outputFormat = Bitmap.CompressFormat.PNG;
+        } else if (outputFormat.compareTo("WEBP") == 0) {
+            this.outputFormat = Bitmap.CompressFormat.WEBP;
+        }
         return this;
     }
 
@@ -39,36 +45,36 @@ public class Resizer {
         return this;
     }
 
-    public Resizer setDestinationDirectoryPath(String destinationDirectoryPath) {
-        this.destinationDirectoryPath = destinationDirectoryPath;
+    public Resizer setDestinationDirPath(String destinationDirPath) {
+        this.destinationDirPath = destinationDirPath;
         return this;
     }
 
-    public File resizeToFile(File imageFile) throws IOException {
-        File file = new File(destinationDirectoryPath);
+    public File getResizedFile(File sourceImage) throws IOException {
+        File file = new File(destinationDirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
 
         // Prepare the new file name and path
-        String sourceFileName = imageFile.getName();
+        String originalFileName = sourceImage.getName();
         String targetFileName;
-        String targetFileExtension = compressFormat.name().toLowerCase().replace("jpeg", "jpg");
+        String targetFileExtension = outputFormat.name().toLowerCase().replace("jpeg", "jpg");
 
-        int extensionIndex = sourceFileName.lastIndexOf('.');
+        int extensionIndex = originalFileName.lastIndexOf('.');
         if (extensionIndex == -1) {
-            targetFileName = sourceFileName + targetFileExtension;
+            targetFileName = originalFileName + targetFileExtension;
         } else {
-            targetFileName = sourceFileName.substring(0, extensionIndex) + targetFileExtension;
+            targetFileName = originalFileName.substring(0, extensionIndex) + targetFileExtension;
         }
 
-        String destinationFilePath = destinationDirectoryPath + File.separator + targetFileName;
+        String destinationFilePath = destinationDirPath + File.separator + targetFileName;
 
         // Write the resized image to the new file
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(destinationFilePath);
-            resizeToBitmap(imageFile).compress(compressFormat, quality, fileOutputStream);
+            getResizedBitmap(sourceImage).compress(outputFormat, quality, fileOutputStream);
         } finally {
             if (fileOutputStream != null) {
                 fileOutputStream.flush();
@@ -79,10 +85,10 @@ public class Resizer {
         return new File(destinationFilePath);
     }
 
-    public Bitmap resizeToBitmap(File imageFile) throws IOException {
+    public Bitmap getResizedBitmap(File sourceImage) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
-        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+        Bitmap bitmap = BitmapFactory.decodeFile(sourceImage.getAbsolutePath(), options);
 
         // Get the dimensions of the original bitmap
         int originalWidth = options.outWidth;
@@ -90,29 +96,26 @@ public class Resizer {
         float aspectRatio = (float) originalWidth / originalHeight;
 
         // Calculate the target dimensions
-        int targetWidth = originalWidth;
-        int targetHeight = originalHeight;
+        int targetWidth, targetHeight;
 
-        if (originalWidth > targetLength || originalHeight > targetLength) {
-            if (originalWidth > originalHeight) {
-                targetWidth = targetLength;
-                targetHeight = Math.round(targetWidth / aspectRatio);
-            } else {
-                aspectRatio = 1 / aspectRatio;
-                targetHeight = targetLength;
-                targetWidth = Math.round(targetHeight / aspectRatio);
-            }
+        if (originalWidth > originalHeight) {
+            targetWidth = targetLength;
+            targetHeight = Math.round(targetWidth / aspectRatio);
+        } else {
+            aspectRatio = 1 / aspectRatio;
+            targetHeight = targetLength;
+            targetWidth = Math.round(targetHeight / aspectRatio);
         }
 
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
     }
 
-    public Flowable<File> resizeToFileAsFlowable(final File imageFile) {
+    public Flowable<File> getResizedFileAsFlowable(final File sourceImage) {
         return Flowable.defer(new Callable<Flowable<File>>() {
             @Override
             public Flowable<File> call() {
                 try {
-                    return Flowable.just(resizeToFile(imageFile));
+                    return Flowable.just(getResizedFile(sourceImage));
                 } catch (IOException e) {
                     return Flowable.error(e);
                 }
@@ -120,12 +123,12 @@ public class Resizer {
         });
     }
 
-    public Flowable<Bitmap> resizeToBitmapAsFlowable(final File imageFile) {
+    public Flowable<Bitmap> getResizedBitmapAsFlowable(final File sourceImage) {
         return Flowable.defer(new Callable<Flowable<Bitmap>>() {
             @Override
             public Flowable<Bitmap> call() {
                 try {
-                    return Flowable.just(resizeToBitmap(imageFile));
+                    return Flowable.just(getResizedBitmap(sourceImage));
                 } catch (IOException e) {
                     return Flowable.error(e);
                 }
