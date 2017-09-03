@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//import me.echodev.resizer.Resizer;
+
 public class ImageHelper {
 
     public static int imageMaxPixel = 1080;
@@ -27,14 +29,15 @@ public class ImageHelper {
 
     public static File imageResize(File imageFile, Context context) throws IOException {
         String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        storagePath += File.separator + "Echowall" + File.separator + "cache";
+        storagePath += File.separator + "Echowall" + File.separator + "pictures";
 
         File resizedImage = new Resizer(context)
                 .setTargetLength(imageMaxPixel)
                 .setQuality(imageQuality)
                 .setOutputFormat("JPEG")
                 .setDestinationDirPath(storagePath)
-                .getResizedFile(imageFile);
+                .setSourceImage(imageFile)
+                .getResizedFile();
 
         return resizedImage;
     }
