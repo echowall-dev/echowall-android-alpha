@@ -7,11 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by Ho on 3/9/2017.
+ * Created by K.K. Ho on 3/9/2017.
  */
 
 public class FileUtils {
-    public static String getDestinationFilePath(String destinationDirPath, File sourceImage, Bitmap.CompressFormat compressFormat) {
+    public static String getDestinationFilePath(Bitmap.CompressFormat compressFormat, String destinationDirPath, File sourceImage) {
         String originalFileName = sourceImage.getName();
         String targetFileName;
         String targetFileExtension = "." + compressFormat.name().toLowerCase().replace("jpeg", "jpg");
@@ -24,17 +24,6 @@ public class FileUtils {
         }
 
         return destinationDirPath + File.separator + targetFileName;
-    }
-
-    public static boolean deleteFileIfExist(String destinationFilePath) {
-        boolean fileDeleted = true;
-
-        File destinationFile = new File(destinationFilePath);
-        if (destinationFile.exists()) {
-            fileDeleted = destinationFile.delete();
-        }
-
-        return fileDeleted;
     }
 
     public static void writeBitmapToFile(Bitmap bitmap, Bitmap.CompressFormat compressFormat, int quality, String filePath) throws IOException {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-cache-path name="image_cache" path="pictures/" />
-    <external-path name="image_files" path="Echowall/pictures/" />
-    <external-path name="audio_files" path="Echowall/audios/" />
+    <external-cache-path name="image_cache" path="Pictures/" />
+    <external-path name="image_files" path="Echowall/Pictures/" />
+    <external-path name="audio_files" path="Echowall/Audios/" />
 </paths>

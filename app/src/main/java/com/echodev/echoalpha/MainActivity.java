@@ -86,22 +86,12 @@ public class MainActivity extends AppCompatActivity {
     public static boolean createAppDir() {
         boolean createSuccess = true;
 
-        File appDirPicture = new File(Environment.getExternalStorageDirectory() + File.separator + appName + "/pictures");
-        File appDirAudio = new File(Environment.getExternalStorageDirectory() + File.separator + appName + "/audios");
-        File appDirCache = new File(Environment.getExternalStorageDirectory() + File.separator + appName + "/cache");
+        File appDirPicture = new File(Environment.getExternalStorageDirectory() + File.separator + appName + File.separator + Environment.DIRECTORY_PICTURES);
+        File appDirAudio = new File(Environment.getExternalStorageDirectory() + File.separator + appName + File.separator + "Audios");
 
-        // Use mkdirs() here instead of mkdir() for creating parent directories.
-        if (!appDirPicture.exists()) {
-            createSuccess = appDirPicture.mkdirs();
-        }
-
-        if (!appDirAudio.exists()) {
-            createSuccess = appDirAudio.mkdirs();
-        }
-
-        if (!appDirCache.exists()) {
-            createSuccess = appDirCache.mkdirs();
-        }
+        // Use mkdirs() here instead of mkdir() for creating parent directories
+        createSuccess = (appDirPicture.exists())? createSuccess : appDirPicture.mkdirs();
+        createSuccess = (appDirAudio.exists())? createSuccess : appDirAudio.mkdirs();
 
         return createSuccess;
     }

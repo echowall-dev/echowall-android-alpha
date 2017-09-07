@@ -4,14 +4,14 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-import com.echowall.resizer.Resizer;
+//import com.echowall.resizer.Resizer;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//import me.echodev.resizer.Resizer;
+import me.echodev.resizer.Resizer;
 
 public class ImageHelper {
 
@@ -21,20 +21,19 @@ public class ImageHelper {
     public static File createImageFile(String userUuid) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageName = userUuid+ "_" + timeStamp + ".jpg";
-        String imagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        imagePath += File.separator + "Echowall" + File.separator + "pictures" + File.separator + imageName;
+        String imagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Echowall";
+        imagePath += File.separator + Environment.DIRECTORY_PICTURES + File.separator + imageName;
 
         return new File(imagePath);
     }
 
     public static File imageResize(File imageFile, Context context) throws IOException {
-        String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        storagePath += File.separator + "Echowall" + File.separator + "pictures";
+//        String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Echowall";
+//        storagePath += File.separator + Environment.DIRECTORY_PICTURES;
+
+        String storagePath = context.getExternalCacheDir().getAbsolutePath() + File.separator + Environment.DIRECTORY_PICTURES;
 
         File resizedImage = new Resizer(context)
-                .setTargetLength(imageMaxPixel)
-                .setQuality(imageQuality)
-                .setOutputFormat("JPEG")
                 .setDestinationDirPath(storagePath)
                 .setSourceImage(imageFile)
                 .getResizedFile();

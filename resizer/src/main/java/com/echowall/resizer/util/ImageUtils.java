@@ -7,18 +7,18 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Ho on 3/9/2017.
+ * Created by K.K. Ho on 3/9/2017.
  */
 
 public class ImageUtils {
-    public static File getResizedImage(int targetLength, int quality, Bitmap.CompressFormat compressFormat, String destinationDirPath, File sourceImage) throws IOException {
+    public static File getScaledImage(int targetLength, int quality, Bitmap.CompressFormat compressFormat, String destinationDirPath, File sourceImage) throws IOException {
         File file = new File(destinationDirPath);
         if (!file.exists()) {
             file.mkdirs();
         }
 
         // Prepare the new file name and path
-        String destinationFilePath = FileUtils.getDestinationFilePath(destinationDirPath, sourceImage, compressFormat);
+        String destinationFilePath = FileUtils.getDestinationFilePath(compressFormat, destinationDirPath, sourceImage);
 
         // Write the resized image to the new file
         Bitmap scaledBitmap = getScaledBitmap(targetLength, sourceImage);
